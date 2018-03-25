@@ -10,7 +10,7 @@ public class Conexion {
     private static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     //El puerto es opcional
     private static String JDBC_URL = "jdbc:mysql://localhost/insetelc_Bevisa?useSSL=false";
-    private static String JDBC_USER = "root";
+    private static String JDBC_USER = "xd";
     private static String JDBC_PASS = "1234";
     
     private static Driver driver = null;
