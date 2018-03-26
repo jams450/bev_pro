@@ -69,26 +69,6 @@ public class DBcontrolador {
             
           }
     }
-    
-    public void conex () throws SQLException{
-        //java.sql.Connection cnx = null;
-        String cnxStr="com.mysql.jdbc.Driver";
-        String url="jdbc:mysql://"+this.svr+"/"+this.bd;
-        try{
-            Class.forName(cnxStr);
-            System.out.println("Controlador cargando...");
-            
-            cnx=DriverManager.getConnection(url, this.usr, this.pass);
-            System.out.println("Conexion establecida");
-        }
-        catch(ClassNotFoundException ex){
-            System.out.println("No se pudo cargar el controlador...");
-        }
-         catch(SQLException ex){
-            JOptionPane.showMessageDialog(null, "Error en la conexion a la base de datos");
-            
-          }
-    }
 
     public ArrayList seleccionar(String query){
             
