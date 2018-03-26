@@ -1674,17 +1674,17 @@ public class Movimientos extends javax.swing.JFrame {
                 } catch (Exception ex) {
                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if (JOptionPane.showConfirmDialog(null, "¿Enviar correo ?", "Correo", JOptionPane.YES_NO_OPTION)==0) {
+                if (JOptionPane.showConfirmDialog(null, "¿Enviar correo?", "Correo", JOptionPane.YES_NO_OPTION)==0) {
                     Properties props = new Properties();
                     props.setProperty("mail.smtp.host", "smtp.gmail.com");
                     props.setProperty("mail.smtp.starttls.enable", "true");
                     props.setProperty("mail.smtp.port","587");
-                    props.setProperty("mail.smtp.user", "jams45072@gmail.com");
+                    props.setProperty("mail.smtp.user", "bevisagaleria@gmail.com");
                     props.setProperty("mail.smtp.auth", "true");
                     Session session = Session.getDefaultInstance(props);
 
                     BodyPart texto = new MimeBodyPart();
-                    texto.setText("Orden de compra no "+index);
+                    texto.setText("Mando orden de compra,favor de confirmar fecha indicada de enrega ");
                     BodyPart adjunto = new MimeBodyPart();
                     adjunto.setDataHandler(new DataHandler(new FileDataSource(s+"\\ODC\\ODC-"+index+".pdf")));
                     adjunto.setFileName("ODC.pdf");
@@ -1693,17 +1693,17 @@ public class Movimientos extends javax.swing.JFrame {
                     multiParte.addBodyPart(texto);
                     multiParte.addBodyPart(adjunto);
 
-                    System.out.println("aqui 2 ");
+                    
                     MimeMessage message = new MimeMessage(session);
 
-                    message.setFrom(new InternetAddress("jams45072@gmail.com"));
+                    message.setFrom(new InternetAddress("bevisagaleria@gmail.com"));
                     message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.correo));
 
-                    message.setSubject("Prueba shida");
+                    message.setSubject("Orden de Compra");
                     message.setContent(multiParte);
 
                     Transport t = session.getTransport("smtp");
-                    t.connect("jams45072@gmail.com","jams45072ande5000");
+                    t.connect("bevisagaleria@gmail.com","bevisairlandesa");
                     t.sendMessage(message,message.getAllRecipients());
                     t.close();
                 }

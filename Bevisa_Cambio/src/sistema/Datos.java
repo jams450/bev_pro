@@ -3378,7 +3378,7 @@ public class Datos extends javax.swing.JFrame {
         Ingredientes_DB ing = new Ingredientes_DB(this.con);
         
         List <Ingrediente> ingres = ing.select_ing(Integer.parseInt(this.txtidingrediente.getText()));
- 
+            
         for (int i = 0; i < ingres.size(); i++) {    
             Object[] obj = new Object[5];
             obj[0]=ingres.get(i).getId();

@@ -44,8 +44,8 @@ public class DBcontrolador {
            
           }
     }
-    
-    private  final  String svr="localhost";
+    //192.168.1.71
+    private  final  String svr="192.168.1.71";
     private  final  String usr="root";
     private  final  String bd="insetelc_Bevisa";
     private  final  String pass="1234";//Clave
