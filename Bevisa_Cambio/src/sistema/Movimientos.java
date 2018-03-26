@@ -5,7 +5,6 @@
  */
 package sistema;
 
-import negocio.Producto;
 import datos.DBcontrolador;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -20,7 +19,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -29,6 +27,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.table.DefaultTableModel;
+import negocio.Producto;
+import funciones.n2t;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -49,7 +49,7 @@ public class Movimientos extends javax.swing.JFrame {
     public Producto pro ;
     public String moneda;
     public int idmoneda;
-    
+    public int idmoneda2;
     public int idcliente;
     public String nombrecliente;
     public int columnaopc;
@@ -92,6 +92,7 @@ public class Movimientos extends javax.swing.JFrame {
     public Movimientos(Menu_Principal mp, DBcontrolador dbc) throws SQLException {
         initComponents();
         this.mp=mp;
+        
         this.pro= new Producto();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
@@ -103,6 +104,9 @@ public class Movimientos extends javax.swing.JFrame {
         this.micro=(DefaultTableModel) this.tblieracionmicrobiologicas.getModel();
         this.fisico=(DefaultTableModel) this.tblieracionfisicoquimicas.getModel();
         this.dbc = dbc;
+        if (this.dbc.getCnx()==null) {
+                this.dbc.conex();
+            }
         combo();
         Path c = Paths.get("");
         s = c.toAbsolutePath().toString();
@@ -136,6 +140,8 @@ public class Movimientos extends javax.swing.JFrame {
         txtfecha = new javax.swing.JTextField();
         btnaceptaropp = new javax.swing.JButton();
         jLabel43 = new javax.swing.JLabel();
+        cbcondicion_pago = new javax.swing.JComboBox<>();
+        jLabel55 = new javax.swing.JLabel();
         Compra = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jLabel33 = new javax.swing.JLabel();
@@ -329,8 +335,14 @@ public class Movimientos extends javax.swing.JFrame {
         OPP.add(btnaceptaropp, new org.netbeans.lib.awtextra.AbsoluteConstraints(1050, 420, 210, -1));
 
         jLabel43.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel43.setText("Fecha:");
-        OPP.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 40, -1, -1));
+        jLabel43.setText("Condicion de pago:");
+        OPP.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 80, -1, -1));
+
+        OPP.add(cbcondicion_pago, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 80, 130, 20));
+
+        jLabel55.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel55.setText("Fecha:");
+        OPP.add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 40, -1, -1));
 
         jTabbedPane1.addTab("Orden de Pedido a Proveedores", OPP);
 
@@ -633,6 +645,7 @@ public class Movimientos extends javax.swing.JFrame {
 
         txtfechaopc.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtfechaopc.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtfechaopc.setEnabled(false);
         OPC.add(txtfechaopc, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 40, 170, -1));
 
         jLabel42.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -746,6 +759,7 @@ public class Movimientos extends javax.swing.JFrame {
         LOP.add(jLabel46, new org.netbeans.lib.awtextra.AbsoluteConstraints(114, 69, -1, -1));
 
         txtfechaliberacion.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtfechaliberacion.setEnabled(false);
         LOP.add(txtfechaliberacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 67, 190, -1));
 
         jLabel22.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
@@ -872,7 +886,7 @@ public class Movimientos extends javax.swing.JFrame {
         LocalDateTime ahora = LocalDateTime.now(); 
        
         this.txtfechaopc.setText(ahora.getDayOfMonth()+"/"+ ahora.getMonthValue() +"/" + ahora.getYear() );
-        
+        this.txtfechaopc.setEnabled(true);
         
         
         String query="Select MAX(id) from opclientes";
@@ -901,9 +915,9 @@ public class Movimientos extends javax.swing.JFrame {
         s[3]=this.pro.getMedida();
         s[4]=this.pro.getStockmin()+"";
         s[5]=this.moneda;
-        s[6]=this.pro.getPventa()+"";
-        s[7]=(this.pro.getPventa()*this.pro.getStockmin())+"";   
-       
+        s[6]=this.pro.getPventa()+"";      
+        s[7]=(Math.round( (this.pro.getPventa()*this.pro.getStockmin())* 100.0 ) / 100.0)+"";
+        
         boolean x=true;
         for (int i = 0; i < this.tabla.getRowCount(); i++) {
             int id = Integer.parseInt(this.tabla.getValueAt(i, 0).toString());
@@ -913,7 +927,7 @@ public class Movimientos extends javax.swing.JFrame {
         }
         if (x) {
             this.tabla.addRow(s);
-            this.preciosopp.add(this.pro.getPventa()*this.pro.getStockmin());
+            this.preciosopp.add(Math.round( (this.pro.getPventa()*this.pro.getStockmin())* 100.0 ) / 100.0);
             this.btnquitarpro.setEnabled(true);
             this.btnaceptaropp.setEnabled(true);
         }
@@ -975,6 +989,13 @@ public class Movimientos extends javax.swing.JFrame {
         op=this.dbc.seleccionar(query);
         for (int i = 0; i < op.size(); i++) {
             this.cbodp.addItem(op.get(i)[0]);
+        }
+        
+        op.clear();
+        query="SELECT nombre FROM condicion_pago ";
+        op=this.dbc.seleccionar(query);
+        for (int i = 0; i < op.size(); i++) {
+            this.cbcondicion_pago.addItem(op.get(i)[0]);
         }
     }
     
@@ -1079,6 +1100,7 @@ public class Movimientos extends javax.swing.JFrame {
                         op2=this.dbc.seleccionar(query);
                         if (op2.get(0)[0]== null) {
                             ingrefaltante += "Requiere "+Double.parseDouble(this.tabla4.getValueAt(i, 4).toString())* Double.parseDouble(op.get(j)[1])  +" de "+op2.get(0)[1] +"\n";
+                            sipasa=false;
                         }
                         else
                         {
@@ -1275,7 +1297,7 @@ public class Movimientos extends javax.swing.JFrame {
         }
         catch(SQLException ex)
         {
-            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez "+ ex);
             try {
                 this.dbc = new DBcontrolador ();
             } catch (SQLException ex1) {
@@ -1351,6 +1373,7 @@ public class Movimientos extends javax.swing.JFrame {
                 this.cbproductosc.addItem(op.get(i)[1]);
 
             }
+            this.idmoneda2=Integer.parseInt(this.dbc.seleccionarid("select idmoneda from opproveedores where id = "+id[0]));
             op.clear();
             query="select proveedores.id  ,  proveedores.nombre , opproveedores.fecha from opproveedores\n" +
             " join proveedores on proveedores.id = opproveedores.idpro where opproveedores.id =" + id[0];
@@ -1369,6 +1392,8 @@ public class Movimientos extends javax.swing.JFrame {
 
             this.txtlotecompra.setEnabled(true);
             this.txtfactno.setEnabled(true);
+            
+            this.txtfechaentrada.setEnabled(true);
 
             this.cbproductosc.setEnabled(true);
             this.txtcantidadcompra.setEnabled(true);
@@ -1404,7 +1429,7 @@ public class Movimientos extends javax.swing.JFrame {
             }
 
             if (escero && this.txtfecha1.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$") && this.txtfechaentrada.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$")) {
-                String  query ="Insert into inventario(idproducto,fechaentrada,cantidadactual,lote,idopp,facturano,cantidad,costo,fechacaducidad) values (?,?,?,?,?,?,?,?,?)";
+                String  query ="Insert into inventario(idproducto,fechaentrada,cantidadactual,lote,idopp,facturano,cantidad,costo,fechacaducidad,idmoneda) values (?,?,?,?,?,?,?,?,?,?)";
                 for (int i = 0; i < this.tabla3.getRowCount(); i++) {
                     PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
                     ps.setInt(1, Integer.parseInt(this.tabla3.getValueAt(i, 0).toString()));
@@ -1419,7 +1444,8 @@ public class Movimientos extends javax.swing.JFrame {
                     ps.setDouble(7, Double.parseDouble(this.tabla3.getValueAt(i, 2).toString()));
                     ps.setDouble(8, Double.parseDouble(this.tabla3.getValueAt(i, 4).toString()));
                     ps.setString(9, fechadividir(this.tabla3.getValueAt(i, 5).toString(),2));
-
+                    //dinero
+                    ps.setInt(10,this.idmoneda2);
                     ps.executeUpdate();
                     ps.close();
                     
@@ -1513,7 +1539,7 @@ public class Movimientos extends javax.swing.JFrame {
         }
         else
         {
-            if (this.txtcantidadcompra.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtcapacidadcompra.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtcaducidad.getText().matches("[0-9]+"))  {
+            if (this.txtcantidadcompra.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtcapacidadcompra.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtcaducidad.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$"))  {
                 double cantidadtotal=0;
                 double punitario=0;
                 int idproducto=0;
@@ -1540,8 +1566,7 @@ public class Movimientos extends javax.swing.JFrame {
                         c[2]=capacidad+"";
                         c[3]=this.txtlotecompra.getText();
                         c[4]= (punitario * capacidad) +"";
-                        LocalDateTime ahora = LocalDateTime.now().plusMonths(Long.parseLong(this.txtcaducidad.getText()));
-                        c[5]= ahora.getDayOfMonth()+"/"+ ahora.getMonthValue() +"/" + ahora.getYear();
+                        c[5]= this.txtcaducidad.getText();
                         this.tabla3.addRow(c);
                     }
                     this.tabla2.setValueAt(cantidadtotal -  cantidad*capacidad, index, 3);
@@ -1564,7 +1589,8 @@ public class Movimientos extends javax.swing.JFrame {
         try{
             
             if (this.txtfecha.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$") && this.tbproductosopp.getRowCount() > 0) {
-                String query="Insert into opproveedores(idpro,idmoneda,ptotal, idestatus,fecha) values (?,?,?,?,?)";
+                String respuesta = JOptionPane.showInputDialog(this, "Observaciones");
+                String query="Insert into opproveedores(idpro,idmoneda,subtotal,iva,ptotal,idestatus,fecha,idcpago,observaciones) values (?,?,?,?,?,?,?,?,?)";
                 PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
                 double total=0;
                 for (Double d : this.preciosopp) {
@@ -1572,11 +1598,14 @@ public class Movimientos extends javax.swing.JFrame {
                 }
                 ps.setInt(1, Integer.parseInt(this.txtidproveedor.getText()) );
                 ps.setInt(2, this.idmoneda);
-                ps.setDouble(3, total);
-                ps.setInt(4, 1);
+                ps.setDouble(3, Math.round( total * 100.0 ) / 100.0);
+                ps.setDouble(4, Math.round( (total*0.16) * 100.0 ) / 100.0);
+                ps.setDouble(5, Math.round( (total*1.16) * 100.0 ) / 100.0);
+                ps.setInt(6, 1);
 
-                ps.setString(5, fechadividir(this.txtfecha,1));
-
+                ps.setString(7, fechadividir(this.txtfecha,1));
+                ps.setInt(8, this.cbcondicion_pago.getSelectedIndex()+1);
+                ps.setString(9, respuesta);
                 ps.executeUpdate();
                 ps.close();
 
@@ -1598,7 +1627,44 @@ public class Movimientos extends javax.swing.JFrame {
                     ps.executeUpdate();
                     ps.close();
                 }
+                //cantidad en letra
+                String cantidad= (Math.round( (total*1.16) * 100.0 ) / 100.0)+"";
+                System.out.println(cantidad);
+                String[] divi =cantidad.split("\\.");
+                n2t num = new n2t();
+                System.out.println(divi[0]);
+                String num_text =num.convertirLetras(Integer.parseInt(divi[0]));
+                String moneda;
+                if (this.idmoneda == 1) {
+                    moneda="Moneda Nacional";
+                }else
+                {
+                    moneda="USD";
+                }
+                num_text+=" "+divi[1]+"/100 "+moneda;
+                
+                
+                JasperReport reporte; //Creo el objeto reporte
+                // Ubicacion del Reporte
+                String path = s+"\\Reportes\\Orden_Compra.jasper";
+                try {
 
+                   reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
+                   Map opp = new HashMap();
+                   opp.put("id", index);
+                   opp.put("letra", num_text);
+                   JasperPrint jprint = JasperFillManager.fillReport(path, opp, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+                   File d = new File(s+"\\ODC");
+                   File pdf = File.createTempFile("ODC-"+index+"---", ".pdf",d);
+                   JasperExportManager.exportReportToPdfStream(jprint, new FileOutputStream(pdf));
+                   JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
+                   viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
+                   viewer.setVisible(true); //Inicializamos la vista del Reporte
+
+                } catch (Exception ex) {
+                   Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
                 this.tabla.setRowCount(0);
                 this.btnAgregarpro.setEnabled(false);
                 this.btnquitarpro.setEnabled(false);
@@ -1620,7 +1686,7 @@ public class Movimientos extends javax.swing.JFrame {
         }
         catch(Exception ex)
         {
-            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez"+ex);
             try {
                 this.dbc = new DBcontrolador ();
             } catch (SQLException ex1) {
@@ -1871,8 +1937,11 @@ public class Movimientos extends javax.swing.JFrame {
                            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                        }
                         
-                       combo();
-                       comboliberacion();   
+                        combo();
+                        comboliberacion();
+             
+                        
+                        
                     }
                     else{
                         JOptionPane.showMessageDialog(null, "Valores incorrectos en pruebas Fisicoquimicas");
@@ -1931,6 +2000,7 @@ public class Movimientos extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Movimientos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -1957,6 +2027,7 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JButton btnquitarpro;
     private javax.swing.JButton btnquitarpro1;
     private javax.swing.JButton btnquitarproc;
+    private javax.swing.JComboBox<String> cbcondicion_pago;
     private javax.swing.JComboBox<String> cbodp;
     private javax.swing.JComboBox<String> cbopp;
     private javax.swing.JComboBox<String> cbproductosc;
@@ -1992,6 +2063,7 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel52;
     private javax.swing.JLabel jLabel53;
     private javax.swing.JLabel jLabel54;
+    private javax.swing.JLabel jLabel55;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
