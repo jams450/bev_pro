@@ -29,12 +29,21 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.table.DefaultTableModel;
 import negocio.Producto;
 import funciones.n2t;
+import java.util.Properties;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
+
 
 /**
  *
@@ -44,6 +53,8 @@ public class Movimientos extends javax.swing.JFrame {
 
     public int idproveedor;
     public String nombreproveedor;
+    public String correo;
+    
     public int columnaopp;
     
     public Producto pro ;
@@ -1589,6 +1600,7 @@ public class Movimientos extends javax.swing.JFrame {
         try{
             
             if (this.txtfecha.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$") && this.tbproductosopp.getRowCount() > 0) {
+                
                 String respuesta = JOptionPane.showInputDialog(this, "Observaciones");
                 String query="Insert into opproveedores(idpro,idmoneda,subtotal,iva,ptotal,idestatus,fecha,idcpago,observaciones) values (?,?,?,?,?,?,?,?,?)";
                 PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
@@ -1654,15 +1666,46 @@ public class Movimientos extends javax.swing.JFrame {
                    opp.put("id", index);
                    opp.put("letra", num_text);
                    JasperPrint jprint = JasperFillManager.fillReport(path, opp, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
-                   File d = new File(s+"\\ODC");
-                   File pdf = File.createTempFile("ODC-"+index+"---", ".pdf",d);
-                   JasperExportManager.exportReportToPdfStream(jprint, new FileOutputStream(pdf));
+                   JasperExportManager.exportReportToPdfFile(jprint, s+"\\ODC\\ODC-"+index+".pdf");
                    JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
                    viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
                    viewer.setVisible(true); //Inicializamos la vista del Reporte
 
                 } catch (Exception ex) {
                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if (JOptionPane.showConfirmDialog(null, "¿Enviar correo ?", "Correo", JOptionPane.YES_NO_OPTION)==0) {
+                    Properties props = new Properties();
+                    props.setProperty("mail.smtp.host", "smtp.gmail.com");
+                    props.setProperty("mail.smtp.starttls.enable", "true");
+                    props.setProperty("mail.smtp.port","587");
+                    props.setProperty("mail.smtp.user", "jams45072@gmail.com");
+                    props.setProperty("mail.smtp.auth", "true");
+                    Session session = Session.getDefaultInstance(props);
+
+                    BodyPart texto = new MimeBodyPart();
+                    texto.setText("Orden de compra no "+index);
+                    BodyPart adjunto = new MimeBodyPart();
+                    adjunto.setDataHandler(new DataHandler(new FileDataSource(s+"\\ODC\\ODC-"+index+".pdf")));
+                    adjunto.setFileName("ODC.pdf");
+
+                    MimeMultipart multiParte = new MimeMultipart();
+                    multiParte.addBodyPart(texto);
+                    multiParte.addBodyPart(adjunto);
+
+                    System.out.println("aqui 2 ");
+                    MimeMessage message = new MimeMessage(session);
+
+                    message.setFrom(new InternetAddress("jams45072@gmail.com"));
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.correo));
+
+                    message.setSubject("Prueba shida");
+                    message.setContent(multiParte);
+
+                    Transport t = session.getTransport("smtp");
+                    t.connect("jams45072@gmail.com","jams45072ande5000");
+                    t.sendMessage(message,message.getAllRecipients());
+                    t.close();
                 }
                 
                 this.tabla.setRowCount(0);

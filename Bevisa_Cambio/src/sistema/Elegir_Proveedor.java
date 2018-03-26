@@ -279,6 +279,7 @@ public class Elegir_Proveedor extends javax.swing.JFrame {
             if(this.opc==1){
             this.mov.idproveedor=Integer.parseInt(this.txtid.getText());
             this.mov.nombreproveedor=this.txtnombre.getText();
+            this.mov.correo=this.txtcorreo.getText();
             this.mov.colocarproveedor();
             }
             else

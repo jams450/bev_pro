@@ -648,9 +648,8 @@ public class Ventas extends javax.swing.JFrame {
                        categoria.put("ID_Venta", mx);
                        reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
                        JasperPrint jprint = JasperFillManager.fillReport(path, categoria,this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
-                       File d = new File(s+"\\Tickets");
-                       File pdf = File.createTempFile("Venta-"+mx+"--", ".pdf",d);
-                       JasperExportManager.exportReportToPdfStream(jprint, new FileOutputStream(pdf));
+                       JasperExportManager.exportReportToPdfFile(jprint, s+"\\Tickets\\Venta-"+mx+".pdf");
+
                        
                        if (this.cbconcepto.getSelectedIndex()==1)
                        {
