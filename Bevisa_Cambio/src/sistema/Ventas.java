@@ -8,6 +8,7 @@ package sistema;
 import datos.DBcontrolador;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Path;
@@ -22,13 +23,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.HashPrintServiceAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.PrintServiceAttributeSet;
+import javax.print.attribute.standard.Copies;
+import javax.print.attribute.standard.PrinterName;
 import javax.swing.JOptionPane;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.JRPrintServiceExporter;
+import net.sf.jasperreports.engine.export.JRPrintServiceExporterParameter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -71,6 +81,9 @@ public class Ventas extends javax.swing.JFrame {
     public Ventas(Menu_Principal mp ,DBcontrolador dbc) throws SQLException {
         this.mp=mp;
         this.dbc = dbc;
+        if (this.dbc.getCnx()==null) {
+                this.dbc.conex();
+        }
         initComponents();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
@@ -144,6 +157,11 @@ public class Ventas extends javax.swing.JFrame {
         jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 10, -1, 39));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnelegirclienteKeyPressed(evt);
+            }
+        });
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -166,6 +184,11 @@ public class Ventas extends javax.swing.JFrame {
         jLabel6.setText("Nombre Cliente :");
         jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 139, -1, -1));
 
+        cbconcepto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnelegirclienteKeyPressed(evt);
+            }
+        });
         jPanel2.add(cbconcepto, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 10, 200, -1));
 
         txtnombrevendedor.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -192,10 +215,15 @@ public class Ventas extends javax.swing.JFrame {
         txtfecha.setEnabled(false);
         jPanel2.add(txtfecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 20, 155, -1));
 
-        btnvendedor.setText("Elegir");
+        btnvendedor.setText("Elegir [F8]");
         btnvendedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnvendedorActionPerformed(evt);
+            }
+        });
+        btnvendedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnelegirclienteKeyPressed(evt);
             }
         });
         jPanel2.add(btnvendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 40, 100, -1));
@@ -227,6 +255,11 @@ public class Ventas extends javax.swing.JFrame {
         tbventas.setCellSelectionEnabled(true);
         tbventas.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tbventas.getTableHeader().setReorderingAllowed(false);
+        tbventas.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnelegirclienteKeyPressed(evt);
+            }
+        });
         jScrollPane4.setViewportView(tbventas);
         tbventas.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         if (tbventas.getColumnModel().getColumnCount() > 0) {
@@ -242,11 +275,16 @@ public class Ventas extends javax.swing.JFrame {
 
         jPanel2.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 185, 1150, 250));
 
-        btnagregar.setText("Agregar Producto");
+        btnagregar.setText("Agregar Producto  F[10]");
         btnagregar.setEnabled(false);
         btnagregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnagregarActionPerformed(evt);
+            }
+        });
+        btnagregar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnelegirclienteKeyPressed(evt);
             }
         });
         jPanel2.add(btnagregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 450, 223, -1));
@@ -258,6 +296,11 @@ public class Ventas extends javax.swing.JFrame {
                 btnquitarActionPerformed(evt);
             }
         });
+        btnquitar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnelegirclienteKeyPressed(evt);
+            }
+        });
         jPanel2.add(btnquitar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 450, 223, -1));
 
         btnaceptar.setText("Aceptar");
@@ -265,6 +308,11 @@ public class Ventas extends javax.swing.JFrame {
         btnaceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnaceptarActionPerformed(evt);
+            }
+        });
+        btnaceptar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnelegirclienteKeyPressed(evt);
             }
         });
         jPanel2.add(btnaceptar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 460, 107, 20));
@@ -301,10 +349,15 @@ public class Ventas extends javax.swing.JFrame {
         txtidvendedor.setEnabled(false);
         jPanel2.add(txtidvendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 45, 140, -1));
 
-        btnelegircliente.setText("Elegir");
+        btnelegircliente.setText("Elegir [F9]");
         btnelegircliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnelegirclienteActionPerformed(evt);
+            }
+        });
+        btnelegircliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnelegirclienteKeyPressed(evt);
             }
         });
         jPanel2.add(btnelegircliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 105, 100, -1));
@@ -344,6 +397,7 @@ public class Ventas extends javax.swing.JFrame {
         this.txtidcliente.setText(c[0]);
         this.txtnombrecliente.setText(c[1]);
         
+        this.txtfecha.setEnabled(true);
         this.btnagregar.setEnabled(true);
         this.btnquitar.setEnabled(true);
         this.txtfecha.setEnabled(true);
@@ -370,7 +424,7 @@ public class Ventas extends javax.swing.JFrame {
         }
 
         v[7]=(ptotal-des)+"";
-        v[8]=c[5]+"";
+        v[8]=Double.parseDouble(c[5])*Double.parseDouble(c[4])+"";
         this.ventas.addRow(v);
         this.importe+=ptotal-des;
         this.total=importe+this.iva;
@@ -597,9 +651,31 @@ public class Ventas extends javax.swing.JFrame {
                        File d = new File(s+"\\Tickets");
                        File pdf = File.createTempFile("Venta-"+mx+"--", ".pdf",d);
                        JasperExportManager.exportReportToPdfStream(jprint, new FileOutputStream(pdf));
+                       
+                       if (this.cbconcepto.getSelectedIndex()==1)
+                       {
+                           for (int i = 0; i < 2; i++) {
+                                PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
+
+                                printRequestAttributeSet.add(new Copies(1));
+                                PrinterName printerName = new PrinterName("EPSON TM-T88V Receipt", null); //gets printer 
+                                PrintServiceAttributeSet printServiceAttributeSet = new HashPrintServiceAttributeSet();
+                                printServiceAttributeSet.add(printerName);
+                                JRPrintServiceExporter exporter = new JRPrintServiceExporter();
+                                exporter.setParameter(JRExporterParameter.JASPER_PRINT, jprint);
+                                exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, printRequestAttributeSet);
+                                exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, printServiceAttributeSet);
+                                exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, Boolean.FALSE);
+                                exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
+                                exporter.exportReport();
+                               }              
+                       }
+
                        JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
                        viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
                        viewer.setVisible(true); //Inicializamos la vista del Reporte
+                        
+                        
                        
                    } catch (Exception ex) {
                        Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
@@ -638,6 +714,46 @@ public class Ventas extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnaceptarActionPerformed
 
+    private void btnelegirclienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnelegirclienteKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_F10) {
+            try{
+                if (this.btnagregar.isEnabled()) {
+                    this.mp.setVisible(false);
+                    Elegir_ProductoV cv = new Elegir_ProductoV(this,this.dbc);
+                    cv.setVisible(true);
+                }
+                
+            }
+            catch(Exception ex)
+            {
+
+            }
+         }
+        if(evt.getKeyCode() == KeyEvent.VK_F9) {
+            try{
+            this.setEnabled(false);
+            Elegir_CV cv = new Elegir_CV(this,2,this.dbc);
+            cv.setVisible(true);
+            }
+            catch(Exception ex)
+            {
+
+            }
+         }
+        if(evt.getKeyCode() == KeyEvent.VK_F8) {
+            try{        
+        
+            Elegir_CV cv = new Elegir_CV(this,1,this.dbc);
+            cv.setVisible(true);
+            }
+            catch(Exception ex)
+            {
+
+            }
+         }
+
+    }//GEN-LAST:event_btnelegirclienteKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -663,6 +779,7 @@ public class Ventas extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

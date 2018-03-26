@@ -44,7 +44,7 @@ public class Menu_Principal extends javax.swing.JFrame {
             initComponents();
             this.user=user;
             this.con=con;
-
+            this.dbc = new DBcontrolador();
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);  
 
@@ -538,7 +538,7 @@ public class Menu_Principal extends javax.swing.JFrame {
 
     private void jpreportesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpreportesMouseClicked
         try {
-            reportes re = new reportes(this, this.dbc);
+            reportes re = new reportes(this, this.dbc );
             re.setVisible(true);
             this.setVisible(false);
         } catch (Exception ex) {

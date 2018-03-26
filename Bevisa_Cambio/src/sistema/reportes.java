@@ -67,6 +67,9 @@ public class reportes extends javax.swing.JFrame {
         initComponents();
         try {
             this.dbc = dbc;
+            if (this.dbc.getCnx()==null) {
+                this.dbc.conex();
+            }
             this.mp=mp;
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
@@ -155,6 +158,13 @@ public class reportes extends javax.swing.JFrame {
         jLabel33 = new javax.swing.JLabel();
         jLabel54 = new javax.swing.JLabel();
         cbtipoinventario = new javax.swing.JComboBox<>();
+        inventarioda = new javax.swing.JPanel();
+        jLabel70 = new javax.swing.JLabel();
+        jLabel72 = new javax.swing.JLabel();
+        jLabel73 = new javax.swing.JLabel();
+        inventariodm = new javax.swing.JPanel();
+        jLabel74 = new javax.swing.JLabel();
+        jLabel75 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel34 = new javax.swing.JLabel();
         produccionano = new javax.swing.JPanel();
@@ -211,6 +221,8 @@ public class reportes extends javax.swing.JFrame {
         dventa = new javax.swing.JPanel();
         jLabel68 = new javax.swing.JLabel();
         jLabel69 = new javax.swing.JLabel();
+        cbtipoventa1 = new javax.swing.JComboBox<>();
+        jLabel71 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         vendedorestodos = new javax.swing.JPanel();
@@ -528,7 +540,7 @@ public class reportes extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        Inventario.add(inventarioea, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 90, 120, 90));
+        Inventario.add(inventarioea, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 40, 120, 90));
 
         inventarioem.setBackground(new java.awt.Color(240, 200, 115));
         inventarioem.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -569,7 +581,7 @@ public class reportes extends javax.swing.JFrame {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        Inventario.add(inventarioem, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 90, 130, 90));
+        Inventario.add(inventarioem, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 40, 130, 90));
 
         jLabel26.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel26.setText("No. Mes");
@@ -577,11 +589,11 @@ public class reportes extends javax.swing.JFrame {
 
         jLabel28.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         jLabel28.setText("Entradas");
-        Inventario.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 20, -1, 39));
+        Inventario.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 0, -1, 39));
 
         jLabel29.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         jLabel29.setText("Final");
-        Inventario.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 220, -1, 39));
+        Inventario.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 140, -1, 39));
         Inventario.add(txtanoinven, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 190, 120, -1));
         Inventario.add(txtmesinven, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, 120, -1));
 
@@ -624,7 +636,7 @@ public class reportes extends javax.swing.JFrame {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        Inventario.add(inventariofm, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 290, 130, 90));
+        Inventario.add(inventariofm, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 180, 130, 90));
 
         inventariofa.setBackground(new java.awt.Color(240, 200, 115));
         inventariofa.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -668,7 +680,7 @@ public class reportes extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        Inventario.add(inventariofa, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 290, 120, 90));
+        Inventario.add(inventariofa, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 180, 120, 90));
 
         jLabel54.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel54.setText("Año");
@@ -676,6 +688,95 @@ public class reportes extends javax.swing.JFrame {
 
         cbtipoinventario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M. Prima", "P. Final" }));
         Inventario.add(cbtipoinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 120, -1));
+
+        inventarioda.setBackground(new java.awt.Color(240, 200, 115));
+        inventarioda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inventariodaMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                inventariodaMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                inventariodaMouseExited(evt);
+            }
+        });
+
+        jLabel70.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/vendedor.png"))); // NOI18N
+
+        jLabel72.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel72.setForeground(new java.awt.Color(162, 127, 51));
+        jLabel72.setText("Año");
+
+        javax.swing.GroupLayout inventariodaLayout = new javax.swing.GroupLayout(inventarioda);
+        inventarioda.setLayout(inventariodaLayout);
+        inventariodaLayout.setHorizontalGroup(
+            inventariodaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inventariodaLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(inventariodaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel70)
+                    .addGroup(inventariodaLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel72)))
+                .addContainerGap(40, Short.MAX_VALUE))
+        );
+        inventariodaLayout.setVerticalGroup(
+            inventariodaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inventariodaLayout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addComponent(jLabel70)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel72)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        Inventario.add(inventarioda, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 320, 120, 90));
+
+        jLabel73.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        jLabel73.setText("Dinero (Final)");
+        Inventario.add(jLabel73, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 280, -1, 39));
+
+        inventariodm.setBackground(new java.awt.Color(240, 200, 115));
+        inventariodm.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inventariodmMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                inventariodmMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                inventariodmMouseExited(evt);
+            }
+        });
+
+        jLabel74.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/mexico.png"))); // NOI18N
+
+        jLabel75.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel75.setForeground(new java.awt.Color(162, 127, 51));
+        jLabel75.setText("Mes");
+
+        javax.swing.GroupLayout inventariodmLayout = new javax.swing.GroupLayout(inventariodm);
+        inventariodm.setLayout(inventariodmLayout);
+        inventariodmLayout.setHorizontalGroup(
+            inventariodmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inventariodmLayout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addGroup(inventariodmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel74)
+                    .addComponent(jLabel75))
+                .addContainerGap(42, Short.MAX_VALUE))
+        );
+        inventariodmLayout.setVerticalGroup(
+            inventariodmLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(inventariodmLayout.createSequentialGroup()
+                .addComponent(jLabel74)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel75)
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+
+        Inventario.add(inventariodm, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 320, 130, 90));
 
         jTabbedPane2.addTab("Inventario", Inventario);
 
@@ -1114,12 +1215,12 @@ public class reportes extends javax.swing.JFrame {
 
         jLabel66.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel66.setText("Año");
-        jPanel9.add(jLabel66, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 80, -1, -1));
-        jPanel9.add(txtanodv, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 110, 120, -1));
+        jPanel9.add(jLabel66, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 140, -1, -1));
+        jPanel9.add(txtanodv, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 160, 120, -1));
 
         jLabel67.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel67.setText("No. Mes");
-        jPanel9.add(jLabel67, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 170, -1, -1));
+        jPanel9.add(jLabel67, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 190, -1, -1));
         jPanel9.add(txtmesdv, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 210, 120, -1));
 
         dventa.setBackground(new java.awt.Color(240, 200, 115));
@@ -1166,6 +1267,13 @@ public class reportes extends javax.swing.JFrame {
         );
 
         jPanel9.add(dventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 250, 120, 90));
+
+        cbtipoventa1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Industrial", "Galeria", "Otro" }));
+        jPanel9.add(cbtipoventa1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 100, 120, -1));
+
+        jLabel71.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel71.setText("Tipo");
+        jPanel9.add(jLabel71, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 70, -1, -1));
 
         jTabbedPane2.addTab("Ventas Semanales", jPanel9);
 
@@ -1495,13 +1603,13 @@ public class reportes extends javax.swing.JFrame {
             switch(this.cbtipoventa.getSelectedIndex())
             {
                 case 0:
-                    c.put("ca", "1");
+                    c.put("tipo", "1");
                     break;
                 case 1:
-                    c.put("ca", "2");
+                    c.put("tipo", "2");
                     break;
                 case 2:
-                    c.put("ca", "3");
+                    c.put("tipo", "3");
                     break;
             }
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
@@ -1538,13 +1646,13 @@ public class reportes extends javax.swing.JFrame {
             switch(this.cbtipoventa.getSelectedIndex())
             {
                 case 0:
-                    c.put("ca", "1");
+                    c.put("tipo", "1");
                     break;
                 case 1:
-                    c.put("ca", "2");
+                    c.put("tipo", "2");
                     break;
                 case 2:
-                    c.put("ca", "3");
+                    c.put("tipo", "3");
                     break;
             }
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
@@ -2077,10 +2185,20 @@ public class reportes extends javax.swing.JFrame {
         String path = s+"Ventas_Salida.jasper";
         try {
             Map c = new HashMap();
-            c.put("ano", this.txtodp.getText());
-            c.put("mes", this.txtodp.getText());
-
-
+            c.put("mes", this.txtmesdv.getText());
+            c.put("ano", this.txtanodv.getText());
+             switch(this.cbtipoventa1.getSelectedIndex())
+            {
+                case 0:
+                    c.put("tipo", "1");
+                    break;
+                case 1:
+                    c.put("tipo", "2");
+                    break;
+                case 2:
+                    c.put("tipo", "3");
+                    break;
+            }
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
             JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
@@ -2103,6 +2221,91 @@ public class reportes extends javax.swing.JFrame {
     private void dventaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dventaMouseExited
         resetcolor(this.dventa);
     }//GEN-LAST:event_dventaMouseExited
+
+    private void inventariodaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inventariodaMouseClicked
+        JasperReport reporte; //Creo el objeto reporte
+        // Ubicacion del Reporte
+        String path = s+"InventarioFinalD_ano.jasper";
+        try {
+            reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
+            Map c = new HashMap();
+            c.put("ano", this.txtanoinven.getText());
+             switch(this.cbtipoinventario.getSelectedIndex())
+            {
+                case 0:
+                    c.put("ca1", "1");
+                    c.put("ca2", "3");
+                    break;
+                case 1:
+                    c.put("ca1", "2");
+                    c.put("ca2", "4");
+                    break;
+            }
+            JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+            JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
+            viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
+            viewer.setVisible(true); //Inicializamos la vista del Reporte
+        } catch (Exception ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error en los valores de entrada");
+            try {
+                this.dbc = new DBcontrolador ();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+    }//GEN-LAST:event_inventariodaMouseClicked
+
+    private void inventariodaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inventariodaMouseEntered
+        this.camcolor(this.inventarioda);
+    }//GEN-LAST:event_inventariodaMouseEntered
+
+    private void inventariodaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inventariodaMouseExited
+        this.resetcolor(this.inventarioda);
+    }//GEN-LAST:event_inventariodaMouseExited
+
+    private void inventariodmMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inventariodmMouseClicked
+        JasperReport reporte; //Creo el objeto reporte
+        // Ubicacion del Reporte
+        String path = s+"InventarioFinalD_Meses.jasper";
+        try {
+            reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
+            Map c = new HashMap();
+            c.put("mes", this.txtmesinven.getText());
+            c.put("ano", this.txtanoinven.getText());
+             switch(this.cbtipoinventario.getSelectedIndex())
+            {
+                case 0:
+                    c.put("ca1", "1");
+                    c.put("ca2", "3");
+                    break;
+                case 1:
+                    c.put("ca1", "2");
+                    c.put("ca2", "4");
+                    break;
+            }
+            JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+            JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
+            viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
+            viewer.setVisible(true); //Inicializamos la vista del Reporte
+        } catch (Exception ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error en los valores de entrada");
+            try {
+                this.dbc = new DBcontrolador ();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+    }//GEN-LAST:event_inventariodmMouseClicked
+
+    private void inventariodmMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inventariodmMouseEntered
+        this.camcolor(this.inventariodm);
+    }//GEN-LAST:event_inventariodmMouseEntered
+
+    private void inventariodmMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inventariodmMouseExited
+        this.resetcolor(this.inventarioda);
+    }//GEN-LAST:event_inventariodmMouseExited
 
     /**
      * @param args the command line arguments
@@ -2130,6 +2333,9 @@ public class reportes extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(reportes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -2146,9 +2352,12 @@ public class reportes extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbdele;
     private javax.swing.JComboBox<String> cbtipoinventario;
     private javax.swing.JComboBox<String> cbtipoventa;
+    private javax.swing.JComboBox<String> cbtipoventa1;
     private javax.swing.JPanel clientes;
     private javax.swing.JPanel dventa;
     private javax.swing.JPanel ingredientes;
+    private javax.swing.JPanel inventarioda;
+    private javax.swing.JPanel inventariodm;
     private javax.swing.JPanel inventarioea;
     private javax.swing.JPanel inventarioem;
     private javax.swing.JPanel inventariofa;
@@ -2219,6 +2428,12 @@ public class reportes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel68;
     private javax.swing.JLabel jLabel69;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel70;
+    private javax.swing.JLabel jLabel71;
+    private javax.swing.JLabel jLabel72;
+    private javax.swing.JLabel jLabel73;
+    private javax.swing.JLabel jLabel74;
+    private javax.swing.JLabel jLabel75;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
