@@ -1701,7 +1701,7 @@ public class Movimientos extends javax.swing.JFrame {
 
                     message.setSubject("Orden de Compra");
                     message.setContent(multiParte);
-
+                    //t.connect("bevisagaleria@gmail.com","bevisairlandesa");
                     Transport t = session.getTransport("smtp");
                     t.connect("bevisagaleria@gmail.com","bevisairlandesa");
                     t.sendMessage(message,message.getAllRecipients());

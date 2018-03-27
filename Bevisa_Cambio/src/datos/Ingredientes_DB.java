@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import negocio.Ingrediente;
 import negocio.Producto;
 
@@ -19,14 +20,14 @@ public class Ingredientes_DB {
     private final String SELECT_PRO_MA=
             "select productos.id ,  productos.Clave, productos.Nombre, umedida.nombre from productos join umedida on productos.idmedida= umedida.id  where idcategoria = 1 or idcategoria = 3; ";
     private final String INSERT_ING=
-            "Insert into ingredientes(idproductofinal,idproducto,cantidad) values (?,?,?)";
+            "Insert into ingredientes(idproductofinal,idproducto,cantidad) values (?,?,?);";
     
     private final String SELECT_ING=
             "select productos.id ,productos.Clave, productos.Nombre,umedida.Nombre, ingredientes.cantidad from ingredientes join productos on productos.id = ingredientes.idproducto "
-            + "join umedida on productos.idmedida= umedida.id where ingredientes.idproductofinal = ? ";
+            + " join umedida on productos.idmedida= umedida.id where ingredientes.idproductofinal = ? ;";
     
     private final String DELETE_ING=
-            "Delete from ingredientes where idproductofinal = ? and idproducto = ?";
+            "Delete from ingredientes where idproductofinal = ? and idproducto = ?;";
        
     public Ingredientes_DB(Connection userConn) {
         this.userConn = userConn;
@@ -102,7 +103,6 @@ public class Ingredientes_DB {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Ingrediente ingre = null;
         List<Ingrediente> ingres = new ArrayList<>();
         try {
             conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
@@ -115,13 +115,14 @@ public class Ingredientes_DB {
                 String nombre = rs.getString(3);
                 String medida = rs.getString(4);
                 Double cantidad=rs.getDouble(5);
-                ingre = new Ingrediente();
+                Ingrediente ingre = new Ingrediente();
                 ingre.setId(id);
                 ingre.setClave(clave);
                 ingre.setNombre(nombre);
                 ingre.setMedida(medida);
                 ingre.setCantidad(cantidad);
-                ingres.add(ingre);      
+                ingres.add(ingre);     
+                
             }
             return ingres;
         } finally {
@@ -134,7 +135,7 @@ public class Ingredientes_DB {
         
     }
     
-    public int insert_ingrediente(Ingrediente ingre) throws SQLException 
+    public void insert_ingrediente(Ingrediente ingre) throws SQLException 
     {
         Connection conn = null;
         PreparedStatement stmt = null;		
@@ -144,21 +145,25 @@ public class Ingredientes_DB {
             conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
             stmt = conn.prepareStatement(this.INSERT_ING);
             int index = 1;//contador de columnas
-            
+            System.out.println(ingre.getId_profinal()+" "+ingre.getId());
             stmt.setInt(index++, ingre.getId_profinal());
             stmt.setInt(index++, ingre.getId());
             stmt.setDouble(index++, ingre.getCantidad());
-
-
-            rows = stmt.executeUpdate();
-        } finally {
+            stmt.executeUpdate();
+            System.out.println("todo bien");
+        } 
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+        finally {
             Conexion.close(stmt);
             //Unicamente cerramos la conexión si fue creada en este metodo
             if (this.userConn == null) {
                 Conexion.close(conn);
             }
         }
-        return rows;
+        
     }
     
     public int delete_ingrediente(Ingrediente ingre) throws SQLException 

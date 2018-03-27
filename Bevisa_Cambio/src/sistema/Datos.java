@@ -499,14 +499,14 @@ public class Datos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Clave", "Nombre", "Categoria", "U. Medida", "P. Venta", "Stock min", "IVA", "Proceso", "Caducidad"
+                "ID", "Clave", "Nombre", "Categoria", "U. Medida", "P. Venta", "Stock min", "IVA", "Proceso", "Caducidad", "Peso"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -824,9 +824,16 @@ public class Datos extends javax.swing.JFrame {
                 "ID", "Clave", "Nombre", "U. Medida", "Cantidad"
             }
         ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
+            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
             };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -1022,6 +1029,7 @@ public class Datos extends javax.swing.JFrame {
             }
         });
         tbinventario.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tbinventario.setColumnSelectionAllowed(true);
         tbinventario.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tbinventario.setShowHorizontalLines(false);
         tbinventario.setShowVerticalLines(false);
@@ -1994,10 +2002,11 @@ public class Datos extends javax.swing.JFrame {
         try{
             
             this.tabla_productos=(DefaultTableModel) this.tbproductos.getModel();
+            this.tabla_productos.setRowCount(0);
             Productos_DB pro = new Productos_DB(this.con);
             List <Producto> productos = pro.select();
             for (int i = 0; i < productos.size(); i++) {
-                Object[] obj = new Object[10];
+                Object[] obj = new Object[11];
                 obj[0]=productos.get(i).getId();
                 obj[1]=productos.get(i).getClave();
                 obj[2]=productos.get(i).getNombre();
@@ -2008,6 +2017,7 @@ public class Datos extends javax.swing.JFrame {
                 obj[7]=productos.get(i).getIva();
                 obj[8]=productos.get(i).getProceso();
                 obj[9]=productos.get(i).getMeses_caducidad();
+                obj[10]=productos.get(i).getPeso();
                 this.tabla_productos.addRow(obj);
             }
         }
@@ -2043,6 +2053,7 @@ public class Datos extends javax.swing.JFrame {
            this.txtnombreproducto.setEnabled(true);
            this.txtpventaproducto.setEnabled(true);
            this.txtsminproducto.setEnabled(true);
+           this.txtpeso_producto.setEnabled(true);
            this.cbcategoriaproducto.setEnabled(true);
            this.cbmedidaproducto.setEnabled(true);
            this.cbprocesoproducto.setEnabled(true);
@@ -2069,7 +2080,7 @@ public class Datos extends javax.swing.JFrame {
            this.cbcategoriaproducto.setEnabled(false);
            this.cbmedidaproducto.setEnabled(false);
            this.cbprocesoproducto.setEnabled(false);
-           
+           this.txtpeso_producto.setEnabled(false);
            this.btnAgregar_producto.setEnabled(true);
            this.btnCambiar_producto.setEnabled(false);
            this.btnCancelar_producto.setEnabled(false);
@@ -2087,70 +2098,6 @@ public class Datos extends javax.swing.JFrame {
        }
     }
     
-    public void insertar_producto()
-    {
-        try{
-            if (this.con.isClosed() || this.con.isReadOnly()) {
-                this.con.close();
-                this.con=Conexion.getConnection();
-            }
-            Productos_DB pro = new Productos_DB(this.con);
-            if(this.seleccionproducto==1)
-            {
-                Producto producto = new Producto();
-                producto.setNombre(this.txtnombreproducto.getText());
-                producto.setClave(this.txtclaveproducto.getText());
-                producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
-                producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
-                producto.setMeses_caducidad(Integer.parseInt(this.txtcaducidadproducto.getText()));
-                if (this.chivaproducto.isSelected()) {
-                    producto.setIva(1);
-                }
-                else
-                {
-                    producto.setIva(0);
-                }
-                producto.setPeso(Double.parseDouble(this.txtpeso_producto.getText()));
-                pro.insert(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
-                this.tablaproductos();
-            }
-            if(this.seleccionproducto==2)
-            {
-                Producto producto = new Producto();              
-                producto.setId(Integer.parseInt(this.txtidproducto.getText()));
-                producto.setNombre(this.txtnombreproducto.getText());
-                producto.setClave(this.txtclaveproducto.getText());
-                producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
-                producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
-                producto.setMeses_caducidad(Integer.parseInt(this.txtcaducidadproducto.getText()));
-                if (this.chivaproducto.isSelected()) {
-                    producto.setIva(1);
-                }
-                else
-                {
-                    producto.setIva(0);
-                }
-                producto.setPeso(Double.parseDouble(this.txtpeso_producto.getText()));
-                pro.update(producto, this.cbmedidaproducto.getSelectedIndex()+1,this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);                          
-                this.tablaproductos();
-            }
-            this.seleccionproducto=0;
-            deshabilitar();
-        }
-        catch(SQLException ex)
-        {
-            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
-             try {
-                this.con=Conexion.getConnection();
-            } catch (SQLException ex1) {
-                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-        }
-        catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error :"+ex);
-        } 
-        
-    }
 
     private void btnCancelar_productoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelar_productoActionPerformed
         deshabilitar();
@@ -2173,7 +2120,34 @@ public class Datos extends javax.swing.JFrame {
                     else
                     {
                         if (this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
-                            insertar_producto();
+                            
+                            if(this.seleccionproducto==1)
+                            {
+                                Productos_DB p = new Productos_DB(this.con);
+                                Producto pro = new Producto();
+                                pro.setNombre(this.txtnombreproducto.getText());
+                                pro.setClave(this.txtclaveproducto.getText());
+                                int cate=this.cbcategoriaproducto.getSelectedIndex()+1;
+                                int medida=this.cbmedidaproducto.getSelectedIndex()+1;
+                                pro.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
+                                p.insert_mp(pro, medida, cate);
+                                tablaproductos();
+                            }
+                            if(this.seleccionproducto==2)
+                            {
+                                Productos_DB p = new Productos_DB(this.con);
+                                Producto pro = new Producto();
+                                pro.setNombre(this.txtnombreproducto.getText());
+                                pro.setClave(this.txtclaveproducto.getText());
+                                int cate=this.cbcategoriaproducto.getSelectedIndex()+1;
+                                int medida=this.cbmedidaproducto.getSelectedIndex()+1;
+                                pro.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
+                                pro.setId(Integer.parseInt(this.txtidproducto.getText()));
+                                p.update_mp(pro, medida, cate);
+                                tablaproductos();
+                            }
+                            this.seleccionproducto=0;
+                            deshabilitar();
                         }
                         else
                         {
@@ -2190,7 +2164,44 @@ public class Datos extends javax.swing.JFrame {
                 else
                 {
                     if (this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtcaducidadproducto.getText().matches("^[0-9]+$")) {
-                        insertar_producto();
+                        Productos_DB pro = new Productos_DB(this.con);
+                        if(this.seleccionproducto==1)
+                        {
+                            Producto producto = new Producto();
+                            producto.setNombre(this.txtnombreproducto.getText());
+                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
+                            producto.setMeses_caducidad(Integer.parseInt(this.txtcaducidadproducto.getText()));
+                            if (this.chivaproducto.isSelected()) {
+                                producto.setIva(1);
+                            }
+                            else
+                            {
+                                producto.setIva(0);
+                            }
+                            pro.insert_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                            this.tablaproductos();
+                        }
+                        if(this.seleccionproducto==2)
+                        {
+                            Producto producto = new Producto();
+                            producto.setNombre(this.txtnombreproducto.getText());
+                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
+                            producto.setMeses_caducidad(Integer.parseInt(this.txtcaducidadproducto.getText()));
+                            if (this.chivaproducto.isSelected()) {
+                                producto.setIva(1);
+                            }
+                            else
+                            {
+                                producto.setIva(0);
+                            }
+                            producto.setId(Integer.parseInt(this.txtidproducto.getText()));
+                            pro.insert_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                            this.tablaproductos();
+                        }
+                        this.seleccionproducto=0;
+                        deshabilitar();
                     }
                     else
                     {
@@ -2198,7 +2209,7 @@ public class Datos extends javax.swing.JFrame {
                     }
                 }
                 break;
-
+                //Empaque
                 case 3:
                 if (this.txtclaveproducto.getText().isEmpty() || this.txtnombreproducto.getText().isEmpty() || this.txtsminproducto.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
@@ -2206,7 +2217,30 @@ public class Datos extends javax.swing.JFrame {
                 else
                 {
                     if (this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") ) {
-                        insertar_producto();
+                        Productos_DB pro = new Productos_DB(this.con);
+                        if(this.seleccionproducto==1)
+                        {
+                            Producto producto = new Producto();
+                            producto.setNombre(this.txtnombreproducto.getText());
+                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setPeso(Double.parseDouble(this.txtpeso_producto.getText()));
+                            producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
+                            pro.insert_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1);
+                            this.tablaproductos();
+                        }
+                        if(this.seleccionproducto==2)
+                        {
+                            Producto producto = new Producto();
+                            producto.setNombre(this.txtnombreproducto.getText());
+                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setPeso(Double.parseDouble(this.txtpeso_producto.getText()));
+                            producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
+                            producto.setId(Integer.parseInt(this.txtidproducto.getText()));
+                            pro.insert_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1);
+                            this.tablaproductos();
+                        }
+                        this.seleccionproducto=0;
+                        deshabilitar();
                     }
                     else
                     {
@@ -2223,7 +2257,45 @@ public class Datos extends javax.swing.JFrame {
                 else
                 {
                     if (this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtcaducidadproducto.getText().matches("^[0-9]+$")) {
-                        insertar_producto();
+                        Productos_DB pro = new Productos_DB(this.con);
+                        if(this.seleccionproducto==1)
+                        {
+                            Producto producto = new Producto();
+                            producto.setNombre(this.txtnombreproducto.getText());
+                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
+                            producto.setMeses_caducidad(Integer.parseInt(this.txtcaducidadproducto.getText()));
+                            if (this.chivaproducto.isSelected()) {
+                                producto.setIva(1);
+                            }
+                            else
+                            {
+                                producto.setIva(0);
+                            }
+                            producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
+                            pro.insert_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                            this.tablaproductos();
+                        }
+                        if(this.seleccionproducto==2)
+                        {
+                            Producto producto = new Producto();
+                            producto.setNombre(this.txtnombreproducto.getText());
+                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
+                            producto.setMeses_caducidad(Integer.parseInt(this.txtcaducidadproducto.getText()));
+                            if (this.chivaproducto.isSelected()) {
+                                producto.setIva(1);
+                            }
+                            else
+                            {
+                                producto.setIva(0);
+                            }
+                            producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
+                            producto.setId(Integer.parseInt(this.txtidproducto.getText()));
+                            pro.insert_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                            this.tablaproductos();
+                            
+                        }
                     }
                     else
                     {
@@ -2232,14 +2304,22 @@ public class Datos extends javax.swing.JFrame {
                 }
                 break;
             }
-
+            this.con.commit();
             
 
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
-            JOptionPane.showMessageDialog(null, "Error :"+ ex);
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        } 
     }//GEN-LAST:event_btnGuardar_productoActionPerformed
 
     private void btnCambiar_productoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiar_productoActionPerformed
@@ -2354,7 +2434,7 @@ public class Datos extends javax.swing.JFrame {
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_productos);
         this.tbproductos.setRowSorter(tr);
 
-        tr.setRowFilter(RowFilter.regexFilter(this.txtbuscar_producto.getText().toUpperCase(),1));
+        tr.setRowFilter(RowFilter.regexFilter(this.txtbuscar_producto.getText().toUpperCase(),2));
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 
         int columnIndexToSort = 0;
@@ -2387,6 +2467,7 @@ public class Datos extends javax.swing.JFrame {
                 }
                 this.cbprocesoproducto.setSelectedItem(this.tbproductos.getValueAt(columna, 8).toString());
                 this.txtcaducidadproducto.setText(this.tbproductos.getValueAt(columna, 9).toString());
+                this.txtpeso_producto.setText(this.tbproductos.getValueAt(columna, 10).toString());
 
                 this.btnCambiar_producto.setEnabled(true);
             }
@@ -2399,9 +2480,6 @@ public class Datos extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tbproductosMouseClicked
 
-
-    
-    
      //inventario
     
      public void creaciontablainventario()
@@ -3343,9 +3421,10 @@ public class Datos extends javax.swing.JFrame {
             }
             
             if (ingre_exis) {
-
+                ing.setId_profinal(Integer.parseInt(this.txtidingrediente.getText()));
                 ingre.insert_ingrediente(ing);
                 actualizaringrediente();
+                this.con.commit();
             }
             else{
                 JOptionPane.showMessageDialog(null, "El ingrediente ya estaba seleccionado");
@@ -3378,7 +3457,7 @@ public class Datos extends javax.swing.JFrame {
         Ingredientes_DB ing = new Ingredientes_DB(this.con);
         
         List <Ingrediente> ingres = ing.select_ing(Integer.parseInt(this.txtidingrediente.getText()));
-            
+          
         for (int i = 0; i < ingres.size(); i++) {    
             Object[] obj = new Object[5];
             obj[0]=ingres.get(i).getId();
@@ -3421,6 +3500,7 @@ public class Datos extends javax.swing.JFrame {
             Ingredientes_DB ingre = new Ingredientes_DB(this.con);
             ingre.delete_ingrediente(ing);
             actualizaringrediente();
+            this.con.commit();
         }
         catch(SQLException ex)
         {
@@ -3573,6 +3653,7 @@ public class Datos extends javax.swing.JFrame {
 
                     pr.insert(prueba, cate);
                     actualizarprueba();
+                    this.con.commit();
                  }
                  else{
                      JOptionPane.showMessageDialog(null, "Algun campo incorrecto");
@@ -3593,11 +3674,7 @@ public class Datos extends javax.swing.JFrame {
         catch(Exception ex)
         {
             JOptionPane.showMessageDialog(null, "Error :"+ ex);
-            try {
-                this.con=Conexion.getConnection();
-            } catch (SQLException ex1) {
-                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            
             
         }
         
@@ -3613,6 +3690,7 @@ public class Datos extends javax.swing.JFrame {
 
             pr.delete(prueba);
             actualizarprueba();
+            this.con.commit();
         }
         catch(SQLException ex)
         {
@@ -3627,12 +3705,7 @@ public class Datos extends javax.swing.JFrame {
         catch(Exception ex)
         {
             JOptionPane.showMessageDialog(null, "Error :"+ ex);
-            try {
-                this.con=Conexion.getConnection();
-            } catch (SQLException ex1) {
-                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-            
+  
         }
     }//GEN-LAST:event_btnquitarpruebaActionPerformed
 

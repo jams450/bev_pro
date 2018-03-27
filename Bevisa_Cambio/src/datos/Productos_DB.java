@@ -20,30 +20,29 @@ public class Productos_DB {
             + "from productos join categoria on productos.idcategoria = categoria.id "
             + "join umedida on productos.idmedida= umedida.id join procesos on productos.idproceso = procesos.id;";
     
-    private final String INSERT =
-            "Insert into productos (clave,nombre,idcategoria,idmedida,pventa, smin,iva,idproceso,peso,mesescaducidad) values (?,?,?,?,?,?,?,?,?,?,?)";
+    private final String INSERT_MP=
+            "Insert into productos (clave,nombre,idcategoria,idmedida,smin) values (?,?,?,?,?);";
     
-    private final String UPDATE=
-            "Update productos set  clave = ?,nombre = ?,idcategoria = ?,idmedida = ?,pventa = ?, smin = ?,iva = ?,idproceso = ?,"
-            + "peso = ?,mesescaducidad = ? where id = ?";
+    private final String UPDATE_MP=
+            "Update productos set  clave = ?,nombre = ?,idcategoria = ?,idmedida = ?, smin = ?  where id = ?;";
     
     private final String INSERT_EM =
-            "Insert into productos (clave,nombre,idcategoria,idmedida, smin) values (?,?,?,?,?)";
+            "Insert into productos (clave,nombre,idcategoria,idmedida, smin,peso) values (?,?,?,?,?,?);";
     
     private final String UPDATE_EM=
-            "Update productos set  clave = ? ,nombre = ? , idmedida = ? ,smin = ? where id = ?";
+            "Update productos set  clave = ? ,nombre = ? , idmedida = ? ,smin = ?,peso = ? where id = ?;";
     
     private final String INSERT_PT =
-            "Insert into productos (clave,nombre,idcategoria,idmedida,pventa,iva,idproceso,mesescaducidad) values (?,?,?,?,?,?,?,?)";
+            "Insert into productos (clave,nombre,idcategoria,idmedida,pventa,iva,idproceso,mesescaducidad) values (?,?,?,?,?,?,?,?);";
     
     private final String UPDATE_PT=
-            "Update productos set nombre = ? , clave = ? ,  idmedida = ? ,pventa = ?, iva=?, mesescaducidad = ? where id = ?"; 
+            "Update productos set nombre = ? , clave = ? ,  idmedida = ? ,pventa = ?, iva=?, mesescaducidad = ? where id = ?;"; 
 
     private final String INSERT_GA =
-            "Insert into productos (clave,nombre,idcategoria,idmedida,pventa,mesescaducidad,idproceso, smin,iva) values (?,?,?,?,?,?,?,?,?)";
+            "Insert into productos (clave,nombre,idcategoria,idmedida,pventa,mesescaducidad,idproceso, smin,iva) values (?,?,?,?,?,?,?,?,?);";
     
     private final String UPDATE_GA =
-            "Update productos set nombre = ? , clave = ? ,   idcategoria = ? ,  idmedida = ?, smin = ? ,pventa = ?, iva=?, mesescaducidad=? where id = ? ";
+            "Update productos set nombre = ? , clave = ? ,   idcategoria = ? ,  idmedida = ?, smin = ? ,pventa = ?, iva=?, mesescaducidad=? where id = ? ;";
     
     
     
@@ -88,7 +87,7 @@ public class Productos_DB {
     }
     
     
-    public int insert(Producto pro,int medida,int cate,int proceso) throws SQLException 
+    public int insert_mp(Producto pro,int medida,int cate) throws SQLException 
     {
         Connection conn = null;
         PreparedStatement stmt = null;		
@@ -96,22 +95,14 @@ public class Productos_DB {
         try {
 
             conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
-            stmt = conn.prepareStatement(this.INSERT);
+            stmt = conn.prepareStatement(this.INSERT_MP);
             int index = 1;//contador de columnas
             
             stmt.setString(index++, pro.getClave());
             stmt.setString(index++, pro.getNombre());
             stmt.setInt(index++, cate);
             stmt.setInt(index++, medida);
-            stmt.setDouble(index++, pro.getPventa());
             stmt.setDouble(index++, pro.getStockmin());
-            stmt.setInt(index++, pro.getIva());
-            stmt.setInt(index++, proceso);
-            stmt.setDouble(index++, pro.getPeso());
-            stmt.setDouble(index++, pro.getStockmin());
-            stmt.setInt(index++, pro.getMeses_caducidad());
-            
-            
 
             rows = stmt.executeUpdate();
         } finally {
@@ -124,7 +115,7 @@ public class Productos_DB {
         return rows;
     }
     
-    public int update(Producto pro,int medida,int cate,int proceso) throws SQLException 
+    public int update_mp(Producto pro,int medida,int cate) throws SQLException 
     {
         Connection conn = null;
         PreparedStatement stmt = null;		
@@ -132,20 +123,14 @@ public class Productos_DB {
         try {
 
             conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
-            stmt = conn.prepareStatement(this.UPDATE);
+            stmt = conn.prepareStatement(this.UPDATE_MP);
             int index = 1;//contador de columnas
             
             stmt.setString(index++, pro.getClave());
             stmt.setString(index++, pro.getNombre());
             stmt.setInt(index++, cate);
             stmt.setInt(index++, medida);
-            stmt.setDouble(index++, pro.getPventa());
             stmt.setDouble(index++, pro.getStockmin());
-            stmt.setInt(index++, pro.getIva());
-            stmt.setInt(index++, proceso);
-            stmt.setDouble(index++, pro.getPeso());
-            stmt.setDouble(index++, pro.getStockmin());
-            stmt.setInt(index++, pro.getMeses_caducidad());
             stmt.setInt(index++, pro.getId());
 
             rows = stmt.executeUpdate();
