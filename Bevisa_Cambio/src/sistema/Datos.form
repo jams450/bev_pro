@@ -123,7 +123,7 @@
                     <Component class="javax.swing.JTable" name="tbproductos">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="11" rowCount="0">
+                          <Table columnCount="12" rowCount="0">
                             <Column editable="false" title="ID" type="java.lang.Integer"/>
                             <Column editable="false" title="Clave" type="java.lang.String"/>
                             <Column editable="false" title="Nombre" type="java.lang.String"/>
@@ -134,10 +134,12 @@
                             <Column editable="false" title="IVA" type="java.lang.String"/>
                             <Column editable="false" title="Proceso" type="java.lang.String"/>
                             <Column editable="false" title="Caducidad" type="java.lang.String"/>
-                            <Column editable="true" title="Peso" type="java.lang.Double"/>
+                            <Column editable="false" title="Peso" type="java.lang.Double"/>
+                            <Column editable="false" title="Moneda" type="java.lang.String"/>
                           </Table>
                         </Property>
                         <Property name="autoResizeMode" type="int" value="0"/>
+                        <Property name="cellSelectionEnabled" type="boolean" value="false"/>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                           <TableColumnModel selectionModel="2">
                             <Column maxWidth="-1" minWidth="-1" prefWidth="25" resizable="true">
@@ -195,11 +197,19 @@
                               <Editor/>
                               <Renderer/>
                             </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
                           </TableColumnModel>
                         </Property>
-                        <Property name="columnSelectionAllowed" type="boolean" value="true"/>
                         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
                           <Color id="Cursor Por defecto"/>
+                        </Property>
+                        <Property name="rowSelectionAllowed" type="boolean" value="true"/>
+                        <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+                          <JTableSelectionModel selectionMode="0"/>
                         </Property>
                         <Property name="showHorizontalLines" type="boolean" value="false"/>
                         <Property name="showVerticalLines" type="boolean" value="false"/>
@@ -296,35 +306,55 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="lblproceso" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblcaducidad" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblpventa" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblsmin" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel2" min="-2" pref="50" max="-2" attributes="0"/>
-                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblpeso" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lbliva" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="chivaproducto" min="-2" max="-2" attributes="0"/>
-                                  <Component id="txtidproducto" min="-2" pref="141" max="-2" attributes="0"/>
-                                  <Component id="txtclaveproducto" min="-2" pref="141" max="-2" attributes="0"/>
-                                  <Component id="cbcategoriaproducto" min="-2" pref="141" max="-2" attributes="0"/>
-                                  <Component id="txtbuscar_producto" min="-2" pref="235" max="-2" attributes="0"/>
-                                  <Component id="cbmedidaproducto" min="-2" pref="141" max="-2" attributes="0"/>
-                                  <Component id="txtsminproducto" min="-2" pref="141" max="-2" attributes="0"/>
-                                  <Component id="txtpventaproducto" min="-2" pref="141" max="-2" attributes="0"/>
-                                  <Component id="txtcaducidadproducto" min="-2" pref="141" max="-2" attributes="0"/>
-                                  <Component id="cbprocesoproducto" min="-2" pref="141" max="-2" attributes="0"/>
-                                  <Component id="txtnombreproducto" alignment="0" min="-2" pref="305" max="-2" attributes="0"/>
-                                  <Component id="txtpeso_producto" alignment="0" min="-2" pref="141" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="1" attributes="0">
+                                              <Component id="lbliva" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="318" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="1" attributes="0">
+                                              <Group type="103" groupAlignment="1" attributes="0">
+                                                  <Component id="lblproceso" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="lblcaducidad" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="lblpventa" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="lblsmin" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel2" min="-2" pref="50" max="-2" attributes="0"/>
+                                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="lblpeso" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="txtidproducto" min="-2" pref="141" max="-2" attributes="0"/>
+                                                  <Component id="txtclaveproducto" min="-2" pref="141" max="-2" attributes="0"/>
+                                                  <Component id="cbcategoriaproducto" min="-2" pref="141" max="-2" attributes="0"/>
+                                                  <Component id="txtbuscar_producto" min="-2" pref="235" max="-2" attributes="0"/>
+                                                  <Component id="cbmedidaproducto" min="-2" pref="141" max="-2" attributes="0"/>
+                                                  <Component id="txtsminproducto" min="-2" pref="141" max="-2" attributes="0"/>
+                                                  <Component id="txtpventaproducto" min="-2" pref="141" max="-2" attributes="0"/>
+                                                  <Component id="txtcaducidadproducto" min="-2" pref="141" max="-2" attributes="0"/>
+                                                  <Component id="cbprocesoproducto" min="-2" pref="141" max="-2" attributes="0"/>
+                                                  <Component id="txtnombreproducto" alignment="0" min="-2" pref="305" max="-2" attributes="0"/>
+                                                  <Component id="txtpeso_producto" alignment="0" min="-2" pref="141" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+                                      <Component id="lbcantidad2" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="chivaproducto" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cbmoneda" min="-2" pref="141" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="164" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace min="0" pref="32" max="32767" attributes="0"/>
                           </Group>
@@ -372,9 +402,12 @@
                                   <Component id="txtsminproducto" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="lblpventa" alignment="3" min="-2" pref="10" max="-2" attributes="0"/>
-                                  <Component id="txtpventaproducto" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="txtpventaproducto" min="-2" pref="20" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
+                                      <Component id="lblpventa" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -392,11 +425,16 @@
                                   <Component id="lblpeso" alignment="3" min="-2" pref="10" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="cbmoneda" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbcantidad2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="chivaproducto" min="-2" pref="20" max="-2" attributes="0"/>
                                   <Component id="lbliva" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="93" max="32767" attributes="0"/>
+                              <EmptySpace pref="66" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -670,6 +708,29 @@
                         <Property name="text" type="java.lang.String" value="Peso:"/>
                       </Properties>
                     </Component>
+                    <Component class="javax.swing.JComboBox" name="cbmoneda">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Arial" size="12" style="0"/>
+                        </Property>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                          <StringArray count="0"/>
+                        </Property>
+                        <Property name="enabled" type="boolean" value="false"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbcantidad2">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Arial" size="12" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Moneda :"/>
+                        <Property name="toolTipText" type="java.lang.String" value=""/>
+                      </Properties>
+                    </Component>
                   </SubComponents>
                 </Container>
               </SubComponents>
@@ -846,6 +907,9 @@
                               <Renderer/>
                             </Column>
                           </TableColumnModel>
+                        </Property>
+                        <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+                          <JTableSelectionModel selectionMode="0"/>
                         </Property>
                         <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                           <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
@@ -1073,6 +1137,9 @@
                             </Column>
                           </TableColumnModel>
                         </Property>
+                        <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+                          <JTableSelectionModel selectionMode="0"/>
+                        </Property>
                         <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                           <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
                         </Property>
@@ -1280,6 +1347,7 @@
                           </Table>
                         </Property>
                         <Property name="autoResizeMode" type="int" value="0"/>
+                        <Property name="cellSelectionEnabled" type="boolean" value="false"/>
                         <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                           <TableColumnModel selectionModel="1">
                             <Column maxWidth="-1" minWidth="-1" prefWidth="50" resizable="true">
@@ -1334,9 +1402,12 @@
                             </Column>
                           </TableColumnModel>
                         </Property>
-                        <Property name="columnSelectionAllowed" type="boolean" value="true"/>
                         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
                           <Color id="Cursor Por defecto"/>
+                        </Property>
+                        <Property name="rowSelectionAllowed" type="boolean" value="true"/>
+                        <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+                          <JTableSelectionModel selectionMode="0"/>
                         </Property>
                         <Property name="showHorizontalLines" type="boolean" value="false"/>
                         <Property name="showVerticalLines" type="boolean" value="false"/>
@@ -1831,6 +1902,9 @@
                         </Property>
                         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
                           <Color id="Cursor Por defecto"/>
+                        </Property>
+                        <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+                          <JTableSelectionModel selectionMode="0"/>
                         </Property>
                         <Property name="showHorizontalLines" type="boolean" value="false"/>
                         <Property name="showVerticalLines" type="boolean" value="false"/>
@@ -2345,6 +2419,9 @@
                         </Property>
                         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
                           <Color id="Cursor Por defecto"/>
+                        </Property>
+                        <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+                          <JTableSelectionModel selectionMode="0"/>
                         </Property>
                         <Property name="showHorizontalLines" type="boolean" value="false"/>
                         <Property name="showVerticalLines" type="boolean" value="false"/>
@@ -3080,6 +3157,9 @@
                         </Property>
                         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
                           <Color id="Cursor Por defecto"/>
+                        </Property>
+                        <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
+                          <JTableSelectionModel selectionMode="0"/>
                         </Property>
                         <Property name="showHorizontalLines" type="boolean" value="false"/>
                         <Property name="showVerticalLines" type="boolean" value="false"/>

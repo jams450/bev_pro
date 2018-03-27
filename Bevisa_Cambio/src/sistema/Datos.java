@@ -239,13 +239,17 @@ public class Datos extends javax.swing.JFrame {
             this.cbvendedor.addItem(op.get(i)[1]);
         }
         
+        op.clear();
+        query="select * from monedas;";
+        op = new ArrayList<>();
+        op=this.dbc.seleccionar(query);
+        for (int i = 0; i < op.size(); i++) {
+            this.cbmoneda.addItem(op.get(i)[1]);
+        }
+        
         
     }
 
-      
-      
-
- 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -285,6 +289,8 @@ public class Datos extends javax.swing.JFrame {
         lbliva = new javax.swing.JLabel();
         txtpeso_producto = new javax.swing.JTextField();
         lblpeso = new javax.swing.JLabel();
+        cbmoneda = new javax.swing.JComboBox<>();
+        lbcantidad2 = new javax.swing.JLabel();
         Ingredientes = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         txtidingrediente = new javax.swing.JTextField();
@@ -499,14 +505,14 @@ public class Datos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Clave", "Nombre", "Categoria", "U. Medida", "P. Venta", "Stock min", "IVA", "Proceso", "Caducidad", "Peso"
+                "ID", "Clave", "Nombre", "Categoria", "U. Medida", "P. Venta", "Stock min", "IVA", "Proceso", "Caducidad", "Peso", "Moneda"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -518,8 +524,10 @@ public class Datos extends javax.swing.JFrame {
             }
         });
         tbproductos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tbproductos.setColumnSelectionAllowed(true);
+        tbproductos.setCellSelectionEnabled(false);
         tbproductos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tbproductos.setRowSelectionAllowed(true);
+        tbproductos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbproductos.setShowHorizontalLines(false);
         tbproductos.setShowVerticalLines(false);
         tbproductos.getTableHeader().setReorderingAllowed(false);
@@ -680,39 +688,59 @@ public class Datos extends javax.swing.JFrame {
         lblpeso.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblpeso.setText("Peso:");
 
+        cbmoneda.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbmoneda.setEnabled(false);
+
+        lbcantidad2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lbcantidad2.setText("Moneda :");
+        lbcantidad2.setToolTipText("");
+
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblproceso)
-                    .addComponent(lblcaducidad)
-                    .addComponent(lblpventa)
-                    .addComponent(lblsmin)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel3)
-                    .addComponent(lblpeso)
-                    .addComponent(lbliva))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chivaproducto)
-                    .addComponent(txtidproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtclaveproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbcategoriaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtbuscar_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbmedidaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtsminproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtpventaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtcaducidadproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbprocesoproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtnombreproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtpeso_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                                .addComponent(lbliva)
+                                .addGap(318, 318, 318))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblproceso)
+                                    .addComponent(lblcaducidad)
+                                    .addComponent(lblpventa)
+                                    .addComponent(lblsmin)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel3)
+                                    .addComponent(lblpeso))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtidproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtclaveproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbcategoriaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtbuscar_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbmedidaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtsminproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtpventaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtcaducidadproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbprocesoproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtnombreproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtpeso_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGap(63, 63, 63)
+                        .addComponent(lbcantidad2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chivaproducto)
+                            .addComponent(cbmoneda, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(164, 164, 164)))
                 .addGap(0, 32, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
@@ -749,9 +777,11 @@ public class Datos extends javax.swing.JFrame {
                     .addComponent(lblsmin, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtsminproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblpventa, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtpventaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtpventaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(lblpventa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblcaducidad, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -765,10 +795,14 @@ public class Datos extends javax.swing.JFrame {
                     .addComponent(txtpeso_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblpeso, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbmoneda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbcantidad2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(chivaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbliva))
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         txtbuscar_producto.getAccessibleContext().setAccessibleName("");
@@ -839,6 +873,7 @@ public class Datos extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tbingredientes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbingredientes.getTableHeader().setReorderingAllowed(false);
         tbingredientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -941,6 +976,7 @@ public class Datos extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tbpruebas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbpruebas.getTableHeader().setReorderingAllowed(false);
         tbpruebas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1029,8 +1065,10 @@ public class Datos extends javax.swing.JFrame {
             }
         });
         tbinventario.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tbinventario.setColumnSelectionAllowed(true);
+        tbinventario.setCellSelectionEnabled(false);
         tbinventario.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tbinventario.setRowSelectionAllowed(true);
+        tbinventario.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbinventario.setShowHorizontalLines(false);
         tbinventario.setShowVerticalLines(false);
         tbinventario.getTableHeader().setReorderingAllowed(false);
@@ -1218,6 +1256,7 @@ public class Datos extends javax.swing.JFrame {
         });
         tbvendedores.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tbvendedores.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tbvendedores.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbvendedores.setShowHorizontalLines(false);
         tbvendedores.setShowVerticalLines(false);
         tbvendedores.getTableHeader().setReorderingAllowed(false);
@@ -1407,6 +1446,7 @@ public class Datos extends javax.swing.JFrame {
         });
         tbproveedor.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tbproveedor.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tbproveedor.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbproveedor.setShowHorizontalLines(false);
         tbproveedor.setShowVerticalLines(false);
         tbproveedor.getTableHeader().setReorderingAllowed(false);
@@ -1654,6 +1694,7 @@ public class Datos extends javax.swing.JFrame {
         });
         tbclientes.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tbclientes.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tbclientes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbclientes.setShowHorizontalLines(false);
         tbclientes.setShowVerticalLines(false);
         tbclientes.getTableHeader().setReorderingAllowed(false);
@@ -2006,7 +2047,7 @@ public class Datos extends javax.swing.JFrame {
             Productos_DB pro = new Productos_DB(this.con);
             List <Producto> productos = pro.select();
             for (int i = 0; i < productos.size(); i++) {
-                Object[] obj = new Object[11];
+                Object[] obj = new Object[12];
                 obj[0]=productos.get(i).getId();
                 obj[1]=productos.get(i).getClave();
                 obj[2]=productos.get(i).getNombre();
@@ -2018,6 +2059,7 @@ public class Datos extends javax.swing.JFrame {
                 obj[8]=productos.get(i).getProceso();
                 obj[9]=productos.get(i).getMeses_caducidad();
                 obj[10]=productos.get(i).getPeso();
+                obj[11]=productos.get(i).getMoneda();
                 this.tabla_productos.addRow(obj);
             }
         }
@@ -2062,6 +2104,7 @@ public class Datos extends javax.swing.JFrame {
            this.btnCancelar_producto.setEnabled(true);
            this.btnGuardar_producto.setEnabled(true);
            this.chivaproducto.setEnabled(true);
+           this.cbmoneda.setEnabled(true);
            
            this.txtcaducidadproducto.setEnabled(true);
     }
@@ -2086,7 +2129,7 @@ public class Datos extends javax.swing.JFrame {
            this.btnCancelar_producto.setEnabled(false);
            this.btnGuardar_producto.setEnabled(false);
            this.chivaproducto.setEnabled(false);
-           
+           this.cbmoneda.setEnabled(false);
            this.txtcaducidadproducto.setEnabled(false);
 
            
@@ -2114,12 +2157,12 @@ public class Datos extends javax.swing.JFrame {
             {
                 //materia prima
                 case 1 :
-                    if (this.txtclaveproducto.getText().isEmpty() || this.txtnombreproducto.getText().isEmpty() || this.txtsminproducto.getText().isEmpty() ) {
+                    if (this.txtclaveproducto.getText().isEmpty() || this.txtnombreproducto.getText().isEmpty() || this.txtsminproducto.getText().isEmpty()||this.txtpventaproducto.getText().isEmpty() ) {
                         JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
                     }
                     else
                     {
-                        if (this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+                        if (this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
                             
                             if(this.seleccionproducto==1)
                             {
@@ -2129,9 +2172,18 @@ public class Datos extends javax.swing.JFrame {
                                 pro.setClave(this.txtclaveproducto.getText());
                                 int cate=this.cbcategoriaproducto.getSelectedIndex()+1;
                                 int medida=this.cbmedidaproducto.getSelectedIndex()+1;
+                                pro.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
                                 pro.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
-                                p.insert_mp(pro, medida, cate);
+                                if (this.chivaproducto.isSelected()) {
+                                    pro.setIva(1);
+                                }
+                                else
+                                {
+                                    pro.setIva(0);
+                                }
+                                p.insert_mp(pro, medida, cate,this.cbmoneda.getSelectedIndex()+1);
                                 tablaproductos();
+                                deshabilitar();
                             }
                             if(this.seleccionproducto==2)
                             {
@@ -2142,8 +2194,16 @@ public class Datos extends javax.swing.JFrame {
                                 int cate=this.cbcategoriaproducto.getSelectedIndex()+1;
                                 int medida=this.cbmedidaproducto.getSelectedIndex()+1;
                                 pro.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
+                                pro.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
                                 pro.setId(Integer.parseInt(this.txtidproducto.getText()));
-                                p.update_mp(pro, medida, cate);
+                                if (this.chivaproducto.isSelected()) {
+                                    pro.setIva(1);
+                                }
+                                else
+                                {
+                                    pro.setIva(0);
+                                }
+                                p.update_mp(pro, medida, cate,this.cbmoneda.getSelectedIndex()+1);
                                 tablaproductos();
                             }
                             this.seleccionproducto=0;
@@ -2197,7 +2257,7 @@ public class Datos extends javax.swing.JFrame {
                                 producto.setIva(0);
                             }
                             producto.setId(Integer.parseInt(this.txtidproducto.getText()));
-                            pro.insert_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                            pro.update_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
                             this.tablaproductos();
                         }
                         this.seleccionproducto=0;
@@ -2225,7 +2285,15 @@ public class Datos extends javax.swing.JFrame {
                             producto.setClave(this.txtclaveproducto.getText());
                             producto.setPeso(Double.parseDouble(this.txtpeso_producto.getText()));
                             producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
-                            pro.insert_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1);
+                            producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
+                            if (this.chivaproducto.isSelected()) {
+                                producto.setIva(1);
+                            }
+                            else
+                            {
+                                producto.setIva(0);
+                            }
+                            pro.insert_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmoneda.getSelectedIndex()+1);
                             this.tablaproductos();
                         }
                         if(this.seleccionproducto==2)
@@ -2236,7 +2304,15 @@ public class Datos extends javax.swing.JFrame {
                             producto.setPeso(Double.parseDouble(this.txtpeso_producto.getText()));
                             producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
                             producto.setId(Integer.parseInt(this.txtidproducto.getText()));
-                            pro.insert_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1);
+                            producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
+                            if (this.chivaproducto.isSelected()) {
+                                producto.setIva(1);
+                            }
+                            else
+                            {
+                                producto.setIva(0);
+                            }
+                            pro.update_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmoneda.getSelectedIndex()+1);
                             this.tablaproductos();
                         }
                         this.seleccionproducto=0;
@@ -2273,7 +2349,7 @@ public class Datos extends javax.swing.JFrame {
                                 producto.setIva(0);
                             }
                             producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
-                            pro.insert_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                            pro.insert_galeria(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
                             this.tablaproductos();
                         }
                         if(this.seleccionproducto==2)
@@ -2292,10 +2368,12 @@ public class Datos extends javax.swing.JFrame {
                             }
                             producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
                             producto.setId(Integer.parseInt(this.txtidproducto.getText()));
-                            pro.insert_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                            pro.update_galeria(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
                             this.tablaproductos();
                             
                         }
+                        this.seleccionproducto=0;
+                        deshabilitar();
                     }
                     else
                     {
@@ -2353,12 +2431,15 @@ public class Datos extends javax.swing.JFrame {
         //materia prima
         if (index==1) {
             this.lblproceso.setVisible(false);
-            this.lblpventa.setVisible(false);
-            this.txtpventaproducto.setVisible(false);
+            
+            this.lblpventa.setVisible(true); 
+            this.lblpventa.setText("Precio Compra:");
+            this.txtpventaproducto.setVisible(true);
+            
             this.cbprocesoproducto.setVisible(false);
             
-            this.chivaproducto.setVisible(false);
-            this.lbliva.setVisible(false);
+            this.chivaproducto.setVisible(true);
+            this.lbliva.setVisible(true);
 
             this.lblsmin.setVisible(true);
             this.txtsminproducto.setVisible(true);
@@ -2379,8 +2460,14 @@ public class Datos extends javax.swing.JFrame {
             this.lbliva.setVisible(true);
 
             this.lblproceso.setVisible(true);
+            
+            this.lblpventa.setText("Precio Venta:");
             this.lblpventa.setVisible(true);
             this.txtpventaproducto.setVisible(true);
+            
+            this.chivaproducto.setVisible(true);
+            this.lbliva.setVisible(true);
+            
             this.cbprocesoproducto.setVisible(true);
             
             this.lblpeso.setVisible(false);
@@ -2394,12 +2481,13 @@ public class Datos extends javax.swing.JFrame {
             this.lblsmin.setVisible(true);
             this.txtsminproducto.setVisible(true);
             
-            this.chivaproducto.setVisible(false);
-            this.lbliva.setVisible(false);
+            this.chivaproducto.setVisible(true);
+            this.lbliva.setVisible(true);
 
             this.lblproceso.setVisible(false);
-            this.lblpventa.setVisible(false);
-            this.txtpventaproducto.setVisible(false);
+            this.lblpventa.setVisible(true); 
+            this.lblpventa.setText("Precio Compra:");
+            this.txtpventaproducto.setVisible(true);
             this.cbprocesoproducto.setVisible(false);
             
             this.lblpeso.setVisible(true);
@@ -2418,6 +2506,7 @@ public class Datos extends javax.swing.JFrame {
 
             this.lblproceso.setVisible(true);
             this.lblpventa.setVisible(true);
+            this.lblpventa.setText("Precio Venta:");
             this.txtpventaproducto.setVisible(true);
             this.cbprocesoproducto.setVisible(true);
             
@@ -2468,7 +2557,7 @@ public class Datos extends javax.swing.JFrame {
                 this.cbprocesoproducto.setSelectedItem(this.tbproductos.getValueAt(columna, 8).toString());
                 this.txtcaducidadproducto.setText(this.tbproductos.getValueAt(columna, 9).toString());
                 this.txtpeso_producto.setText(this.tbproductos.getValueAt(columna, 10).toString());
-
+                this.cbmoneda.setSelectedItem(this.tbproductos.getValueAt(columna, 11).toString());
                 this.btnCambiar_producto.setEnabled(true);
             }
 
@@ -3792,6 +3881,7 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbmedidaproducto;
     private javax.swing.JComboBox<String> cbmodopago;
     private javax.swing.JComboBox<String> cbmodopago1;
+    private javax.swing.JComboBox<String> cbmoneda;
     private javax.swing.JComboBox<String> cbprocesoproducto;
     private javax.swing.JComboBox<String> cbvendedor;
     private javax.swing.JCheckBox chestatusclientes;
@@ -3890,6 +3980,7 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JLabel lbcantidad2;
     private javax.swing.JLabel lblcaducidad;
     private javax.swing.JLabel lbliva;
     private javax.swing.JLabel lblpeso;

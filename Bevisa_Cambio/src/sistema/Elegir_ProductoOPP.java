@@ -67,7 +67,8 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
 
             ArrayList <String[]> op = new ArrayList<>();
 
-            String query="select productos.id , productos.Nombre, productos.Clave, umedida.nombre from productos join umedida on productos.idmedida= umedida.id  where idcategoria = 1 or idcategoria = 3 ";
+            String query="select productos.id , productos.Nombre, productos.Clave, umedida.nombre,productos.pventa,productos.iva,monedas.nombre "
+                    + "from productos join umedida on productos.idmedida= umedida.id join monedas on monedas.id=productos.idmoneda  where idcategoria = 1 or idcategoria = 3 ";
             op=this.dbc.seleccionar(query);
 
             for (int i = 0; i < op.size(); i++) {    
@@ -85,13 +86,21 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
 
             ArrayList <String[]> op = new ArrayList<>();
 
-            String query="select productos.id , productos.Nombre, productos.Clave, umedida.nombre from productos join umedida on productos.idmedida= umedida.id  where idcategoria = 2 or idcategoria = 4   ";
+            String query="select productos.id , productos.Nombre, productos.Clave, umedida.nombre,productos.pventa,productos.iva,monedas.nombre "
+                    + " from productos join umedida on productos.idmedida= umedida.id join monedas on monedas.id=productos.idmoneda where idcategoria = 2 or idcategoria = 4   ";
             op=this.dbc.seleccionar(query);
 
             for (int i = 0; i < op.size(); i++) {    
 
                 this.tabla.addRow(op.get(i));
             }     
+            
+            this.chivaproducto.setVisible(false);
+            this.lbliva.setVisible(false);
+            this.cbmoneda.setVisible(false);
+            this.lbcantidad1.setVisible(false);
+            this.txtpunitario.setVisible(false);
+            this.lbcantidad2.setVisible(false);
         }
            
         
@@ -138,6 +147,8 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
         txtbuscar = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        lbliva = new javax.swing.JLabel();
+        chivaproducto = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -162,14 +173,14 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Clave", "U Medida"
+                "ID", "Nombre", "Clave", "U Medida", "Precio", "Iva", "Moneda"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, true, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -180,9 +191,9 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tbdatos.setColumnSelectionAllowed(true);
         tbdatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        tbdatos.setRowSelectionAllowed(true);
         tbdatos.setShowHorizontalLines(false);
         tbdatos.setShowVerticalLines(false);
         tbdatos.getTableHeader().setReorderingAllowed(false);
@@ -294,7 +305,16 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
         jLabel6.setText("Clave :");
         jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 70, -1, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 68, 850, 280));
+        lbliva.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lbliva.setText("IVA :");
+        lbliva.setToolTipText("");
+        jPanel2.add(lbliva, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 250, -1, -1));
+
+        chivaproducto.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        chivaproducto.setEnabled(false);
+        jPanel2.add(chivaproducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 250, -1, -1));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 68, 850, 300));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -338,9 +358,18 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
             this.txtnombre.setText(this.tbdatos.getValueAt(this.columna, 1).toString());
             this.txtclave.setText(this.tbdatos.getValueAt(this.columna, 2).toString());
             this.txtmedida.setText(this.tbdatos.getValueAt(this.columna, 3).toString());
+            this.txtpunitario.setText(this.tbdatos.getValueAt(this.columna, 4).toString());
+            if (this.tbdatos.getValueAt(this.columna, 5).toString().compareTo("1")==0) {
+                this.chivaproducto.setSelected(true);
+            }
+            else
+            {
+                this.chivaproducto.setSelected(false);
+            }
             
+            this.cbmoneda.setSelectedItem(this.tbdatos.getValueAt(this.columna, 6).toString());
             this.btnAceptar.setEnabled(true);
-            
+            this.chivaproducto.setEnabled(true);
             this.cbmoneda.setEnabled(true);
             this.txtcantidad.setEnabled(true);
             this.txtpunitario.setEnabled(true);
@@ -367,6 +396,14 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
                     this.mov.pro.setMedida(this.txtmedida.getText());
                     this.mov.pro.setPventa(Double.parseDouble(this.txtpunitario.getText()));
                     this.mov.pro.setStockmin(Double.parseDouble(this.txtcantidad.getText()));
+                    if (this.chivaproducto.isSelected()) {
+                       this.mov.pro.setIva(1); 
+                    }
+                    else
+                    {
+                        this.mov.pro.setIva(0);
+                    }
+                    
                     this.mov.moneda=this.cbmoneda.getSelectedItem().toString();
                     this.mov.idmoneda=this.cbmoneda.getSelectedIndex()+1;
 
@@ -450,6 +487,7 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JComboBox<String> cbmoneda;
+    private javax.swing.JCheckBox chivaproducto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -462,6 +500,7 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
     private javax.swing.JLabel lbcantidad;
     private javax.swing.JLabel lbcantidad1;
     private javax.swing.JLabel lbcantidad2;
+    private javax.swing.JLabel lbliva;
     private javax.swing.JTable tbdatos;
     private javax.swing.JTextField txtbuscar;
     private javax.swing.JTextField txtcantidad;

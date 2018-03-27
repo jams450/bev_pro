@@ -17,5 +17,8 @@ public class Inventario_DB {
                                 "inventario.lote, inventario.idopp, inventario.facturano from inventario join productos \n" +
                                 "on productos.id=inventario.idproducto where inventario.cantidadactual>0;";
     
+    private final String UPDATE="Update inventario set cantidadactual = ? , lote = ? ,   facturano = ? , fechaentrada = ? , fechacaducidad = ? where id = ? ";
+   
+    
     
 }

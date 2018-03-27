@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sistema;
 
 import datos.DBcontrolador;
@@ -285,11 +281,11 @@ public class Movimientos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Clave", "Nombre", "U. Medida", "Cantidad", "Moneda", "P. Unitario", "P. Total"
+                "ID", "Clave", "Nombre", "U. Medida", "Cantidad", "Moneda", "P. Unitario", "Subtotal", "Iva", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -304,9 +300,13 @@ public class Movimientos extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tbproductosopp);
         if (tbproductosopp.getColumnModel().getColumnCount() > 0) {
-            tbproductosopp.getColumnModel().getColumn(5).setHeaderValue("Moneda");
-            tbproductosopp.getColumnModel().getColumn(6).setHeaderValue("P. Unitario");
-            tbproductosopp.getColumnModel().getColumn(7).setHeaderValue("P. Total");
+            tbproductosopp.getColumnModel().getColumn(0).setMaxWidth(50);
+            tbproductosopp.getColumnModel().getColumn(1).setMaxWidth(100);
+            tbproductosopp.getColumnModel().getColumn(2).setMinWidth(400);
+            tbproductosopp.getColumnModel().getColumn(3).setMinWidth(70);
+            tbproductosopp.getColumnModel().getColumn(3).setMaxWidth(70);
+            tbproductosopp.getColumnModel().getColumn(4).setMaxWidth(70);
+            tbproductosopp.getColumnModel().getColumn(5).setMaxWidth(100);
         }
 
         OPP.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 1240, 230));
@@ -919,7 +919,7 @@ public class Movimientos extends javax.swing.JFrame {
     public void colocarproducto()
     {
         
-        String[] s = new String[8]; 
+        String[] s = new String[10]; 
         s[1]=this.pro.getClave();
         s[0]=this.pro.getId()+"";
         s[2]=this.pro.getNombre();
@@ -928,6 +928,14 @@ public class Movimientos extends javax.swing.JFrame {
         s[5]=this.moneda;
         s[6]=this.pro.getPventa()+"";      
         s[7]=(Math.round( (this.pro.getPventa()*this.pro.getStockmin())* 100.0 ) / 100.0)+"";
+        if (this.pro.getIva()==1) {
+            s[8]=(Math.round( (this.pro.getPventa()*this.pro.getStockmin()*0.16)* 100.0 ) / 100.0)+"";
+        }
+        else
+        {
+            s[8]="0";
+        }
+        s[9]=(Math.round( (Double.parseDouble(s[7])+Double.parseDouble(s[8]))* 100.0 ) / 100.0)+"";
         
         boolean x=true;
         for (int i = 0; i < this.tabla.getRowCount(); i++) {
@@ -938,7 +946,7 @@ public class Movimientos extends javax.swing.JFrame {
         }
         if (x) {
             this.tabla.addRow(s);
-            this.preciosopp.add(Math.round( (this.pro.getPventa()*this.pro.getStockmin())* 100.0 ) / 100.0);
+            
             this.btnquitarpro.setEnabled(true);
             this.btnaceptaropp.setEnabled(true);
         }
@@ -1604,15 +1612,19 @@ public class Movimientos extends javax.swing.JFrame {
                 String respuesta = JOptionPane.showInputDialog(this, "Observaciones");
                 String query="Insert into opproveedores(idpro,idmoneda,subtotal,iva,ptotal,idestatus,fecha,idcpago,observaciones) values (?,?,?,?,?,?,?,?,?)";
                 PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
+                double subtotal=0;
+                double iva=0;
                 double total=0;
-                for (Double d : this.preciosopp) {
-                    total+=d;
+                for (int i = 0; i < this.tabla.getRowCount(); i++) {
+                    subtotal+=Double.parseDouble(this.tabla.getValueAt(i, 7).toString());
+                    iva+=Double.parseDouble(this.tabla.getValueAt(i, 8).toString());
+                    total+=Double.parseDouble(this.tabla.getValueAt(i, 9).toString());
                 }
                 ps.setInt(1, Integer.parseInt(this.txtidproveedor.getText()) );
                 ps.setInt(2, this.idmoneda);
-                ps.setDouble(3, Math.round( total * 100.0 ) / 100.0);
-                ps.setDouble(4, Math.round( (total*0.16) * 100.0 ) / 100.0);
-                ps.setDouble(5, Math.round( (total*1.16) * 100.0 ) / 100.0);
+                ps.setDouble(3, Math.round( subtotal * 100.0 ) / 100.0);
+                ps.setDouble(4, Math.round( (iva) * 100.0 ) / 100.0);
+                ps.setDouble(5, Math.round( (total) * 100.0 ) / 100.0);
                 ps.setInt(6, 1);
 
                 ps.setString(7, fechadividir(this.txtfecha,1));
@@ -1640,7 +1652,7 @@ public class Movimientos extends javax.swing.JFrame {
                     ps.close();
                 }
                 //cantidad en letra
-                String cantidad= (Math.round( (total*1.16) * 100.0 ) / 100.0)+"";
+                String cantidad= (Math.round( (total) * 100.0 ) / 100.0)+"";
                 System.out.println(cantidad);
                 String[] divi =cantidad.split("\\.");
                 n2t num = new n2t();

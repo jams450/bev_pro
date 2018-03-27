@@ -11,6 +11,8 @@ package negocio;
  */
 public class Producto {
 
+    
+
     private int id;
     private String clave;
     private String nombre;
@@ -22,13 +24,13 @@ public class Producto {
     private String proceso;
     private int meses_caducidad;
     private double peso;
-    
+    private String moneda;
 
     public Producto() {
        
     }
     
-    public Producto(int id, String clave,String nombre, String categoria, String medida, double pventa, double stockmin, int iva, String proceso, int meses_caducidad, double peso) {
+    public Producto(int id, String clave,String nombre, String categoria, String medida, double pventa, double stockmin, int iva, String proceso, int meses_caducidad, double peso, String moneda) {
         this.id = id;
         this.nombre = nombre;
         this.clave = clave;
@@ -40,6 +42,7 @@ public class Producto {
         this.proceso = proceso;
         this.meses_caducidad = meses_caducidad;
         this.peso=peso;
+        this.moneda=moneda;
     }
 
     public void setProceso(String proceso) {
@@ -133,6 +136,13 @@ public class Producto {
 
     public void setPeso(double peso) {
         this.peso = peso;
+    }
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
     }
 
     

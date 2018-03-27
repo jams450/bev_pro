@@ -16,33 +16,33 @@ public class Productos_DB {
     
     private final String SELECT
             = "select productos.id ,productos.clave, productos.nombre, categoria.nombre, umedida.nombre, productos.pventa, "
-            + "productos.smin,  productos.iva, procesos.detalles, productos.mesescaducidad,productos.peso "
-            + "from productos join categoria on productos.idcategoria = categoria.id "
+            + "productos.smin,  productos.iva, procesos.detalles, productos.mesescaducidad,productos.peso,monedas.nombre "
+            + "from productos join categoria on productos.idcategoria = categoria.id join monedas on monedas.id=productos.idmoneda  "
             + "join umedida on productos.idmedida= umedida.id join procesos on productos.idproceso = procesos.id;";
     
     private final String INSERT_MP=
-            "Insert into productos (clave,nombre,idcategoria,idmedida,smin) values (?,?,?,?,?);";
+            "Insert into productos (clave,nombre,idcategoria,idmedida,smin,pventa,iva,idmoneda) values (?,?,?,?,?,?,?,?);";
     
     private final String UPDATE_MP=
-            "Update productos set  clave = ?,nombre = ?,idcategoria = ?,idmedida = ?, smin = ?  where id = ?;";
+            "Update productos set  clave = ?,nombre = ?,idcategoria = ?,idmedida = ?, smin = ?,pventa=?,iva =? ,idmoneda=?  where id = ?;";
     
     private final String INSERT_EM =
-            "Insert into productos (clave,nombre,idcategoria,idmedida, smin,peso) values (?,?,?,?,?,?);";
+            "Insert into productos (clave,nombre,idcategoria,idmedida, smin,peso,pventa,iva,idmoneda) values (?,?,?,?,?,?,?,?,?);";
     
     private final String UPDATE_EM=
-            "Update productos set  clave = ? ,nombre = ? , idmedida = ? ,smin = ?,peso = ? where id = ?;";
+            "Update productos set  clave = ? ,nombre = ? ,idcategoria=?, idmedida = ? ,smin = ?,peso = ? ,pventa=?,iva =?,idmoneda=? where id = ?;";
     
     private final String INSERT_PT =
             "Insert into productos (clave,nombre,idcategoria,idmedida,pventa,iva,idproceso,mesescaducidad) values (?,?,?,?,?,?,?,?);";
     
     private final String UPDATE_PT=
-            "Update productos set nombre = ? , clave = ? ,  idmedida = ? ,pventa = ?, iva=?, mesescaducidad = ? where id = ?;"; 
+            "Update productos set  clave = ?,nombre=?,idcategoria=? ,  idmedida = ? ,pventa = ?, iva=?,idproceso=?, mesescaducidad = ? where id = ?;"; 
 
     private final String INSERT_GA =
             "Insert into productos (clave,nombre,idcategoria,idmedida,pventa,mesescaducidad,idproceso, smin,iva) values (?,?,?,?,?,?,?,?,?);";
     
     private final String UPDATE_GA =
-            "Update productos set nombre = ? , clave = ? ,   idcategoria = ? ,  idmedida = ?, smin = ? ,pventa = ?, iva=?, mesescaducidad=? where id = ? ;";
+            "Update productos set  clave = ?,nombre=? ,   idcategoria = ? ,  idmedida = ?, pventa=?,mesescaducidad=?,idproceso=?,smin=?,iva=? where id = ? ;";
     
     
     
@@ -72,7 +72,8 @@ public class Productos_DB {
                 String proceso = rs.getString(9);
                 int meses_caducidad=rs.getInt(10);
                 int peso=rs.getInt(11);
-                producto = new Producto(id,clave,nombre,categoria,medida,pventa,stockmin,iva,proceso,meses_caducidad,peso);
+                String moneda=rs.getString(12);
+                producto = new Producto(id,clave,nombre,categoria,medida,pventa,stockmin,iva,proceso,meses_caducidad,peso,moneda);
                 productos.add(producto);      
             }
             return productos;
@@ -87,7 +88,7 @@ public class Productos_DB {
     }
     
     
-    public int insert_mp(Producto pro,int medida,int cate) throws SQLException 
+    public int insert_mp(Producto pro,int medida,int cate, int moneda) throws SQLException 
     {
         Connection conn = null;
         PreparedStatement stmt = null;		
@@ -103,7 +104,9 @@ public class Productos_DB {
             stmt.setInt(index++, cate);
             stmt.setInt(index++, medida);
             stmt.setDouble(index++, pro.getStockmin());
-
+            stmt.setDouble(index++, pro.getPventa());
+            stmt.setInt(index++, pro.getIva());
+            stmt.setInt(index++, moneda);
             rows = stmt.executeUpdate();
         } finally {
             Conexion.close(stmt);
@@ -115,7 +118,7 @@ public class Productos_DB {
         return rows;
     }
     
-    public int update_mp(Producto pro,int medida,int cate) throws SQLException 
+    public int update_mp(Producto pro,int medida,int cate,int moneda) throws SQLException 
     {
         Connection conn = null;
         PreparedStatement stmt = null;		
@@ -131,8 +134,11 @@ public class Productos_DB {
             stmt.setInt(index++, cate);
             stmt.setInt(index++, medida);
             stmt.setDouble(index++, pro.getStockmin());
+            stmt.setDouble(index++, pro.getPventa());
+            stmt.setInt(index++, pro.getIva());
+            stmt.setInt(index++, moneda);
             stmt.setInt(index++, pro.getId());
-
+            
             rows = stmt.executeUpdate();
         } finally {
             Conexion.close(stmt);
@@ -144,7 +150,7 @@ public class Productos_DB {
         return rows;
     }
 
-    public int insert_empaque(Producto pro,int medida,int cate) throws SQLException 
+    public int insert_empaque(Producto pro,int medida,int cate,int moneda) throws SQLException 
     {
         Connection conn = null;
         PreparedStatement stmt = null;		
@@ -159,7 +165,10 @@ public class Productos_DB {
             stmt.setInt(index++, cate);
             stmt.setInt(index++, medida);
             stmt.setDouble(index++, pro.getStockmin());
-
+            stmt.setDouble(index++, pro.getPeso());
+            stmt.setDouble(index++, pro.getPventa());
+            stmt.setInt(index++, pro.getIva());
+            stmt.setInt(index++, moneda);
             rows = stmt.executeUpdate();
         } finally {
             Conexion.close(stmt);
@@ -171,7 +180,7 @@ public class Productos_DB {
         return rows;
     }
     
-    public int update_empaque(Producto pro,int medida) throws SQLException 
+    public int update_empaque(Producto pro,int medida,int cate,int moneda) throws SQLException 
     {
         Connection conn = null;
         PreparedStatement stmt = null;		
@@ -184,9 +193,14 @@ public class Productos_DB {
             
             stmt.setString(index++, pro.getClave());
             stmt.setString(index++, pro.getNombre());
+            stmt.setInt(index++, cate);
             stmt.setInt(index++, medida);
             stmt.setDouble(index++, pro.getStockmin());
-
+            stmt.setDouble(index++, pro.getPeso());
+            stmt.setDouble(index++, pro.getPventa());
+            stmt.setInt(index++, pro.getIva());
+            stmt.setInt(index++, moneda);
+            stmt.setInt(index++,pro.getId());
             rows = stmt.executeUpdate();
         } finally {
             Conexion.close(stmt);
@@ -240,6 +254,7 @@ public class Productos_DB {
             
             stmt.setString(index++, pro.getClave());
             stmt.setString(index++, pro.getNombre());
+            stmt.setInt(index++, cate);
             stmt.setInt(index++, medida);
             stmt.setDouble(index++,pro.getPventa());
             stmt.setInt(index++,pro.getIva());
@@ -275,7 +290,7 @@ public class Productos_DB {
             stmt.setDouble(index++,pro.getPventa());
             stmt.setDouble(index++,pro.getMeses_caducidad());
             stmt.setInt(index++,proceso);
-            stmt.setDouble(index++,pro.getMeses_caducidad());
+            stmt.setDouble(index++,pro.getStockmin());
             stmt.setInt(index++,pro.getIva());
             
             
@@ -308,7 +323,7 @@ public class Productos_DB {
             stmt.setDouble(index++,pro.getPventa());
             stmt.setDouble(index++,pro.getMeses_caducidad());
             stmt.setInt(index++,proceso);
-            stmt.setDouble(index++,pro.getMeses_caducidad());
+            stmt.setDouble(index++,pro.getStockmin());
             stmt.setInt(index++,pro.getIva());
             stmt.setInt(index++, pro.getId());
             
