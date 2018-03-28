@@ -13,6 +13,7 @@ import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,9 +24,12 @@ import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import negocio.Ingrediente;
 import negocio.Prueba;
+import funciones.NumberRenderer;
 
 /**
  *
@@ -524,9 +528,7 @@ public class Datos extends javax.swing.JFrame {
             }
         });
         tbproductos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tbproductos.setCellSelectionEnabled(false);
         tbproductos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        tbproductos.setRowSelectionAllowed(true);
         tbproductos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbproductos.setShowHorizontalLines(false);
         tbproductos.setShowVerticalLines(false);
@@ -1065,9 +1067,7 @@ public class Datos extends javax.swing.JFrame {
             }
         });
         tbinventario.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tbinventario.setCellSelectionEnabled(false);
         tbinventario.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        tbinventario.setRowSelectionAllowed(true);
         tbinventario.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbinventario.setShowHorizontalLines(false);
         tbinventario.setShowVerticalLines(false);
@@ -3542,9 +3542,14 @@ public class Datos extends javax.swing.JFrame {
         this.tabla_ingredientes=(DefaultTableModel) this.tbingredientes.getModel();
         
         this.tabla_ingredientes.setRowCount(0);
+        TableColumnModel tcm = tbingredientes.getColumnModel();
+        NumberFormat format = NumberFormat.getInstance();
+        format.setMaximumFractionDigits(5);
+    
+        tcm.getColumn(4).setCellRenderer( new NumberRenderer( format ) );
         
         Ingredientes_DB ing = new Ingredientes_DB(this.con);
-        
+        Ingrediente inge = new Ingrediente();
         List <Ingrediente> ingres = ing.select_ing(Integer.parseInt(this.txtidingrediente.getText()));
           
         for (int i = 0; i < ingres.size(); i++) {    
@@ -3554,6 +3559,7 @@ public class Datos extends javax.swing.JFrame {
             obj[2]=ingres.get(i).getNombre();
             obj[3]=ingres.get(i).getMedida();
             obj[4]=ingres.get(i).getCantidad();
+            
             this.tabla_ingredientes.addRow(obj);
         } 
         

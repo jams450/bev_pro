@@ -145,12 +145,12 @@ public class Ingredientes_DB {
             conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
             stmt = conn.prepareStatement(this.INSERT_ING);
             int index = 1;//contador de columnas
-            System.out.println(ingre.getId_profinal()+" "+ingre.getId());
+            
             stmt.setInt(index++, ingre.getId_profinal());
             stmt.setInt(index++, ingre.getId());
             stmt.setDouble(index++, ingre.getCantidad());
             stmt.executeUpdate();
-            System.out.println("todo bien");
+            
         } 
         catch(SQLException ex)
         {

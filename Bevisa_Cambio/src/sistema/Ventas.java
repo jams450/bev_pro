@@ -534,7 +534,8 @@ public class Ventas extends javax.swing.JFrame {
                     
                 }
                 if (hay) {
-                    String query = "insert into ventas (fecha,idvendedor,idcliente,importe,iva,total,tipo) values(?,?,?,?,?,?,?)";
+                    String respuesta = JOptionPane.showInputDialog(this, "Observaciones");
+                    String query = "insert into ventas (fecha,idvendedor,idcliente,importe,iva,total,tipo,op) values(?,?,?,?,?,?,?,?)";
                     PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
 
                     ps.setString(1, this.fechadividir(this.txtfecha.getText(), 1));
@@ -545,7 +546,7 @@ public class Ventas extends javax.swing.JFrame {
                     ps.setString(5, this.txtiva.getText());
                     ps.setString(6, this.txttotal.getText());
                     ps.setInt(7, this.cbconcepto.getSelectedIndex()+1);
-
+                    ps.setString(8, respuesta);
                     ps.executeUpdate();
                     ps.close();
 
@@ -620,9 +621,11 @@ public class Ventas extends javax.swing.JFrame {
                             }
                         }
                     }
+                  
+                    
                     //limpiar
                     this.ventas.setRowCount(0);
-                    this.txtfecha.setText("");
+                    
                     this.txtidcliente.setText("");
                     this.txtnombrecliente.setText("");
                     this.txtidvendedor.setText("");
@@ -646,6 +649,7 @@ public class Ventas extends javax.swing.JFrame {
                    try {
                        Map categoria = new HashMap();
                        categoria.put("ID_Venta", mx);
+                       categoria.put("op",respuesta);
                        reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
                        JasperPrint jprint = JasperFillManager.fillReport(path, categoria,this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
                        JasperExportManager.exportReportToPdfFile(jprint, s+"\\Tickets\\Venta-"+mx+".pdf");
