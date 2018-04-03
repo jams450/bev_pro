@@ -34,9 +34,9 @@ public class Login extends javax.swing.JFrame {
             con = Conexion.getConnection();
             //Revisamos si la conexion esta en modo autocommit
             //por default es autocommit == true
-            if (con.getAutoCommit()) {
+            /*if (con.getAutoCommit()) {
                 con.setAutoCommit(false);
-            }
+            }*/
 
             Login_DB login = new Login_DB(con);
             user =login.select();

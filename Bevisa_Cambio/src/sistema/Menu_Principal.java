@@ -68,6 +68,7 @@ public class Menu_Principal extends javax.swing.JFrame {
             if (this.con==null) {
                 this.con=Conexion.getConnection();
             }
+            //this.con.commit();
             Menu_DB me = new Menu_DB(this.con);
             this.txtnotificaciones.setText(me.notificaciones());
 

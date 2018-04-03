@@ -2382,7 +2382,7 @@ public class Datos extends javax.swing.JFrame {
                 }
                 break;
             }
-            this.con.commit();
+            //this.con.commit();
             
 
         }
@@ -2690,7 +2690,6 @@ public class Datos extends javax.swing.JFrame {
 
                     creaciontablainventario();
 
-                    
                     limpiarinventario();
                     deshabilitarinventario();
 
@@ -3513,7 +3512,7 @@ public class Datos extends javax.swing.JFrame {
                 ing.setId_profinal(Integer.parseInt(this.txtidingrediente.getText()));
                 ingre.insert_ingrediente(ing);
                 actualizaringrediente();
-                this.con.commit();
+                //this.con.commit();
             }
             else{
                 JOptionPane.showMessageDialog(null, "El ingrediente ya estaba seleccionado");
@@ -3595,7 +3594,7 @@ public class Datos extends javax.swing.JFrame {
             Ingredientes_DB ingre = new Ingredientes_DB(this.con);
             ingre.delete_ingrediente(ing);
             actualizaringrediente();
-            this.con.commit();
+            //this.con.commit();
         }
         catch(SQLException ex)
         {
@@ -3748,7 +3747,7 @@ public class Datos extends javax.swing.JFrame {
 
                     pr.insert(prueba, cate);
                     actualizarprueba();
-                    this.con.commit();
+                    //this.con.commit();
                  }
                  else{
                      JOptionPane.showMessageDialog(null, "Algun campo incorrecto");
@@ -3785,7 +3784,7 @@ public class Datos extends javax.swing.JFrame {
 
             pr.delete(prueba);
             actualizarprueba();
-            this.con.commit();
+            //this.con.commit();
         }
         catch(SQLException ex)
         {
