@@ -1691,7 +1691,7 @@ public class Movimientos extends javax.swing.JFrame {
                     props.setProperty("mail.smtp.host", "smtp.gmail.com");
                     props.setProperty("mail.smtp.starttls.enable", "true");
                     props.setProperty("mail.smtp.port","587");
-                    props.setProperty("mail.smtp.user", "bevisagaleria@gmail.com");
+                    props.setProperty("mail.smtp.user", "X");
                     props.setProperty("mail.smtp.auth", "true");
                     Session session = Session.getDefaultInstance(props);
 
@@ -1708,14 +1708,14 @@ public class Movimientos extends javax.swing.JFrame {
                     
                     MimeMessage message = new MimeMessage(session);
 
-                    message.setFrom(new InternetAddress("bevisagaleria@gmail.com"));
+                    message.setFrom(new InternetAddress("X"));
                     message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.correo));
 
                     message.setSubject("Orden de Compra");
                     message.setContent(multiParte);
                     //t.connect("bevisagaleria@gmail.com","bevisairlandesa");
                     Transport t = session.getTransport("smtp");
-                    t.connect("bevisagaleria@gmail.com","bevisairlandesa");
+                    t.connect("X","X");
                     t.sendMessage(message,message.getAllRecipients());
                     t.close();
                 }
