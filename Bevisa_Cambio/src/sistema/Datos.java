@@ -119,26 +119,7 @@ public class Datos extends javax.swing.JFrame {
     //tablas de cada parte
     //necesario separar debido a que se llaman despues por separado
 
-    public void creaciontablavendedores()
-    {
-
-        this.tabla_vendedores=(DefaultTableModel) this.tbvendedores.getModel();
-        
-        this.tabla_vendedores.setRowCount(0);
-
-        ArrayList <String[]> op = new ArrayList<>();
-        
-        String query="select vendedores.id , vendedores.nombre, vendedores.telefono, vendedores.correo,\n" +
-        " delegacion.nombre, vendedores.colonia, vendedores.calle,vendedores.noint,vendedores.noext\n" +
-        " from vendedores join delegacion on vendedores.iddelegacion = delegacion.id";
-        op=this.dbc.seleccionar(query);
- 
-        for (int i = 0; i < op.size(); i++) {    
-            
-            this.tabla_vendedores.addRow(op.get(i));
-        } 
-        
-    }
+    
     
     public void creaciontablaclientes()
     {
@@ -3294,6 +3275,28 @@ public class Datos extends javax.swing.JFrame {
     
     //vendedores   
        
+    
+    public void creaciontablavendedores()
+    {
+
+        this.tabla_vendedores=(DefaultTableModel) this.tbvendedores.getModel();
+        
+        this.tabla_vendedores.setRowCount(0);
+
+        ArrayList <String[]> op = new ArrayList<>();
+        
+        String query="select vendedores.id , vendedores.nombre, vendedores.telefono, vendedores.correo,\n" +
+        " delegacion.nombre, vendedores.colonia, vendedores.calle,vendedores.noint,vendedores.noext\n" +
+        " from vendedores join delegacion on vendedores.iddelegacion = delegacion.id";
+        op=this.dbc.seleccionar(query);
+ 
+        for (int i = 0; i < op.size(); i++) {    
+            
+            this.tabla_vendedores.addRow(op.get(i));
+        } 
+        
+    }
+    
     public void deshabilitarvendedor()
     {
         this.txtbuscarvendedores.setEnabled(true);

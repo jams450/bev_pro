@@ -3,8 +3,10 @@ package negocio;
 
 public class Inventario {
 
+    
+
     private int id;
-    private int id_producto;
+    private Producto produc;
     private String fecha_entrada;
     private double cantidad_actual; 
     private String lote;
@@ -23,14 +25,14 @@ public class Inventario {
         this.id = id;
     }
 
-    public int getId_producto() {
-        return id_producto;
+    public Producto getProduc() {
+        return produc;
     }
 
-    public void setId_producto(int id_producto) {
-        this.id_producto = id_producto;
+    public void setProduc(Producto produc) {
+        this.produc = produc;
     }
-
+    
     public String getFecha_entrada() {
         return fecha_entrada;
     }
