@@ -1715,7 +1715,7 @@ public class Movimientos extends javax.swing.JFrame {
                     message.setContent(multiParte);
                     //t.connect("bevisagaleria@gmail.com","bevisairlandesa");
                     Transport t = session.getTransport("smtp");
-                    t.connect("XX","X");
+                    t.connect("X","X");
                     t.sendMessage(message,message.getAllRecipients());
                     t.close();
                 }
