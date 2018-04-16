@@ -43,7 +43,7 @@ public class Vendedores_DB {
                 vende.setCalle(rs.getString(7));
                 vende.setNoint(rs.getString(8));
                 vende.setNoext(rs.getString(9));
-                    
+                vendedores.add(vende);
             }
             return vendedores;
         } finally {
@@ -85,6 +85,10 @@ public class Vendedores_DB {
             }
         }
         return rows;
+    }
+
+    public Vendedores_DB(Connection userConn) {
+        this.userConn = userConn;
     }
 
     public int update(Vendedor vende) throws SQLException 
