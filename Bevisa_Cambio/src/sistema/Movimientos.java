@@ -1261,25 +1261,24 @@ public class Movimientos extends javax.swing.JFrame {
 
                             }
                              //reporte 
+                             //reporte 
                             JasperReport reporte; //Creo el objeto reporte
                             // Ubicacion del Reporte
-                           String path = s+"\\Reportes\\ODP.jasper";
-                           try {
-                               
-                               reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
-                               Map idodp = new HashMap();
-                               idodp.put("ID_ODP", indexodp);
-                               JasperPrint jprint = JasperFillManager.fillReport(path, idodp, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
-                               File d = new File(s+"\\ODP");
-                               File pdf = File.createTempFile("ODP-"+indexodp+"---", ".pdf",d);
-                               JasperExportManager.exportReportToPdfStream(jprint, new FileOutputStream(pdf));
-                               JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
-                               viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
-                               viewer.setVisible(true); //Inicializamos la vista del Reporte
-                               
-                           } catch (Exception ex) {
-                               Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-                           }
+                            String path = s+"\\Reportes\\ODP.jasper";
+                            try {
+
+                                reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
+                                Map idodp = new HashMap();
+                                idodp.put("ID_ODP", indexodp);
+                                JasperPrint jprint = JasperFillManager.fillReport(path, idodp, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+                                JasperExportManager.exportReportToPdfFile(jprint, s+"\\ODP\\ODP-"+indexodp+".pdf");
+                                JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
+                                viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
+                                viewer.setVisible(true); //Inicializamos la vista del Reporte
+
+                            } catch (Exception ex) {
+                                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                            }
 
                         }
 
