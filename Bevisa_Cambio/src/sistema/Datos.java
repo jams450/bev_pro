@@ -1,12 +1,10 @@
 
 package sistema;
 
+import com.toedter.calendar.JTextFieldDateEditor;
 import datos.Conexion;
-import negocio.Producto;
-import datos.DBcontrolador;
-import datos.Ingredientes_DB;
-import datos.Productos_DB;
-import datos.Pruebas_DB;
+import negocio.*;
+import datos.*;
 import java.awt.Dimension;
 
 import java.awt.Toolkit;
@@ -24,12 +22,13 @@ import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
-import negocio.Ingrediente;
-import negocio.Prueba;
 import funciones.NumberRenderer;
+import java.awt.Color;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.UIManager;
 
 /**
  *
@@ -47,7 +46,6 @@ public class Datos extends javax.swing.JFrame {
     private DefaultTableModel tabla_pruebas;  
     //vendedores
     private DefaultTableModel tabla_vendedores;
-    
     //clientes
     private DefaultTableModel tabla4;
     //proveedores
@@ -88,7 +86,8 @@ public class Datos extends javax.swing.JFrame {
         
         try{
             initComponents();
-      
+            UIManager.put("ComboBox.disabledForeground", Color.black);
+            
             this.mp=mp;
             this.con=con;
             if (this.con.isClosed() || this.con.isReadOnly()) {
@@ -117,10 +116,7 @@ public class Datos extends javax.swing.JFrame {
     
     
     //tablas de cada parte
-    //necesario separar debido a que se llaman despues por separado
-
-    
-    
+    //necesario separar debido a que se llaman despues por separado 
     public void creaciontablaclientes()
     {
         this.tabla4=(DefaultTableModel) this.tbclientes.getModel();
@@ -161,9 +157,7 @@ public class Datos extends javax.swing.JFrame {
         } 
     }
     
-    
-   
-    
+
     //llenado de combo (se junta mas de una pestaña)
     public void combobox()
     {
@@ -326,8 +320,7 @@ public class Datos extends javax.swing.JFrame {
         txtnombreinventario = new javax.swing.JTextField();
         jLabel84 = new javax.swing.JLabel();
         jLabel85 = new javax.swing.JLabel();
-        txtfechainventario = new javax.swing.JTextField();
-        txtcantidadinventario = new javax.swing.JTextField();
+        txtcantidad_actualinventario = new javax.swing.JTextField();
         jLabel86 = new javax.swing.JLabel();
         txtloteinventario = new javax.swing.JTextField();
         jLabel87 = new javax.swing.JLabel();
@@ -338,7 +331,8 @@ public class Datos extends javax.swing.JFrame {
         txtcantidadtinventario = new javax.swing.JTextField();
         jLabel90 = new javax.swing.JLabel();
         jLabel91 = new javax.swing.JLabel();
-        txtfechainventario1 = new javax.swing.JTextField();
+        jdfecha_caducidad = new com.toedter.calendar.JDateChooser();
+        jdfecha = new com.toedter.calendar.JDateChooser();
         Vendedores = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -509,6 +503,7 @@ public class Datos extends javax.swing.JFrame {
             }
         });
         tbproductos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tbproductos.setColumnSelectionAllowed(true);
         tbproductos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tbproductos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbproductos.setShowHorizontalLines(false);
@@ -1029,11 +1024,11 @@ public class Datos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Numero Entrada", "Clave", "Nombre", "Fecha", "Fecha Caducidad", "Cantidad", "C. Actual", "Lote", "ID OPP", "Factura"
+                "Numero Entrada", "Clave", "Nombre", "Fecha", "C. Actual", "Lote", "ID OPP", "Factura", "Cantidad", "Fecha Caducidad"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false, false, false
@@ -1065,8 +1060,8 @@ public class Datos extends javax.swing.JFrame {
             tbinventario.getColumnModel().getColumn(1).setPreferredWidth(100);
             tbinventario.getColumnModel().getColumn(2).setPreferredWidth(250);
             tbinventario.getColumnModel().getColumn(3).setPreferredWidth(150);
-            tbinventario.getColumnModel().getColumn(4).setPreferredWidth(150);
-            tbinventario.getColumnModel().getColumn(5).setPreferredWidth(100);
+            tbinventario.getColumnModel().getColumn(8).setPreferredWidth(100);
+            tbinventario.getColumnModel().getColumn(9).setPreferredWidth(150);
         }
 
         Inventario.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 56, 650, 370));
@@ -1144,15 +1139,10 @@ public class Datos extends javax.swing.JFrame {
         jLabel85.setText("Fecha :");
         Inventario.add(jLabel85, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 150, -1, -1));
 
-        txtfechainventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtfechainventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtfechainventario.setEnabled(false);
-        Inventario.add(txtfechainventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 150, 140, -1));
-
-        txtcantidadinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtcantidadinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtcantidadinventario.setEnabled(false);
-        Inventario.add(txtcantidadinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 210, 139, -1));
+        txtcantidad_actualinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtcantidad_actualinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtcantidad_actualinventario.setEnabled(false);
+        Inventario.add(txtcantidad_actualinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 210, 139, -1));
 
         jLabel86.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel86.setText("C. Actual :");
@@ -1198,10 +1188,12 @@ public class Datos extends javax.swing.JFrame {
         jLabel91.setText("Fecha Caducidad :");
         Inventario.add(jLabel91, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 180, -1, -1));
 
-        txtfechainventario1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtfechainventario1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtfechainventario1.setEnabled(false);
-        Inventario.add(txtfechainventario1, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 180, 140, -1));
+        jdfecha_caducidad.setBackground(new java.awt.Color(255, 255, 255));
+        jdfecha_caducidad.setEnabled(false);
+        Inventario.add(jdfecha_caducidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 180, 140, 20));
+
+        jdfecha.setEnabled(false);
+        Inventario.add(jdfecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 150, 140, -1));
 
         jTabbedPane2.addTab("Inventario", Inventario);
 
@@ -1995,15 +1987,17 @@ public class Datos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     //metodo para pasar de dd/mm/yyyy a yyyy-mm-dd
-    public String fechadividir(JTextField  jt, int i ){
+    public String fechadividir(String  jt, int i ){
         String fi ="";
+        // a-a-a ---> a/a/a
         if (i == 0) {
-            String[] s = jt.getText().split("-");
+            String[] s = jt.split("-");
             fi = s[2]+"/"+s[1]+"/"+s[0];       
         }
+        // a/a/a ---> a-a-a
         else
         {
-            String[] s = jt.getText().split("/");
+            String[] s = jt.split("/");
             fi = s[2]+"-"+s[1]+"-"+s[0]; 
         }
         return fi;
@@ -2017,7 +2011,8 @@ public class Datos extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_formWindowClosing
 
-        
+   
+   
     //Productos
      public void tablaproductos()
     {
@@ -2550,40 +2545,53 @@ public class Datos extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tbproductosMouseClicked
 
-     //inventario
+     
+//inventario
     
      public void creaciontablainventario()
     {  
-        this.tabla_inventario=(DefaultTableModel) this.tbinventario.getModel();
-        
-        this.tabla_inventario.setRowCount(0);
+        try{
+            this.tabla_inventario=(DefaultTableModel) this.tbinventario.getModel();
+            this.tabla_inventario.setRowCount(0);
+            Inventario_DB in = new Inventario_DB(this.con);
+            List <Inventario> inventario = in.select();
+            for (int i = 0; i < inventario.size(); i++) {
+                Object[] obj = new Object[10];
+                obj[0]=inventario.get(i).getId();
+                obj[1]=inventario.get(i).getProduc().getClave();
+                obj[2]=inventario.get(i).getProduc().getNombre();
+                obj[3]=inventario.get(i).getFecha_entrada();
+                obj[4]=inventario.get(i).getCantidad_actual();
+                obj[5]=inventario.get(i).getLote();
+                obj[6]=inventario.get(i).getIdopp();
+                obj[7]=inventario.get(i).getFactura();
+                obj[8]=inventario.get(i).getCantidad();
+                obj[9]=inventario.get(i).getFecha_caducidad();
+                
+                this.tabla_inventario.addRow(obj);
+            }
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        }
 
-        ArrayList <String[]> op = new ArrayList<>();
-        
-        String query="select inventario.id, productos.clave, productos.nombre, inventario.fechaentrada, inventario.fechacaducidad, inventario.cantidad, inventario.cantidadactual,\n" +
-"inventario.lote, inventario.idopp, inventario.facturano from inventario join productos \n" +
-"on productos.id=inventario.idproducto where inventario.cantidadactual>0;";
-        op=this.dbc.seleccionar(query);
- 
-        for (int i = 0; i < op.size(); i++) {    
-            
-            this.tabla_inventario.addRow(op.get(i));
-        } 
     }
-    
-    
+       
     public void habilitarinventario()
     {
            this.tbinventario.setEnabled(false);
             
            this.txtbuscarinventario.setEnabled(false);        
-
-           this.txtfechainventario.setEnabled(true);
-           this.txtfechainventario1.setEnabled(true);
-           this.txtcantidadinventario.setEnabled(true);
+           this.txtcantidad_actualinventario.setEnabled(true);
            this.txtloteinventario.setEnabled(true);
 
-           this.txtfactinventario.setEnabled(true);    
+           this.txtfactinventario.setEnabled(true); 
+           this.jdfecha_caducidad.setEnabled(true);
+           this.jdfecha.setEnabled(true);
 
            this.btnCancelarinventario.setEnabled(true);
            this.btnGuardarinventario.setEnabled(true);
@@ -2596,16 +2604,12 @@ public class Datos extends javax.swing.JFrame {
             this.tbinventario.setEnabled(true);
             
            this.txtbuscarinventario.setEnabled(true);        
-
-           this.txtfechainventario.setEnabled(false);
-           this.txtfechainventario1.setEnabled(false);
-           this.txtcantidadinventario.setEnabled(false);
+           this.txtcantidad_actualinventario.setEnabled(false);
            this.txtloteinventario.setEnabled(false);
-           
+           this.jdfecha_caducidad.setEnabled(false);
            this.txtfactinventario.setEnabled(false);  
-
-
-
+           this.jdfecha.setEnabled(false);
+           
            this.btnCancelarinventario.setEnabled(false);
            this.btnGuardarinventario.setEnabled(false);
            this.btnCambiarinventario.setEnabled(false);
@@ -2618,14 +2622,11 @@ public class Datos extends javax.swing.JFrame {
            this.txtbuscarinventario.setText("");        
            this.txtclaveinventario.setText("");  
            this.txtnombreinventario.setText("");  
-           this.txtfechainventario.setText("");  
-           this.txtfechainventario1.setText("");  
-           this.txtcantidadinventario.setText("");
+           this.txtcantidad_actualinventario.setText("");
            this.txtcantidadtinventario.setText("");  
            this.txtloteinventario.setText("");  
            this.txtidoppinventario.setText("");  
-           this.txtfactinventario.setText("");   
-           
+           this.txtfactinventario.setText("");      
     }
     
     
@@ -2644,33 +2645,30 @@ public class Datos extends javax.swing.JFrame {
     private void btnGuardarinventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarinventarioActionPerformed
         try{
             //hacer todo :V
-            if (this.txtcantidadinventario.getText().isEmpty() || this.txtloteinventario.getText().isEmpty() || this.txtfactinventario.getText().isEmpty() ||
-                this.txtfechainventario.getText().isEmpty() || this.txtfechainventario1.getText().isEmpty()) {
+            if (this.txtcantidad_actualinventario.getText().isEmpty() || this.txtloteinventario.getText().isEmpty() || this.txtfactinventario.getText().isEmpty() ||
+                this.jdfecha.getDate().toString().isEmpty()|| this.jdfecha_caducidad.getDate().toString().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
             }
             else
             {
-                if (this.txtcantidadinventario.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtfechainventario.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$") && this.txtfechainventario1.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$") ){
-
-                    String query="Update inventario set cantidadactual = ? , lote = ? ,   facturano = ? , fechaentrada = ? , fechacaducidad = ? where id = ? ";
-                    PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
-
-                    ps.setString(1, this.txtcantidadinventario.getText());
-                    ps.setString(2, this.txtloteinventario.getText());
-
-                    ps.setString(3, this.txtfactinventario.getText());
+                if (this.txtcantidad_actualinventario.getText().matches("^([0-9]+)(\\.[0-9]+)?$") ){
                     
+                    Inventario_DB in = new Inventario_DB(this.con);
+                    Inventario inventario = new Inventario();
+                    
+                    inventario.setCantidad_actual(Double.parseDouble(this.txtcantidad_actualinventario.getText()));
+                    inventario.setLote(this.txtloteinventario.getText());
+                    inventario.setFactura(this.txtfactinventario.getText());
+                    
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-                    ps.setString(4, fechadividir(this.txtfechainventario,1));
-                    ps.setString(5, fechadividir(this.txtfechainventario1,1));
-
-                    ps.setInt(6, Integer.parseInt(this.txtnoentradainventario.getText()));
-
-                    ps.executeUpdate();
-                    ps.close();
+                    inventario.setFecha_entrada(fechadividir(formatter.format(this.jdfecha.getDate()),1));
+                    inventario.setFecha_caducidad(fechadividir(formatter.format(this.jdfecha_caducidad.getDate()),1));
+                    inventario.setId(Integer.parseInt(this.txtnoentradainventario.getText()));
+                    
+                    in.update(inventario);
 
                     creaciontablainventario();
-
                     limpiarinventario();
                     deshabilitarinventario();
 
@@ -2683,7 +2681,7 @@ public class Datos extends javax.swing.JFrame {
         }
         catch(Exception ex)
         {
-             JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+             JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez "+ ex);
             try {
                 this.dbc = new DBcontrolador ();
             } catch (SQLException ex1) {
@@ -2702,22 +2700,29 @@ public class Datos extends javax.swing.JFrame {
     private void tbinventarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbinventarioMouseClicked
         try
         {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            this.jdfecha_caducidad.setDateFormatString("dd/MM/yyyy");
+            this.jdfecha.setDateFormatString("dd/MM/yyyy");
+
             this.columnainventario=this.tbinventario.getSelectedRow();
 
             this.txtnoentradainventario.setText(this.tbinventario.getValueAt(this.columnainventario, 0).toString());
             this.txtclaveinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 1).toString());
             this.txtnombreinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 2).toString());
-            this.txtfechainventario.setText(this.tbinventario.getValueAt(this.columnainventario, 3).toString());
-            this.txtfechainventario1.setText(this.tbinventario.getValueAt(this.columnainventario, 4).toString());
-            this.txtcantidadtinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 5).toString());
-            this.txtcantidadinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 6).toString());
-            this.txtloteinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 7).toString());
-            this.txtidoppinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 8).toString());
-            this.txtfactinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 9).toString());
+            Date date = formatter.parse(fechadividir(this.tbinventario.getValueAt(this.columnainventario, 3).toString(),0));
+            this.jdfecha.setDate(date);
             
-            this.txtfechainventario.setText(fechadividir(this.txtfechainventario,0));
-            this.txtfechainventario1.setText(fechadividir(this.txtfechainventario1,0));
-
+            this.txtcantidad_actualinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 4).toString());
+            this.txtloteinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 5).toString());
+            this.txtidoppinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 6).toString());
+            this.txtfactinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 7).toString());
+            this.txtcantidadtinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 8).toString());     
+            
+            date = formatter.parse(fechadividir(this.tbinventario.getValueAt(this.columnainventario, 9).toString(),0));
+            this.jdfecha_caducidad.setDate(date);
+            
+            
+           
             this.btnCambiarinventario.setEnabled(true);
         }
         catch(Exception ex)
@@ -3988,6 +3993,8 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private com.toedter.calendar.JDateChooser jdfecha;
+    private com.toedter.calendar.JDateChooser jdfecha_caducidad;
     private javax.swing.JLabel lbcantidad2;
     private javax.swing.JLabel lblcaducidad;
     private javax.swing.JLabel lbliva;
@@ -4012,7 +4019,7 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JTextField txtcalleclientes1;
     private javax.swing.JTextField txtcalleproveedor;
     private javax.swing.JTextField txtcallevendedor;
-    private javax.swing.JTextField txtcantidadinventario;
+    private javax.swing.JTextField txtcantidad_actualinventario;
     private javax.swing.JTextField txtcantidadtinventario;
     private javax.swing.JTextField txtcelularclientes;
     private javax.swing.JTextField txtclaveingrediente;
@@ -4033,8 +4040,6 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JTextField txtcuentaproveedor;
     private javax.swing.JTextField txtdeterminacion;
     private javax.swing.JTextField txtfactinventario;
-    private javax.swing.JTextField txtfechainventario;
-    private javax.swing.JTextField txtfechainventario1;
     private javax.swing.JTextField txtidclientes;
     private javax.swing.JTextField txtidingrediente;
     private javax.swing.JTextField txtidoppinventario;

@@ -57,6 +57,8 @@ public class Inventario_DB {
                 inven.setLote(rs.getString(8));
                 inven.setIdopp(rs.getInt(9));
                 inven.setFactura(rs.getString(10));
+                
+                inventario.add(inven);
                     
             }
             return inventario;
