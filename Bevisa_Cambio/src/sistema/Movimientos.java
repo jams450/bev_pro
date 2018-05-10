@@ -1691,12 +1691,12 @@ public class Movimientos extends javax.swing.JFrame {
                     props.setProperty("mail.smtp.host", "smtp.gmail.com");
                     props.setProperty("mail.smtp.starttls.enable", "true");
                     props.setProperty("mail.smtp.port","587");
-                    props.setProperty("mail.smtp.user", "X");
+                    props.setProperty("mail.smtp.user", "bevisagaleria@gmail.com");
                     props.setProperty("mail.smtp.auth", "true");
                     Session session = Session.getDefaultInstance(props);
 
                     BodyPart texto = new MimeBodyPart();
-                    texto.setText("Mando orden de compra,favor de confirmar fecha indicada de enrega ");
+                    texto.setText("Mando orden de compra,favor de confirmar fecha indicada de entrega ");
                     BodyPart adjunto = new MimeBodyPart();
                     adjunto.setDataHandler(new DataHandler(new FileDataSource(s+"\\ODC\\ODC-"+index+".pdf")));
                     adjunto.setFileName("ODC.pdf");
@@ -1708,14 +1708,14 @@ public class Movimientos extends javax.swing.JFrame {
                     
                     MimeMessage message = new MimeMessage(session);
 
-                    message.setFrom(new InternetAddress("X"));
+                    message.setFrom(new InternetAddress("bevisagaleria@gmail.com"));
                     message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.correo));
 
                     message.setSubject("Orden de Compra");
                     message.setContent(multiParte);
                     //t.connect("bevisagaleria@gmail.com","bevisairlandesa");
                     Transport t = session.getTransport("smtp");
-                    t.connect("XX","X");
+                    t.connect("bevisagaleria@gmail.com","bevisairlandesa");
                     t.sendMessage(message,message.getAllRecipients());
                     t.close();
                 }

@@ -2,6 +2,7 @@
 package negocio;
 
 public class Proveedores {
+    
     private int id;
     private String nombre;
     private String telefono;
@@ -16,6 +17,23 @@ public class Proveedores {
     private String cuenta;
     private String contacto;
     private String sistema_calidad;
+    
+    public Proveedores() {
+        this.id = 1;
+        this.nombre = "";
+        this.telefono = "";
+        this.correo = "";
+        this.cp = "";
+        this.colonia = "";
+        this.calle = "";
+        this.noint = "";
+        this.noext = "";
+        this.rfc = "";
+        this.idmpago = "";
+        this.cuenta = "";
+        this.contacto = "";
+        this.sistema_calidad = "";
+    }
 
     public int getId() {
         return id;

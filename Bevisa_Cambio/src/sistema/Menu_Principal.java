@@ -65,7 +65,7 @@ public class Menu_Principal extends javax.swing.JFrame {
     public void notificaciones()
     {
         try{
-            if (this.con==null) {
+            if (this.con==null || this.con.isClosed()) {
                 this.con=Conexion.getConnection();
             }
             //this.con.commit();

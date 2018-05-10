@@ -49,9 +49,10 @@ public class Proveedores_DB {
                 prov.setNoint(rs.getString(8));
                 prov.setNoext(rs.getString(9));
                 prov.setRfc(rs.getString(10));
-                prov.setCuenta(rs.getString(11));
-                prov.setContacto(rs.getString(12));
-                prov.setSistema_calidad(rs.getString(13));               
+                prov.setIdmpago(rs.getString(11));
+                prov.setCuenta(rs.getString(12));
+                prov.setContacto(rs.getString(13));
+                prov.setSistema_calidad(rs.getString(14));               
                 proveedores.add(prov); //ir añadiendo a la lista el nuevo proveedor
             }
             return proveedores; 

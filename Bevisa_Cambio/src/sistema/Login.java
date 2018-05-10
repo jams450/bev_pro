@@ -4,6 +4,7 @@ package sistema;
 
 
 import datos.Conexion;
+import datos.DBcontrolador;
 import datos.Login_DB;
 import java.awt.Color;
 import negocio.Usuario;
@@ -11,7 +12,9 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 

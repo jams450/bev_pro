@@ -1,7 +1,6 @@
 
 package sistema;
 
-import com.toedter.calendar.JTextFieldDateEditor;
 import datos.Conexion;
 import negocio.*;
 import datos.*;
@@ -47,9 +46,9 @@ public class Datos extends javax.swing.JFrame {
     //vendedores
     private DefaultTableModel tabla_vendedores;
     //clientes
-    private DefaultTableModel tabla4;
+    private DefaultTableModel tabla_clientes;
     //proveedores
-    private DefaultTableModel tabla5;
+    private DefaultTableModel tabla_proveedor;
     //inventario
     private DefaultTableModel tabla_inventario;
     
@@ -113,50 +112,6 @@ public class Datos extends javax.swing.JFrame {
         }
         
     }
-    
-    
-    //tablas de cada parte
-    //necesario separar debido a que se llaman despues por separado 
-    public void creaciontablaclientes()
-    {
-        this.tabla4=(DefaultTableModel) this.tbclientes.getModel();
-        
-        this.tabla4.setRowCount(0);
-
-        ArrayList <String[]> op = new ArrayList<>();
-        
-        String query="select clientes.id , clientes.nombre, clientes.telefono, clientes.celular, clientes.correo,\n" +
-        " delegacion.nombre, clientes.colonia, clientes.calle, clientes.noint, clientes.noext, clientes.rfc, modo_pago.nombre ,"
-        + " clientes.cuenta, clientes.contacto, clientes.estatus, clientes.nombrefact,clientes.coloniafact, clientes.callefact, clientes.nointfact, clientes.noextfact, clientes.delefact \n" +
-        " from clientes join delegacion on clientes.iddelegacion = delegacion.id join modo_pago on clientes.idmpago = modo_pago.id";
-        op=this.dbc.seleccionar(query);
- 
-        for (int i = 0; i < op.size(); i++) {    
-            
-            this.tabla4.addRow(op.get(i));
-        } 
-    }
-    
-    public void creaciontablaproveedor()
-    {
-        this.tabla5=(DefaultTableModel) this.tbproveedor.getModel();
-        
-        this.tabla5.setRowCount(0);
-
-        ArrayList <String[]> op = new ArrayList<>();
-        
-        String query="select proveedores.id , proveedores.nombre, proveedores.telefono, proveedores.correo,\n" +
-        " proveedores.cp, proveedores.colonia, proveedores.calle, proveedores.noint, proveedores.noext, proveedores.rfc, modo_pago.nombre ,"
-        + " proveedores.cuenta, proveedores.contacto, proveedores.sistema_calidad \n" +
-        " from proveedores join modo_pago on proveedores.idmpago = modo_pago.id";
-        op=this.dbc.seleccionar(query);
- 
-        for (int i = 0; i < op.size(); i++) {    
-            
-            this.tabla5.addRow(op.get(i));
-        } 
-    }
-    
 
     //llenado de combo (se junta mas de una pestaña)
     public void combobox()
@@ -503,7 +458,6 @@ public class Datos extends javax.swing.JFrame {
             }
         });
         tbproductos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tbproductos.setColumnSelectionAllowed(true);
         tbproductos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tbproductos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbproductos.setShowHorizontalLines(false);
@@ -1647,14 +1601,14 @@ public class Datos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Telefono", "Celular", "Correo", "Delegacion", "Colonia", "Calle", "No int", "No ext", "RFC", "Pago", "Cuenta", "Contacto", "Estatus", "Nombre Fact", "Colonia Fact", "Calle Fact", "No Int Fact", "No Ext Fact", "Delegacion Fact"
+                "ID", "Nombre", "Telefono", "Celular", "Correo", "Delegacion", "Colonia", "Calle", "No int", "No ext", "RFC", "Pago", "Cuenta", "Contacto", "Estatus", "Nombre Fact", "Colonia Fact", "Calle Fact", "No Int Fact", "No Ext Fact", "Delegacion Fact", "Vendedor"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -2038,6 +1992,15 @@ public class Datos extends javax.swing.JFrame {
                 obj[11]=productos.get(i).getMoneda();
                 this.tabla_productos.addRow(obj);
             }
+            
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_productos);
+            this.tbproductos.setRowSorter(tr);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
         }
         catch(SQLException ex)
         {
@@ -2500,13 +2463,6 @@ public class Datos extends javax.swing.JFrame {
         this.tbproductos.setRowSorter(tr);
 
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscar_producto.getText().toUpperCase(),2));
-        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-
-        int columnIndexToSort = 0;
-        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
-
-        tr.setSortKeys(sortKeys);
-        tr.sort();
     }//GEN-LAST:event_txtbuscar_productoKeyReleased
 
     private void tbproductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbproductosMouseClicked
@@ -2570,6 +2526,15 @@ public class Datos extends javax.swing.JFrame {
                 
                 this.tabla_inventario.addRow(obj);
             }
+            
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_inventario);
+            this.tbinventario.setRowSorter(tr);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
         }
         catch(SQLException ex)
         {
@@ -2635,6 +2600,12 @@ public class Datos extends javax.swing.JFrame {
         this.tbinventario.setRowSorter(tr);
 
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscarinventario.getText().toUpperCase(),2));
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
     }//GEN-LAST:event_txtbuscarinventarioKeyReleased
 
     private void btnCancelarinventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarinventarioActionPerformed
@@ -2733,6 +2704,63 @@ public class Datos extends javax.swing.JFrame {
 
     //clientes    
     
+    public void creaciontablaclientes()
+    {
+        
+        try{
+            this.tabla_clientes=(DefaultTableModel) this.tbclientes.getModel();
+            this.tabla_clientes.setRowCount(0);
+            Clientes_DB in = new Clientes_DB(this.con);
+            List <Clientes> cliente = in.select();
+            
+            for (int i = 0; i < cliente.size(); i++) {
+                Object[] obj = new Object[22];
+                obj[0]=cliente.get(i).getId();
+                obj[1]=cliente.get(i).getNombre();
+                obj[2]=cliente.get(i).getTelefono();
+                obj[3]=cliente.get(i).getCelular();
+                obj[4]=cliente.get(i).getCorreo();
+                obj[5]=cliente.get(i).getDelegacion();
+                obj[6]=cliente.get(i).getColonia();
+                obj[7]=cliente.get(i).getCalle();
+                obj[8]=cliente.get(i).getNo_int();
+                obj[9]=cliente.get(i).getNo_ext();
+                obj[10]=cliente.get(i).getRfc();
+                obj[11]=cliente.get(i).getPago();
+                obj[12]=cliente.get(i).getCuenta();
+                obj[13]=cliente.get(i).getContacto();
+                obj[14]=cliente.get(i).getEstatus();
+                
+                obj[15]=cliente.get(i).getNombref();               
+                obj[16]=cliente.get(i).getColoniaf();
+                obj[17]=cliente.get(i).getCallef();
+                obj[18]=cliente.get(i).getNo_intf();
+                obj[19]=cliente.get(i).getNo_extf();
+                obj[20]=cliente.get(i).getDelegacionf();
+                obj[21]=cliente.get(i).getVendedor();
+                
+                this.tabla_clientes.addRow(obj);
+            }
+            
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_clientes);
+            this.tbclientes.setRowSorter(tr);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        }
+  
+    }
+   
      public void habilitarcliente()
     {
        this.btnCancelarcliente.setEnabled(true);
@@ -2826,12 +2854,37 @@ public class Datos extends javax.swing.JFrame {
 
        this.txtcuentaclientes.setText("");
        this.txtcontactoclientes.setText("");
+       this.txtidclientes.setText("");
        this.chestatusclientes.setSelected(false);
        
        
        this.txtbuscarclientes.setText("");
     }
     
+     public boolean validar_cliente()
+     {
+         boolean valida =true;
+         
+         if (!this.txtcorreoclientes.getText().isEmpty()) {
+            if (!this.txtcorreoclientes.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
+                valida=false;
+            }
+        }
+
+        if (!this.txtrfcclientes.getText().isEmpty()) {
+            if (!this.txtrfcclientes.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")) {
+                valida=false;
+            }
+        }
+        if (!this.txtcuentaclientes.getText().isEmpty()) {
+            if (!this.txtcuentaclientes.getText().matches("^[0-9]{4}$")) {
+                valida=false;
+            }
+        }
+         return valida;
+     }
+     
+     
     private void btnCancelarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarclienteActionPerformed
         deshabilitarcliente();
         limpiarcliente();
@@ -2840,151 +2893,114 @@ public class Datos extends javax.swing.JFrame {
     private void btnGuardarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarclienteActionPerformed
         try
         {
-            if(this.txtnointclientes.getText().isEmpty())
-            {
-                this.txtnointclientes.setText(" ");
-                
-            }
-            
-            if(this.txtnoextclientes.getText().isEmpty())
-            {
-                this.txtnoextclientes.setText(" ");
-                
-            }
-            if(this.txtnointclientes1.getText().isEmpty())
-            {
-                this.txtnointclientes1.setText(" ");
-                
-            }
-            
-            if(this.txtnoextclientes1.getText().isEmpty())
-            {
-                this.txtnoextclientes1.setText(" ");
-                
-            }
-            if (this.txtnombreclientes.getText().isEmpty() || this.txttelefonoclientes.getText().isEmpty() || this.txtcorreoclientes.getText().isEmpty() || this.txtcelularclientes.getText().isEmpty() ||
-                this.txtcoloniaclientes.getText().isEmpty() || this.txtcalleclientes.getText().isEmpty() || this.txtnoextclientes.getText().isEmpty() || this.txtnointclientes.getText().isEmpty()
-                || this.txtrfcclientes.getText().isEmpty() || this.txtcuentaclientes.getText().isEmpty() || this.txtcontactoclientes.getText().isEmpty() ||
-                this.txtnombreclientes1.getText().isEmpty() || this.txtcoloniaclientes1.getText().isEmpty() || this.txtcalleclientes1.getText().isEmpty()
-                || this.txtnoextclientes1.getText().isEmpty() || this.txtnointclientes1.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-            }
-            else
-            {
-                if (this.txtcorreoclientes.getText().matches("^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*(.[a-zA-Z]{2,4})$")
-                    && this.txtcuentaclientes.getText().matches("^[0-9]{4}$") && this.txtrfcclientes.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")) {
-
+            if (this.validar_cliente()) {
+                if (!this.txtnombreclientes.getText().isEmpty()) {
                     if(this.seleccionclientes==1)
                     {
-                        String query="Insert into clientes (nombre,telefono,celular,correo,iddelegacion,colonia,calle,noint,noext,rfc,idmpago,cuenta,contacto,estatus, nombrefact, coloniafact, callefact, nointfact, noextfact, delefact, idvendedor) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
-
-                        ps.setString(1, this.txtnombreclientes.getText());
-                        ps.setString(2, this.txttelefonoclientes.getText());
-                        ps.setString(3, this.txtcelularclientes.getText());
-                        ps.setString(4, this.txtcorreoclientes.getText());
-
-                        ps.setInt(5, this.cbdelegacion1.getSelectedIndex()+1);
-
-                        ps.setString(6, this.txtcoloniaclientes.getText() );
-                        ps.setString(7, this.txtcalleclientes.getText());
-                        ps.setString(8, this.txtnointclientes.getText());
-                        ps.setString(9, this.txtnoextclientes.getText());
-
-                        ps.setString(10, this.txtrfcclientes.getText());
-                        ps.setInt(11, this.cbmodopago.getSelectedIndex()+1);
-                        ps.setInt(12, Integer.parseInt(this.txtcuentaclientes.getText()));
-                        ps.setString(13, this.txtcontactoclientes.getText());
+                        Clientes_DB  cb = new  Clientes_DB(this.con);
+                        Clientes cliente = new Clientes();
+                        
+                        cliente.setNombre(this.txtnombreclientes.getText());
+                        cliente.setTelefono(this.txttelefonoclientes.getText());
+                        cliente.setCelular(this.txtcelularclientes.getText());
+                        cliente.setCorreo(this.txtcorreoclientes.getText());
+                        cliente.setDelegacion(this.cbdelegacion1.getSelectedIndex()+1+"");
+                        cliente.setColonia(this.txtcoloniaclientes.getText() );
+                        cliente.setCalle(this.txtcalleclientes.getText());
+                        cliente.setNo_int(this.txtnointclientes.getText());
+                        cliente.setNo_ext(this.txtnoextclientes.getText());
+                        cliente.setRfc(this.txtrfcclientes.getText());
+                        cliente.setPago(this.cbmodopago.getSelectedIndex()+1+"");
+                        cliente.setCuenta(this.txtcuentaclientes.getText());
+                        cliente.setContacto(this.txtcontactoclientes.getText());
 
                         if (this.chestatusclientes.isSelected()) {
-                            ps.setInt(14, 2);
+                            cliente.setEstatus(2+"");
                         }
                         else
                         {
-                            ps.setInt(14, 1);
+                            cliente.setEstatus(1+"");
                         }
 
-                        ps.setString(15, this.txtnombreclientes1.getText());
-                        ps.setString(16, this.txtcoloniaclientes1.getText() );
-                        ps.setString(17, this.txtcalleclientes1.getText());
-                        ps.setString(18, this.txtnointclientes1.getText());
-                        ps.setString(19, this.txtnoextclientes1.getText());
-                        ps.setInt(20, this.cbdelegacion2.getSelectedIndex()+1);
-                        ps.setInt(21, this.cbvendedor.getSelectedIndex()+1);
+                        cliente.setNombref(this.txtnombreclientes1.getText());
+                        cliente.setColoniaf(this.txtcoloniaclientes1.getText() );
+                        cliente.setCallef(this.txtcalleclientes1.getText());
+                        cliente.setNo_intf(this.txtnointclientes1.getText());
+                        cliente.setNo_extf(this.txtnoextclientes1.getText());
+                        cliente.setDelegacionf(this.cbdelegacion2.getSelectedIndex()+1+"");
+                        cliente.setVendedor(this.cbvendedor.getSelectedIndex()+1+"");
 
-                        ps.executeUpdate();
-                        ps.close();
+                        cb.insert(cliente);
 
-                        creaciontablaclientes();
                     }
                     if(this.seleccionclientes==2)
                     {
-                        String query="Update clientes set nombre = ? , telefono = ?, celular = ? ,   correo = ? ,  iddelegacion = ? , colonia = ? , calle = ? ,  noint = ? ,  noext= ? , rfc = ? ,idmpago = ?,cuenta = ?,contacto = ?,estatus = ? , "
-                        + " nombrefact = ? , coloniafact = ?, callefact = ?, nointfact = ?, noextfact = ?, delefact = ?, idvendedor= ?  where id = ? ";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
-
-                        ps.setString(1, this.txtnombreclientes.getText());
-                        ps.setString(2, this.txttelefonoclientes.getText());
-                        ps.setString(3, this.txtcelularclientes.getText());
-                        ps.setString(4, this.txtcorreoclientes.getText());
-
-                        ps.setInt(5, this.cbdelegacion1.getSelectedIndex()+1);
-
-                        ps.setString(6, this.txtcoloniaclientes.getText() );
-                        ps.setString(7, this.txtcalleclientes.getText());
-                        ps.setString(8, this.txtnointclientes.getText());
-                        ps.setString(9, this.txtnoextclientes.getText());
-
-                        ps.setString(10, this.txtrfcclientes.getText());
-                        ps.setInt(11, this.cbmodopago.getSelectedIndex()+1);
-                        ps.setInt(12, Integer.parseInt(this.txtcuentaclientes.getText()));
-                        ps.setString(13, this.txtcontactoclientes.getText());
+                        Clientes_DB  cb = new  Clientes_DB(this.con);
+                        Clientes cliente = new Clientes();
+                        
+                        cliente.setNombre(this.txtnombreclientes.getText());
+                        cliente.setTelefono(this.txttelefonoclientes.getText());
+                        cliente.setCelular(this.txtcelularclientes.getText());
+                        cliente.setCorreo(this.txtcorreoclientes.getText());
+                        cliente.setDelegacion(this.cbdelegacion1.getSelectedIndex()+1+"");
+                        cliente.setColonia(this.txtcoloniaclientes.getText() );
+                        cliente.setCalle(this.txtcalleclientes.getText());
+                        cliente.setNo_int(this.txtnointclientes.getText());
+                        cliente.setNo_ext(this.txtnoextclientes.getText());
+                        cliente.setRfc(this.txtrfcclientes.getText());
+                        cliente.setPago(this.cbmodopago.getSelectedIndex()+1+"");
+                        cliente.setCuenta(this.txtcuentaclientes.getText());
+                        cliente.setContacto(this.txtcontactoclientes.getText());
 
                         if (this.chestatusclientes.isSelected()) {
-                            ps.setInt(14, 2);
+                            cliente.setEstatus(2+"");
                         }
                         else
                         {
-                            ps.setInt(14, 1);
+                            cliente.setEstatus(1+"");
                         }
 
-                        ps.setString(15, this.txtnombreclientes1.getText());
-                        ps.setString(16, this.txtcoloniaclientes1.getText() );
-                        ps.setString(17, this.txtcalleclientes1.getText());
-                        ps.setString(18, this.txtnointclientes1.getText());
-                        ps.setString(19, this.txtnoextclientes1.getText());
-                        ps.setInt(20, this.cbdelegacion2.getSelectedIndex()+1);
-                        ps.setInt(21, this.cbvendedor.getSelectedIndex()+1);
-                        ps.setInt(22, Integer.parseInt(this.txtidclientes.getText()));
-                        ps.executeUpdate();
-                        ps.close();
-
-                        creaciontablaclientes();
-
+                        cliente.setNombref(this.txtnombreclientes1.getText());
+                        cliente.setColoniaf(this.txtcoloniaclientes1.getText() );
+                        cliente.setCallef(this.txtcalleclientes1.getText());
+                        cliente.setNo_intf(this.txtnointclientes1.getText());
+                        cliente.setNo_extf(this.txtnoextclientes1.getText());
+                        cliente.setDelegacionf(this.cbdelegacion2.getSelectedIndex()+1+"");
+                        cliente.setVendedor(this.cbvendedor.getSelectedIndex()+1+"");
+                        cliente.setId(Integer.parseInt(this.txtidclientes.getText()));
+                        
+                        cb.update(cliente);
+                        
                     }
+                    creaciontablaclientes();
 
                     this.seleccionvendedor=0;
                     deshabilitarcliente();
                     limpiarcliente();
-
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
+                    JOptionPane.showMessageDialog(null, "Campo nombre esta vacio");
                 }
             }
+            else{
+                JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
+            }
+            
 
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
-             JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
-            try {
-                this.dbc = new DBcontrolador ();
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
             } catch (SQLException ex1) {
                 Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            this.con=this.dbc.getCnx();
         }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        } 
     }//GEN-LAST:event_btnGuardarclienteActionPerformed
 
     private void btnCambiarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarclienteActionPerformed
@@ -2999,7 +3015,7 @@ public class Datos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarclienteActionPerformed
 
     private void txtbuscarclientesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarclientesKeyReleased
-        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla4);
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_clientes);
         this.tbclientes.setRowSorter(tr);
 
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscarclientes.getText().toUpperCase(),1,15));
@@ -3031,6 +3047,8 @@ public class Datos extends javax.swing.JFrame {
             this.txtnointclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 18).toString());
             this.txtnoextclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 19).toString());
             this.cbdelegacion2.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 20).toString());
+            
+            this.cbvendedor.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 21).toString());
 
             if ( Integer.parseInt(this.tbclientes.getValueAt(this.columnacliente, 14).toString() ) == 1 )
             {
@@ -3050,6 +3068,65 @@ public class Datos extends javax.swing.JFrame {
     }//GEN-LAST:event_tbclientesMouseClicked
 
     //proveedor    
+    
+     public void creaciontablaproveedor()
+    {
+         try{
+            this.tabla_proveedor=(DefaultTableModel) this.tbproveedor.getModel();
+            this.tabla_proveedor.setRowCount(0);
+            Proveedores_DB in = new Proveedores_DB(this.con);
+            List <Proveedores> provee = in.select();
+            for (int i = 0; i < provee.size(); i++) {
+                Object[] obj = new Object[14];
+                obj[0]=provee.get(i).getId();
+                obj[1]=provee.get(i).getNombre();
+                obj[2]=provee.get(i).getTelefono();
+                obj[3]=provee.get(i).getCorreo();
+                obj[4]=provee.get(i).getCp();
+                obj[5]=provee.get(i).getColonia();
+                obj[6]=provee.get(i).getCalle();
+                obj[7]=provee.get(i).getNoint();
+                obj[8]=provee.get(i).getNoext();
+                obj[9]=provee.get(i).getRfc();
+                obj[10]=provee.get(i).getIdmpago();
+                obj[11]=provee.get(i).getCuenta();
+                obj[12]=provee.get(i).getContacto();
+                obj[13]=provee.get(i).getSistema_calidad();
+                
+                this.tabla_proveedor.addRow(obj);
+            }
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_proveedor);
+            this.tbproveedor.setRowSorter(tr);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error :"+ ex);
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
+        }
+    }
+    
+    
     public void habilitarproveedor()
     {
        this.btnCancelarproveedor.setEnabled(true);
@@ -3119,6 +3196,33 @@ public class Datos extends javax.swing.JFrame {
    
     }    
      
+    public boolean validar_proveedor()
+    {
+        boolean validado= true;
+        
+        if (!this.txtcorreoproveedor.getText().isEmpty()) {
+            if (!this.txtcorreoproveedor.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
+                validado=false;
+            }
+        }
+        if (!this.txtcpproveedor.getText().isEmpty()) {
+            if (!this.txtcpproveedor.getText().matches("^[0-9]{5}$")) {
+                validado=false;
+            }
+        }
+        if (!this.txtrfcproveedor.getText().isEmpty()) {
+            if (!this.txtrfcproveedor.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")) {
+                validado=false;
+            }
+        }
+        if (!this.txtcuentaproveedor.getText().isEmpty()) {
+            if (!this.txtcuentaproveedor.getText().matches("^[0-9]{4}$")) {
+                validado=false;
+            }
+        }
+        
+        return validado;
+    }
     
     private void btnCancelarproveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarproveedorActionPerformed
         deshabilitarproveedor();
@@ -3128,106 +3232,91 @@ public class Datos extends javax.swing.JFrame {
     private void btnGuardarproveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarproveedorActionPerformed
         try
         {
-            if(this.txtnointproveedor.getText().isEmpty())
-            {
-                this.txtnointproveedor.setText(" ");
-                
-            }
             
-            if(this.txtnoextproveedor.getText().isEmpty())
-            {
-                this.txtnoextproveedor.setText(" ");
-                
-            }
-
-            if (this.txtnombreproveedor.getText().isEmpty() || this.txttelefonoproveedor.getText().isEmpty() || this.txtcorreoproveedor.getText().isEmpty() || this.txtcpproveedor.getText().isEmpty() ||
-                this.txtcoloniaproveedor.getText().isEmpty() || this.txtcalleproveedor.getText().isEmpty() || this.txtnoextproveedor.getText().isEmpty() || this.txtnointproveedor.getText().isEmpty()
-                || this.txtrfcproveedor.getText().isEmpty() || this.txtcuentaproveedor.getText().isEmpty() || this.txtcontactoproveedor.getText().isEmpty() || this.txtsistemacalidad.getText().isEmpty()   ) {
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-            }
-            else
-            {
-                if (this.txtcorreoproveedor.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")
-                    && this.txtcuentaproveedor.getText().matches("^[0-9]{4}$") && this.txtrfcproveedor.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")|| this.txtcpproveedor.getText().matches("^[0-9]+$") ) {
-
+            if (this.validar_proveedor()) {
+                if (!this.txtnombreproveedor.getText().isEmpty()) {
                     if(this.seleccionproveedor==1) 
                     {
-                        String query="Insert into proveedores (nombre,telefono,correo,cp,colonia,calle,noint,noext,rfc,idmpago,cuenta,contacto, sistema_calidad) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
+                        Proveedores proveedor = new Proveedores();
+                        Proveedores_DB pr = new Proveedores_DB(this.con);
+                        
+                        proveedor.setNombre(this.txtnombreproveedor.getText());
+                        proveedor.setTelefono(this.txttelefonoproveedor.getText());
+                        proveedor.setCorreo(this.txtcorreoproveedor.getText());
+                        proveedor.setCp(this.txtcpproveedor.getText());
+                        proveedor.setColonia(this.txtcoloniaproveedor.getText() );
+                        proveedor.setCalle(this.txtcalleproveedor.getText());
+                        proveedor.setNoint(this.txtnointproveedor.getText());
+                        proveedor.setNoext(this.txtnoextproveedor.getText());
 
-                        ps.setString(1, this.txtnombreproveedor.getText());
-                        ps.setString(2, this.txttelefonoproveedor.getText());
-                        ps.setString(3, this.txtcorreoproveedor.getText());
+                        proveedor.setRfc(this.txtrfcproveedor.getText());
+                        proveedor.setIdmpago(this.cbmodopago1.getSelectedIndex()+1+"");
+                        proveedor.setCuenta(this.txtcuentaproveedor.getText());
+                        proveedor.setContacto(this.txtcontactoproveedor.getText());
+                        proveedor.setSistema_calidad(this.txtsistemacalidad.getText());
 
-                        ps.setString(4, this.txtcpproveedor.getText());
-
-                        ps.setString(5, this.txtcoloniaproveedor.getText() );
-                        ps.setString(6, this.txtcalleproveedor.getText());
-                        ps.setString(7, this.txtnointproveedor.getText());
-                        ps.setString(8, this.txtnoextproveedor.getText());
-
-                        ps.setString(9, this.txtrfcproveedor.getText());
-                        ps.setInt(10, this.cbmodopago1.getSelectedIndex()+1);
-                        ps.setInt(11, Integer.parseInt(this.txtcuentaproveedor.getText()));
-                        ps.setString(12, this.txtcontactoproveedor.getText());
-                        ps.setString(13, this.txtsistemacalidad.getText());
-
-                        ps.executeUpdate();
-                        ps.close();
-
-                        creaciontablaproveedor();
+                        pr.insert(proveedor);
                     }
                     if(this.seleccionproveedor==2)
                     {
-                        String query="Update proveedores set nombre = ? , telefono = ? ,   correo = ? ,  cp = ? , colonia = ? , calle = ? ,  noint = ? ,  noext= ? , rfc = ? ,idmpago = ?,cuenta = ?,contacto = ?, sistema_calidad = ?  where id = ? ";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
+                        Proveedores proveedor = new Proveedores();
+                        Proveedores_DB pr = new Proveedores_DB(this.con);
+                        
+                        proveedor.setNombre(this.txtnombreproveedor.getText());
+                        proveedor.setTelefono(this.txttelefonoproveedor.getText());
+                        proveedor.setCorreo(this.txtcorreoproveedor.getText());
+                        proveedor.setCp(this.txtcpproveedor.getText());
+                        proveedor.setColonia(this.txtcoloniaproveedor.getText() );
+                        proveedor.setCalle(this.txtcalleproveedor.getText());
+                        proveedor.setNoint(this.txtnointproveedor.getText());
+                        proveedor.setNoext(this.txtnoextproveedor.getText());
 
-                        ps.setString(1, this.txtnombreproveedor.getText());
-                        ps.setString(2, this.txttelefonoproveedor.getText());
-                        ps.setString(3, this.txtcorreoproveedor.getText());
-
-                        ps.setString(4, this.txtcpproveedor.getText());
-
-                        ps.setString(5, this.txtcoloniaproveedor.getText() );
-                        ps.setString(6, this.txtcalleproveedor.getText());
-                        ps.setString(7, this.txtnointproveedor.getText());
-                        ps.setString(8, this.txtnoextproveedor.getText());
-
-                        ps.setString(9, this.txtrfcproveedor.getText());
-                        ps.setInt(10, this.cbmodopago1.getSelectedIndex()+1);
-                        ps.setInt(11, Integer.parseInt(this.txtcuentaproveedor.getText()));
-                        ps.setString(12, this.txtcontactoproveedor.getText());
-                        ps.setString(13, this.txtsistemacalidad.getText());
-
-                        ps.setInt(14, Integer.parseInt(this.txtidproveedor.getText()));
-                        ps.executeUpdate();
-                        ps.close();
-
-                        creaciontablaproveedor();
-
+                        proveedor.setRfc(this.txtrfcproveedor.getText());
+                        proveedor.setIdmpago(this.cbmodopago1.getSelectedIndex()+1+"");
+                        proveedor.setCuenta(this.txtcuentaproveedor.getText());
+                        proveedor.setContacto(this.txtcontactoproveedor.getText());
+                        proveedor.setSistema_calidad(this.txtsistemacalidad.getText());
+                      
+                        proveedor.setId(Integer.parseInt(this.txtidproveedor.getText()));
+                        
+                        pr.update(proveedor);
+                        
                     }
-
+                    creaciontablaproveedor();
                     this.seleccionproveedor=0;
                     deshabilitarproveedor();
                     limpiarproveedor();
-
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
+                    JOptionPane.showMessageDialog(null, "El campo nombre esta vacio");
                 }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
             }
 
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
-             JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
             try {
-                this.dbc = new DBcontrolador ();
+                this.con=Conexion.getConnection();
             } catch (SQLException ex1) {
                 Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            this.con=this.dbc.getCnx();
+            
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error :"+ ex);
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
         }
     }//GEN-LAST:event_btnGuardarproveedorActionPerformed
 
@@ -3243,10 +3332,17 @@ public class Datos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarproveedorActionPerformed
 
     private void txtbuscarproveedorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarproveedorKeyReleased
-        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla5);
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_proveedor);
         this.tbproveedor.setRowSorter(tr);
 
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscarproveedor.getText().toUpperCase(),1));
+
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        int columnIndexToSort = 0;
+        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+        tr.setSortKeys(sortKeys);
+        tr.sort();
     }//GEN-LAST:event_txtbuscarproveedorKeyReleased
 
     private void tbproveedorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbproveedorMouseClicked
@@ -3279,26 +3375,57 @@ public class Datos extends javax.swing.JFrame {
 
     
     //vendedores   
-       
-    
     public void creaciontablavendedores()
     {
-
-        this.tabla_vendedores=(DefaultTableModel) this.tbvendedores.getModel();
-        
-        this.tabla_vendedores.setRowCount(0);
-
-        ArrayList <String[]> op = new ArrayList<>();
-        
-        String query="select vendedores.id , vendedores.nombre, vendedores.telefono, vendedores.correo,\n" +
-        " delegacion.nombre, vendedores.colonia, vendedores.calle,vendedores.noint,vendedores.noext\n" +
-        " from vendedores join delegacion on vendedores.iddelegacion = delegacion.id";
-        op=this.dbc.seleccionar(query);
- 
-        for (int i = 0; i < op.size(); i++) {    
+        try{
+            this.tabla_vendedores=(DefaultTableModel) this.tbvendedores.getModel();
+            this.tabla_vendedores.setRowCount(0);
+            Vendedores_DB in = new Vendedores_DB(this.con);
+            List <Vendedor> inventario = in.select();
+            for (int i = 0; i < inventario.size(); i++) {
+                Object[] obj = new Object[9];
+                obj[0]=inventario.get(i).getId();
+                obj[1]=inventario.get(i).getNombre();
+                obj[2]=inventario.get(i).getTelefono();
+                obj[3]=inventario.get(i).getCorreo();
+                obj[4]=inventario.get(i).getDele_muni();
+                obj[5]=inventario.get(i).getColonia();
+                obj[6]=inventario.get(i).getCalle();
+                obj[7]=inventario.get(i).getNoint();
+                obj[8]=inventario.get(i).getNoext();
+                
+                this.tabla_vendedores.addRow(obj);
+            }
             
-            this.tabla_vendedores.addRow(op.get(i));
-        } 
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_vendedores);
+            this.tbvendedores.setRowSorter(tr);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error :"+ ex);
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
+        }
         
     }
     
@@ -3364,90 +3491,81 @@ public class Datos extends javax.swing.JFrame {
     private void btnGuardarvendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarvendedorActionPerformed
         try
         {
-            if(this.txtnointvendedor.getText().isEmpty())
-            {
-                this.txtnointvendedor.setText(" ");
-                
+            boolean validacion=true;
+            if (!this.txtcorreovendedor.getText().isEmpty()) {
+                if (!this.txtcorreovendedor.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
+                    validacion=false;
+                }
             }
-            
-            if(this.txtnoextvendedor.getText().isEmpty())
-            {
-                this.txtnoextvendedor.setText(" ");
-                
-            }
-            if (this.txtnombrevendedor.getText().isEmpty() || this.txttelefonovendedor.getText().isEmpty() || this.txtcorreovendedor.getText().isEmpty() ||
-                this.txtcoloniavendedor.getText().isEmpty() || this.txtcallevendedor.getText().isEmpty() || this.txtnoextvendedor.getText().isEmpty() || this.txtnointvendedor.getText().isEmpty() ) {
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-            }
-            else
-            {
-                if (this.txtcorreovendedor.getText().matches("^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*(.[a-zA-Z]{2,4})$") ) {
-
+            if (!this.txtnombrevendedor.getText().isEmpty()) {
+                if (validacion) {
                     if(this.seleccionvendedor==1)
-                    {
-                        String query="Insert into vendedores (nombre,telefono,correo,iddelegacion,colonia,calle,noint,noext) values (?,?,?,?,?,?,?,?)";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
+                    {         
+                        Vendedores_DB db = new Vendedores_DB(this.con);
+                        Vendedor vende= new Vendedor();
+                        vende.setNombre(this.txtnombrevendedor.getText());
+                        vende.setTelefono(this.txttelefonovendedor.getText());
+                        vende.setCorreo(this.txtcorreovendedor.getText());
+                        vende.setDele_muni(this.cbdelegacion.getSelectedIndex()+1+"");
+                        vende.setColonia(this.txtcoloniavendedor.getText() );
+                        vende.setCalle(this.txtcallevendedor.getText());
+                        vende.setNoint(this.txtnointvendedor.getText());
+                        vende.setNoext(this.txtnoextvendedor.getText());
 
-                        ps.setString(1, this.txtnombrevendedor.getText());
-                        ps.setString(2, this.txttelefonovendedor.getText());
-                        ps.setString(3, this.txtcorreovendedor.getText());
-
-                        ps.setInt(4, this.cbdelegacion.getSelectedIndex()+1);
-
-                        ps.setString(5, this.txtcoloniavendedor.getText() );
-                        ps.setString(6, this.txtcallevendedor.getText());
-                        ps.setString(7, this.txtnointvendedor.getText());
-                        ps.setString(8, this.txtnoextvendedor.getText());
-
-                        ps.executeUpdate();
-                        ps.close();
-
-                        creaciontablavendedores();
+                        db.insert(vende);
                     }
                     if(this.seleccionvendedor==2)
                     {
-                        String query="Update vendedores set nombre = ? , telefono = ? ,   correo = ? ,  iddelegacion = ? , colonia = ? , calle = ? ,  noint = ? ,  noext= ?  where id = ? ";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
 
-                        ps.setString(1, this.txtnombrevendedor.getText());
-                        ps.setString(2, this.txttelefonovendedor.getText());
-                        ps.setString(3, this.txtcorreovendedor.getText());
-
-                        ps.setInt(4, this.cbdelegacion.getSelectedIndex()+1);
-
-                        ps.setString(5, this.txtcoloniavendedor.getText() );
-                        ps.setString(6, this.txtcallevendedor.getText());
-                        ps.setString(7, this.txtnointvendedor.getText());
-                        ps.setString(8, this.txtnoextvendedor.getText());
-
-                        ps.setInt(9, Integer.parseInt(this.txtidvendedor.getText() ));
-                        ps.executeUpdate();
-                        ps.close();
-
-                        creaciontablavendedores();
+                        Vendedores_DB db = new Vendedores_DB(this.con);
+                        Vendedor vende= new Vendedor();
+                        vende.setNombre(this.txtnombrevendedor.getText());
+                        vende.setTelefono(this.txttelefonovendedor.getText());
+                        vende.setCorreo(this.txtcorreovendedor.getText());
+                        vende.setDele_muni(this.cbdelegacion.getSelectedIndex()+1+"");
+                        vende.setColonia(this.txtcoloniavendedor.getText() );
+                        vende.setCalle(this.txtcallevendedor.getText());
+                        vende.setNoint(this.txtnointvendedor.getText());
+                        vende.setNoext(this.txtnoextvendedor.getText());
+                        vende.setId(Integer.parseInt(this.txtidvendedor.getText()));
+                        db.update(vende);
 
                     }
-
+                    creaciontablavendedores();
                     this.seleccionvendedor=0;
                     deshabilitarvendedor();
                     combobox();
-
                 }
                 else
                 {
                     JOptionPane.showMessageDialog(null, "Algun campo tiene informacion incorrecta");
                 }
             }
+            else
+            {
+                 JOptionPane.showMessageDialog(null, "El nombre esta vacio");
+            }
+            
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
             JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
             try {
-                this.dbc = new DBcontrolador ();
+                this.con=Conexion.getConnection();
             } catch (SQLException ex1) {
                 Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            this.con=this.dbc.getCnx();
+            
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error :"+ ex);
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
         }
     }//GEN-LAST:event_btnGuardarvendedorActionPerformed
 
@@ -3468,6 +3586,13 @@ public class Datos extends javax.swing.JFrame {
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_vendedores);
         this.tbvendedores.setRowSorter(tr);
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscarvendedores.getText().toUpperCase(),1,4));
+
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        int columnIndexToSort = 0;
+        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+        tr.setSortKeys(sortKeys);
+        tr.sort();
     }//GEN-LAST:event_txtbuscarvendedoresKeyReleased
 
     private void tbvendedoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbvendedoresMouseClicked
