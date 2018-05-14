@@ -4,13 +4,17 @@ package sistema;
 
 
 import datos.Conexion;
+import datos.DBcontrolador;
 import datos.Login_DB;
+import java.awt.Color;
 import negocio.Usuario;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -75,6 +79,7 @@ public class Login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
         setBackground(new java.awt.Color(255, 255, 255));
+        setIconImages(null);
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(162, 127, 51));
@@ -97,10 +102,10 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jLabel13.setFont(new java.awt.Font("MV Boli", 0, 14)); // NOI18N
+        jLabel13.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 14)); // NOI18N
         jLabel13.setText("Usuario :");
 
-        jLabel15.setFont(new java.awt.Font("MV Boli", 0, 14)); // NOI18N
+        jLabel15.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 14)); // NOI18N
         jLabel15.setText("Contraseña :");
 
         btnAceptar.setBackground(new java.awt.Color(162, 127, 51));
@@ -116,6 +121,11 @@ public class Login extends javax.swing.JFrame {
         txtuser.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtuser.setBorder(null);
         txtuser.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtuser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtpassKeyPressed(evt);
+            }
+        });
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pass.png"))); // NOI18N
 
@@ -142,49 +152,49 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
                     .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jSeparator1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel13)
-                    .addComponent(jLabel15)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btncancelar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(47, 47, 47)
                         .addComponent(btnAceptar))
-                    .addComponent(txtuser, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtpass)
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 41, Short.MAX_VALUE))
+                    .addComponent(jLabel15)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(txtpass, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(txtuser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)))
+                .addGap(0, 39, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
+                .addComponent(jLabel13)
+                .addGap(3, 3, 3)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addGap(3, 3, 3)
-                        .addComponent(txtuser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(txtuser, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel15)
+                .addGap(3, 3, 3)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel15)
-                        .addGap(1, 1, 1)
-                        .addComponent(txtpass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
+                    .addComponent(jLabel1)
+                    .addComponent(txtpass, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(4, 4, 4)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btncancelar)
                     .addComponent(btnAceptar))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 320, 200));
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 320, 230));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -206,38 +216,62 @@ public class Login extends javax.swing.JFrame {
 
     public void entrar()
     {
+        
         try{
-
-            boolean correcto=false;
-            Usuario user=null;
-            for (int i = 0; i < this.user.size(); i++) {
-                if (this.txtuser.getText().compareTo(this.user.get(i).getUser())== 0) {
-                    if (this.txtpass.getText().compareTo(this.user.get(i).getPass())== 0){
-                        correcto=true; 
-                        user=this.user.get(i);
+            
+            if (validacion_vacio()) {
+                boolean correcto=false;
+                Usuario user=null;
+                for (int i = 0; i < this.user.size(); i++) {
+                    if (this.txtuser.getText().compareTo(this.user.get(i).getUser())== 0) {
+                        if (this.txtpass.getText().compareTo(this.user.get(i).getPass())== 0){
+                            correcto=true; 
+                            user=this.user.get(i);
+                        }
                     }
                 }
-            }
-            
-            if (correcto) {
-                JOptionPane.showMessageDialog(null, "Bienvendo");
-                Menu_Principal mp = new Menu_Principal(user,this.con);
-                mp.setVisible(true);
-                this.dispose();
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "Datos incorrectos");
+
+                if (correcto) {
+                    JOptionPane.showMessageDialog(null, "Bienvendo");
+                    Menu_Principal mp = new Menu_Principal(user,this.con);
+                    mp.setVisible(true);
+                    this.dispose();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Datos incorrectos");
+                    this.txtpass.setText("");
+                }
             }
 
-           
-    
         }
         catch(Exception ex)
         {
             JOptionPane.showMessageDialog(null, "Error :"+ex);
         } 
     }
+ 
+    
+    
+    public boolean validacion_vacio(){
+        boolean pasa=true;
+        if (this.txtuser.getText().isEmpty()) {
+            this.txtuser.setBackground(Color.decode("#FFCCCC"));
+            pasa=false;
+        }
+        
+        if (this.txtpass.getText().isEmpty()) {
+            this.txtpass.setBackground(Color.decode("#FFCCCC"));
+            pasa=false;
+        }
+        
+        if (!pasa) {
+            JOptionPane.showMessageDialog(null, "Error : Campo vacio");
+        }
+        
+        return pasa;
+    }
+    
     
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
      entrar();
@@ -246,6 +280,11 @@ public class Login extends javax.swing.JFrame {
     private void txtpassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtpassKeyPressed
          if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
             entrar();
+         }
+         else
+         {
+             this.txtuser.setBackground(Color.white);
+             this.txtpass.setBackground(Color.white);
          }
     }//GEN-LAST:event_txtpassKeyPressed
 

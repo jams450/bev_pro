@@ -9,8 +9,6 @@ import datos.DBcontrolador;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
@@ -93,6 +91,7 @@ public class Ventas extends javax.swing.JFrame {
         for (int i = 0; i < op.size(); i++) {
             this.cbconcepto.addItem(op.get(i)[1]);
         }
+        this.cbconcepto.setSelectedIndex(1);
         
         Path c = Paths.get("");
         s = c.toAbsolutePath().toString();

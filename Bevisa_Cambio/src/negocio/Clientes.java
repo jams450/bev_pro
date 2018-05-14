@@ -25,6 +25,35 @@ public class Clientes {
     private String no_intf;
     private String no_extf;
     private String delegacionf;
+    
+    private String vendedor;
+
+    public Clientes(){
+        this.id = 1;
+        this.nombre = "";
+        this.telefono = "";
+        this.celular = "";
+        this.correo = "";
+        this.delegacion = "";
+        this.colonia = "";
+        this.calle = "";
+        this.no_int = "";
+        this.no_ext = "";
+        this.rfc = "";
+        this.pago = "";
+        this.cuenta = "";
+        this.contacto = "";
+        this.estatus = "";
+        this.nombref = "";
+        this.coloniaf = "";
+        this.callef = "";
+        this.no_intf = "";
+        this.no_extf = "";
+        this.delegacionf = "";
+        this.vendedor = "";
+    }
+    
+    
 
     public String getContacto() {
         return contacto;
@@ -202,7 +231,5 @@ public class Clientes {
         this.vendedor = vendedor;
     }
 
-    private String vendedor;
-    
     
 }

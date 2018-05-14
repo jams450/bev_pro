@@ -2,16 +2,12 @@
 package sistema;
 
 import datos.Conexion;
-import negocio.Producto;
-import datos.DBcontrolador;
-import datos.Ingredientes_DB;
-import datos.Productos_DB;
-import datos.Pruebas_DB;
+import negocio.*;
+import datos.*;
 import java.awt.Dimension;
 
 import java.awt.Toolkit;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -19,17 +15,17 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
-import negocio.Ingrediente;
-import negocio.Prueba;
 import funciones.NumberRenderer;
+import java.awt.Color;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.UIManager;
 
 /**
  *
@@ -39,6 +35,9 @@ import funciones.NumberRenderer;
  */
 public class Datos extends javax.swing.JFrame {
     
+    
+    //<editor-fold defaultstate="collapsed" desc="Variables">
+    
     //produtos
     private DefaultTableModel tabla_productos;
     //ingredientes
@@ -47,16 +46,13 @@ public class Datos extends javax.swing.JFrame {
     private DefaultTableModel tabla_pruebas;  
     //vendedores
     private DefaultTableModel tabla_vendedores;
-    
     //clientes
-    private DefaultTableModel tabla4;
+    private DefaultTableModel tabla_clientes;
     //proveedores
-    private DefaultTableModel tabla5;
+    private DefaultTableModel tabla_proveedor;
     //inventario
     private DefaultTableModel tabla_inventario;
     
-    
-
     private int columnaingrediente;
     private int columnavendedor;
     private int columnacliente;
@@ -74,21 +70,21 @@ public class Datos extends javax.swing.JFrame {
     private int seleccionproveedor;
 
     private Menu_Principal mp;
-    
-    
-    private  DBcontrolador dbc;
     private Connection con;
+    
+   //</editor-fold>
 
     /**
      *
-     * @param mp 
-     * @param con
+     * @param mp Menu Principal
+     * @param con La Conexion
      */
     public Datos(Menu_Principal mp, Connection con) {
         
         try{
             initComponents();
-      
+            UIManager.put("ComboBox.disabledForeground", Color.black);
+            
             this.mp=mp;
             this.con=con;
             if (this.con.isClosed() || this.con.isReadOnly()) {
@@ -98,14 +94,12 @@ public class Datos extends javax.swing.JFrame {
             
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-            this.dbc = new DBcontrolador();
-            this.tablaproductos();
-          
+            this.tablaproductos();        
             creaciontablavendedores();
             creaciontablaclientes();
             creaciontablaproveedor(); 
             creaciontablainventario();  
-            combobox();
+            this.combo_prueba();
             
         }
         catch(Exception ex)
@@ -114,126 +108,7 @@ public class Datos extends javax.swing.JFrame {
         }
         
     }
-    
-    
-    //tablas de cada parte
-    //necesario separar debido a que se llaman despues por separado
 
-    
-    
-    public void creaciontablaclientes()
-    {
-        this.tabla4=(DefaultTableModel) this.tbclientes.getModel();
-        
-        this.tabla4.setRowCount(0);
-
-        ArrayList <String[]> op = new ArrayList<>();
-        
-        String query="select clientes.id , clientes.nombre, clientes.telefono, clientes.celular, clientes.correo,\n" +
-        " delegacion.nombre, clientes.colonia, clientes.calle, clientes.noint, clientes.noext, clientes.rfc, modo_pago.nombre ,"
-        + " clientes.cuenta, clientes.contacto, clientes.estatus, clientes.nombrefact,clientes.coloniafact, clientes.callefact, clientes.nointfact, clientes.noextfact, clientes.delefact \n" +
-        " from clientes join delegacion on clientes.iddelegacion = delegacion.id join modo_pago on clientes.idmpago = modo_pago.id";
-        op=this.dbc.seleccionar(query);
- 
-        for (int i = 0; i < op.size(); i++) {    
-            
-            this.tabla4.addRow(op.get(i));
-        } 
-    }
-    
-    public void creaciontablaproveedor()
-    {
-        this.tabla5=(DefaultTableModel) this.tbproveedor.getModel();
-        
-        this.tabla5.setRowCount(0);
-
-        ArrayList <String[]> op = new ArrayList<>();
-        
-        String query="select proveedores.id , proveedores.nombre, proveedores.telefono, proveedores.correo,\n" +
-        " proveedores.cp, proveedores.colonia, proveedores.calle, proveedores.noint, proveedores.noext, proveedores.rfc, modo_pago.nombre ,"
-        + " proveedores.cuenta, proveedores.contacto, proveedores.sistema_calidad \n" +
-        " from proveedores join modo_pago on proveedores.idmpago = modo_pago.id";
-        op=this.dbc.seleccionar(query);
- 
-        for (int i = 0; i < op.size(); i++) {    
-            
-            this.tabla5.addRow(op.get(i));
-        } 
-    }
-    
-    
-   
-    
-    //llenado de combo (se junta mas de una pestaña)
-    public void combobox()
-    {
-        String query="select * from categoria;";
-        ArrayList <String[]> op = new ArrayList<>();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbcategoriaproducto.addItem(op.get(i)[1]);
-        }
-        
-        query="select * from umedida;";
-        op.clear();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbmedidaproducto.addItem(op.get(i)[1]);
-        }
-
-        query="select * from procesos;";
-        op.clear();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbprocesoproducto.addItem(op.get(i)[1]);
-        }
-        
-        query="select * from delegacion;";
-        op.clear();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbdelegacion.addItem(op.get(i)[1]);
-        }
-        
-        query="select * from delegacion;";
-        op.clear();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbdelegacion1.addItem(op.get(i)[1]);
-            this.cbdelegacion2.addItem(op.get(i)[1]);  
-        }
-        op.clear();
-        query="select * from modo_pago";
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbmodopago.addItem(op.get(i)[1]);
-            this.cbmodopago1.addItem(op.get(i)[1]);
-        }
-        
-        op.clear();
-        query="select * from categoria_prueba";
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbcategoriaprueba.addItem(op.get(i)[1]);
-        }
-        
-        op.clear();
-        query="select id,nombre from vendedores";
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbvendedor.addItem(op.get(i)[1]);
-        }
-        
-        op.clear();
-        query="select * from monedas;";
-        op = new ArrayList<>();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbmoneda.addItem(op.get(i)[1]);
-        }
-        
-        
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -274,7 +149,7 @@ public class Datos extends javax.swing.JFrame {
         lbliva = new javax.swing.JLabel();
         txtpeso_producto = new javax.swing.JTextField();
         lblpeso = new javax.swing.JLabel();
-        cbmoneda = new javax.swing.JComboBox<>();
+        cbmonedaproducto = new javax.swing.JComboBox<>();
         lbcantidad2 = new javax.swing.JLabel();
         Ingredientes = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
@@ -326,8 +201,7 @@ public class Datos extends javax.swing.JFrame {
         txtnombreinventario = new javax.swing.JTextField();
         jLabel84 = new javax.swing.JLabel();
         jLabel85 = new javax.swing.JLabel();
-        txtfechainventario = new javax.swing.JTextField();
-        txtcantidadinventario = new javax.swing.JTextField();
+        txtcantidad_actualinventario = new javax.swing.JTextField();
         jLabel86 = new javax.swing.JLabel();
         txtloteinventario = new javax.swing.JTextField();
         jLabel87 = new javax.swing.JLabel();
@@ -338,7 +212,8 @@ public class Datos extends javax.swing.JFrame {
         txtcantidadtinventario = new javax.swing.JTextField();
         jLabel90 = new javax.swing.JLabel();
         jLabel91 = new javax.swing.JLabel();
-        txtfechainventario1 = new javax.swing.JTextField();
+        jdfecha_caducidad = new com.toedter.calendar.JDateChooser();
+        jdfecha = new com.toedter.calendar.JDateChooser();
         Vendedores = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -350,7 +225,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel21 = new javax.swing.JLabel();
         txttelefonovendedor = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
-        cbdelegacion = new javax.swing.JComboBox<>();
+        cbdelegacionvendedor = new javax.swing.JComboBox<>();
         jLabel23 = new javax.swing.JLabel();
         txtnombrevendedor = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
@@ -397,7 +272,7 @@ public class Datos extends javax.swing.JFrame {
         txtrfcproveedor = new javax.swing.JTextField();
         jLabel56 = new javax.swing.JLabel();
         jLabel57 = new javax.swing.JLabel();
-        cbmodopago1 = new javax.swing.JComboBox<>();
+        cbmodopagoproveedor = new javax.swing.JComboBox<>();
         txtcuentaproveedor = new javax.swing.JTextField();
         jLabel58 = new javax.swing.JLabel();
         txtcontactoproveedor = new javax.swing.JTextField();
@@ -416,7 +291,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel32 = new javax.swing.JLabel();
         txttelefonoclientes = new javax.swing.JTextField();
         jLabel33 = new javax.swing.JLabel();
-        cbdelegacion1 = new javax.swing.JComboBox<>();
+        cbdelegacioncliente = new javax.swing.JComboBox<>();
         jLabel34 = new javax.swing.JLabel();
         txtnombreclientes = new javax.swing.JTextField();
         jLabel35 = new javax.swing.JLabel();
@@ -434,7 +309,7 @@ public class Datos extends javax.swing.JFrame {
         btnCancelarcliente = new javax.swing.JButton();
         txtnoextclientes = new javax.swing.JTextField();
         jLabel41 = new javax.swing.JLabel();
-        cbmodopago = new javax.swing.JComboBox<>();
+        cbmodopagocliente = new javax.swing.JComboBox<>();
         txtcuentaclientes = new javax.swing.JTextField();
         jLabel42 = new javax.swing.JLabel();
         txtcontactoclientes = new javax.swing.JTextField();
@@ -455,10 +330,10 @@ public class Datos extends javax.swing.JFrame {
         jLabel74 = new javax.swing.JLabel();
         jLabel75 = new javax.swing.JLabel();
         jLabel76 = new javax.swing.JLabel();
-        cbdelegacion2 = new javax.swing.JComboBox<>();
+        cbdelegacionclientef = new javax.swing.JComboBox<>();
         jLabel40 = new javax.swing.JLabel();
         txtcelularclientes = new javax.swing.JTextField();
-        cbvendedor = new javax.swing.JComboBox<>();
+        cbvendedorcliente = new javax.swing.JComboBox<>();
         jLabel77 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
 
@@ -671,8 +546,8 @@ public class Datos extends javax.swing.JFrame {
         lblpeso.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblpeso.setText("Peso:");
 
-        cbmoneda.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbmoneda.setEnabled(false);
+        cbmonedaproducto.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbmonedaproducto.setEnabled(false);
 
         lbcantidad2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lbcantidad2.setText("Moneda :");
@@ -722,7 +597,7 @@ public class Datos extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(chivaproducto)
-                            .addComponent(cbmoneda, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbmonedaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(164, 164, 164)))
                 .addGap(0, 32, Short.MAX_VALUE))
         );
@@ -779,7 +654,7 @@ public class Datos extends javax.swing.JFrame {
                     .addComponent(lblpeso, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbmoneda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbmonedaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbcantidad2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1029,11 +904,11 @@ public class Datos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Numero Entrada", "Clave", "Nombre", "Fecha", "Fecha Caducidad", "Cantidad", "C. Actual", "Lote", "ID OPP", "Factura"
+                "Numero Entrada", "Clave", "Nombre", "Fecha", "C. Actual", "Lote", "ID OPP", "Factura", "Cantidad", "Fecha Caducidad"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false, false, false
@@ -1065,8 +940,8 @@ public class Datos extends javax.swing.JFrame {
             tbinventario.getColumnModel().getColumn(1).setPreferredWidth(100);
             tbinventario.getColumnModel().getColumn(2).setPreferredWidth(250);
             tbinventario.getColumnModel().getColumn(3).setPreferredWidth(150);
-            tbinventario.getColumnModel().getColumn(4).setPreferredWidth(150);
-            tbinventario.getColumnModel().getColumn(5).setPreferredWidth(100);
+            tbinventario.getColumnModel().getColumn(8).setPreferredWidth(100);
+            tbinventario.getColumnModel().getColumn(9).setPreferredWidth(150);
         }
 
         Inventario.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 56, 650, 370));
@@ -1144,15 +1019,10 @@ public class Datos extends javax.swing.JFrame {
         jLabel85.setText("Fecha :");
         Inventario.add(jLabel85, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 150, -1, -1));
 
-        txtfechainventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtfechainventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtfechainventario.setEnabled(false);
-        Inventario.add(txtfechainventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 150, 140, -1));
-
-        txtcantidadinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtcantidadinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtcantidadinventario.setEnabled(false);
-        Inventario.add(txtcantidadinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 210, 139, -1));
+        txtcantidad_actualinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtcantidad_actualinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtcantidad_actualinventario.setEnabled(false);
+        Inventario.add(txtcantidad_actualinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 210, 139, -1));
 
         jLabel86.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel86.setText("C. Actual :");
@@ -1198,10 +1068,12 @@ public class Datos extends javax.swing.JFrame {
         jLabel91.setText("Fecha Caducidad :");
         Inventario.add(jLabel91, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 180, -1, -1));
 
-        txtfechainventario1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtfechainventario1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtfechainventario1.setEnabled(false);
-        Inventario.add(txtfechainventario1, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 180, 140, -1));
+        jdfecha_caducidad.setBackground(new java.awt.Color(255, 255, 255));
+        jdfecha_caducidad.setEnabled(false);
+        Inventario.add(jdfecha_caducidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 180, 140, 20));
+
+        jdfecha.setEnabled(false);
+        Inventario.add(jdfecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 150, 140, -1));
 
         jTabbedPane2.addTab("Inventario", Inventario);
 
@@ -1296,9 +1168,9 @@ public class Datos extends javax.swing.JFrame {
         jLabel22.setText("Correo :");
         Vendedores.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 180, -1, -1));
 
-        cbdelegacion.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbdelegacion.setEnabled(false);
-        Vendedores.add(cbdelegacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 210, 220, -1));
+        cbdelegacionvendedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbdelegacionvendedor.setEnabled(false);
+        Vendedores.add(cbdelegacionvendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 210, 220, -1));
 
         jLabel23.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel23.setText("Delegacion :");
@@ -1591,7 +1463,7 @@ public class Datos extends javax.swing.JFrame {
         txtrfcproveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtrfcproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtrfcproveedor.setEnabled(false);
-        txtrfcproveedor.setNextFocusableComponent(cbmodopago1);
+        txtrfcproveedor.setNextFocusableComponent(cbmodopagoproveedor);
         Proovedores.add(txtrfcproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 320, 240, -1));
 
         jLabel56.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1602,10 +1474,10 @@ public class Datos extends javax.swing.JFrame {
         jLabel57.setText("Pago: ");
         Proovedores.add(jLabel57, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 350, -1, -1));
 
-        cbmodopago1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbmodopago1.setEnabled(false);
-        cbmodopago1.setNextFocusableComponent(txtcuentaproveedor);
-        Proovedores.add(cbmodopago1, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 350, 190, -1));
+        cbmodopagoproveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbmodopagoproveedor.setEnabled(false);
+        cbmodopagoproveedor.setNextFocusableComponent(txtcuentaproveedor);
+        Proovedores.add(cbmodopagoproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 350, 190, -1));
 
         txtcuentaproveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcuentaproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
@@ -1655,14 +1527,14 @@ public class Datos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Telefono", "Celular", "Correo", "Delegacion", "Colonia", "Calle", "No int", "No ext", "RFC", "Pago", "Cuenta", "Contacto", "Estatus", "Nombre Fact", "Colonia Fact", "Calle Fact", "No Int Fact", "No Ext Fact", "Delegacion Fact"
+                "ID", "Nombre", "Telefono", "Celular", "Correo", "Delegacion", "Colonia", "Calle", "No int", "No ext", "RFC", "Pago", "Cuenta", "Contacto", "Estatus", "Nombre Fact", "Colonia Fact", "Calle Fact", "No Int Fact", "No Ext Fact", "Delegacion Fact", "Vendedor"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -1734,10 +1606,10 @@ public class Datos extends javax.swing.JFrame {
         jLabel33.setText("Correo :");
         Clientes.add(jLabel33, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 170, -1, -1));
 
-        cbdelegacion1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbdelegacion1.setEnabled(false);
-        cbdelegacion1.setNextFocusableComponent(txtcoloniaclientes);
-        Clientes.add(cbdelegacion1, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 200, 200, -1));
+        cbdelegacioncliente.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbdelegacioncliente.setEnabled(false);
+        cbdelegacioncliente.setNextFocusableComponent(txtcoloniaclientes);
+        Clientes.add(cbdelegacioncliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 200, 200, -1));
 
         jLabel34.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel34.setText("Delegacion :");
@@ -1766,7 +1638,7 @@ public class Datos extends javax.swing.JFrame {
         txtcorreoclientes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcorreoclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcorreoclientes.setEnabled(false);
-        txtcorreoclientes.setNextFocusableComponent(cbdelegacion1);
+        txtcorreoclientes.setNextFocusableComponent(cbdelegacioncliente);
         Clientes.add(txtcorreoclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 170, 200, -1));
 
         jLabel37.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1835,17 +1707,17 @@ public class Datos extends javax.swing.JFrame {
         txtnoextclientes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtnoextclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtnoextclientes.setEnabled(false);
-        txtnoextclientes.setNextFocusableComponent(cbmodopago);
+        txtnoextclientes.setNextFocusableComponent(cbmodopagocliente);
         Clientes.add(txtnoextclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 320, 200, -1));
 
         jLabel41.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel41.setText("Pago: ");
         Clientes.add(jLabel41, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 350, -1, -1));
 
-        cbmodopago.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbmodopago.setEnabled(false);
-        cbmodopago.setNextFocusableComponent(txtcuentaclientes);
-        Clientes.add(cbmodopago, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 350, 200, -1));
+        cbmodopagocliente.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbmodopagocliente.setEnabled(false);
+        cbmodopagocliente.setNextFocusableComponent(txtcuentaclientes);
+        Clientes.add(cbmodopagocliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 350, 200, -1));
 
         txtcuentaclientes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcuentaclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
@@ -1920,7 +1792,7 @@ public class Datos extends javax.swing.JFrame {
         txtnoextclientes1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtnoextclientes1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtnoextclientes1.setEnabled(false);
-        txtnoextclientes1.setNextFocusableComponent(cbdelegacion2);
+        txtnoextclientes1.setNextFocusableComponent(cbdelegacionclientef);
         Clientes.add(txtnoextclientes1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 290, 190, -1));
 
         jLabel72.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1943,9 +1815,9 @@ public class Datos extends javax.swing.JFrame {
         jLabel76.setText("Delegacion :");
         Clientes.add(jLabel76, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 320, -1, -1));
 
-        cbdelegacion2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbdelegacion2.setEnabled(false);
-        Clientes.add(cbdelegacion2, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 320, 190, -1));
+        cbdelegacionclientef.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbdelegacionclientef.setEnabled(false);
+        Clientes.add(cbdelegacionclientef, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 320, 190, -1));
 
         jLabel40.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel40.setText("Celular :");
@@ -1957,9 +1829,9 @@ public class Datos extends javax.swing.JFrame {
         txtcelularclientes.setNextFocusableComponent(txtcorreoclientes);
         Clientes.add(txtcelularclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 140, 200, -1));
 
-        cbvendedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbvendedor.setEnabled(false);
-        Clientes.add(cbvendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 350, 190, -1));
+        cbvendedorcliente.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbvendedorcliente.setEnabled(false);
+        Clientes.add(cbvendedorcliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 350, 190, -1));
 
         jLabel77.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel77.setText("Vendedor :");
@@ -1994,22 +1866,8 @@ public class Datos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    //metodo para pasar de dd/mm/yyyy a yyyy-mm-dd
-    public String fechadividir(JTextField  jt, int i ){
-        String fi ="";
-        if (i == 0) {
-            String[] s = jt.getText().split("-");
-            fi = s[2]+"/"+s[1]+"/"+s[0];       
-        }
-        else
-        {
-            String[] s = jt.getText().split("/");
-            fi = s[2]+"-"+s[1]+"-"+s[0]; 
-        }
-        return fi;
-    }
-  
-    
+
+
     //cuando se cierra   
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.mp.setVisible(true);
@@ -2017,8 +1875,25 @@ public class Datos extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_formWindowClosing
 
-        
-    //Productos
+    //metodo para pasar de dd/mm/yyyy a yyyy-mm-dd
+    public String fechadividir(String  jt, int i ){
+        String fi ="";
+        // a-a-a ---> a/a/a
+        if (i == 0) {
+            String[] s = jt.split("-");
+            fi = s[2]+"/"+s[1]+"/"+s[0];       
+        }
+        // a/a/a ---> a-a-a
+        else
+        {
+            String[] s = jt.split("/");
+            fi = s[2]+"-"+s[1]+"-"+s[0]; 
+        }
+        return fi;
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="Productos">
+
      public void tablaproductos()
     {
         try{
@@ -2043,6 +1918,40 @@ public class Datos extends javax.swing.JFrame {
                 obj[11]=productos.get(i).getMoneda();
                 this.tabla_productos.addRow(obj);
             }
+            
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_productos);
+            this.tbproductos.setRowSorter(tr);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
+            
+            
+            //combo
+            List <String> combo =pro.combo_categoria();
+            for (int i = 0; i < combo.size(); i++) {
+            this.cbcategoriaproducto.addItem(combo.get(i));
+            }
+            combo.clear();
+            
+            combo =pro.combo_medida();
+            for (int i = 0; i < combo.size(); i++) {
+            this.cbmedidaproducto.addItem(combo.get(i));
+            }
+            combo.clear();
+            combo =pro.combo_moneda();
+            for (int i = 0; i < combo.size(); i++) {
+            this.cbmonedaproducto.addItem(combo.get(i));
+            }
+            
+            combo.clear();
+            combo =pro.combo_proceso();
+            for (int i = 0; i < combo.size(); i++) {
+            this.cbprocesoproducto.addItem(combo.get(i));
+            }
+            
         }
         catch(SQLException ex)
         {
@@ -2085,7 +1994,7 @@ public class Datos extends javax.swing.JFrame {
            this.btnCancelar_producto.setEnabled(true);
            this.btnGuardar_producto.setEnabled(true);
            this.chivaproducto.setEnabled(true);
-           this.cbmoneda.setEnabled(true);
+           this.cbmonedaproducto.setEnabled(true);
            
            this.txtcaducidadproducto.setEnabled(true);
     }
@@ -2110,7 +2019,7 @@ public class Datos extends javax.swing.JFrame {
            this.btnCancelar_producto.setEnabled(false);
            this.btnGuardar_producto.setEnabled(false);
            this.chivaproducto.setEnabled(false);
-           this.cbmoneda.setEnabled(false);
+           this.cbmonedaproducto.setEnabled(false);
            this.txtcaducidadproducto.setEnabled(false);
 
            
@@ -2162,7 +2071,7 @@ public class Datos extends javax.swing.JFrame {
                                 {
                                     pro.setIva(0);
                                 }
-                                p.insert_mp(pro, medida, cate,this.cbmoneda.getSelectedIndex()+1);
+                                p.insert_mp(pro, medida, cate,this.cbmonedaproducto.getSelectedIndex()+1);
                                 tablaproductos();
                                 deshabilitar();
                             }
@@ -2184,7 +2093,7 @@ public class Datos extends javax.swing.JFrame {
                                 {
                                     pro.setIva(0);
                                 }
-                                p.update_mp(pro, medida, cate,this.cbmoneda.getSelectedIndex()+1);
+                                p.update_mp(pro, medida, cate,this.cbmonedaproducto.getSelectedIndex()+1);
                                 tablaproductos();
                             }
                             this.seleccionproducto=0;
@@ -2274,7 +2183,7 @@ public class Datos extends javax.swing.JFrame {
                             {
                                 producto.setIva(0);
                             }
-                            pro.insert_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmoneda.getSelectedIndex()+1);
+                            pro.insert_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmonedaproducto.getSelectedIndex()+1);
                             this.tablaproductos();
                         }
                         if(this.seleccionproducto==2)
@@ -2293,7 +2202,7 @@ public class Datos extends javax.swing.JFrame {
                             {
                                 producto.setIva(0);
                             }
-                            pro.update_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmoneda.getSelectedIndex()+1);
+                            pro.update_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmonedaproducto.getSelectedIndex()+1);
                             this.tablaproductos();
                         }
                         this.seleccionproducto=0;
@@ -2505,13 +2414,6 @@ public class Datos extends javax.swing.JFrame {
         this.tbproductos.setRowSorter(tr);
 
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscar_producto.getText().toUpperCase(),2));
-        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-
-        int columnIndexToSort = 0;
-        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
-
-        tr.setSortKeys(sortKeys);
-        tr.sort();
     }//GEN-LAST:event_txtbuscar_productoKeyReleased
 
     private void tbproductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbproductosMouseClicked
@@ -2538,7 +2440,7 @@ public class Datos extends javax.swing.JFrame {
                 this.cbprocesoproducto.setSelectedItem(this.tbproductos.getValueAt(columna, 8).toString());
                 this.txtcaducidadproducto.setText(this.tbproductos.getValueAt(columna, 9).toString());
                 this.txtpeso_producto.setText(this.tbproductos.getValueAt(columna, 10).toString());
-                this.cbmoneda.setSelectedItem(this.tbproductos.getValueAt(columna, 11).toString());
+                this.cbmonedaproducto.setSelectedItem(this.tbproductos.getValueAt(columna, 11).toString());
                 this.btnCambiar_producto.setEnabled(true);
             }
 
@@ -2549,41 +2451,65 @@ public class Datos extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_tbproductosMouseClicked
+ 
 
-     //inventario
-    
+
+//</editor-fold>
+     
+    //<editor-fold defaultstate="collapsed" desc="Inventario">
      public void creaciontablainventario()
     {  
-        this.tabla_inventario=(DefaultTableModel) this.tbinventario.getModel();
-        
-        this.tabla_inventario.setRowCount(0);
-
-        ArrayList <String[]> op = new ArrayList<>();
-        
-        String query="select inventario.id, productos.clave, productos.nombre, inventario.fechaentrada, inventario.fechacaducidad, inventario.cantidad, inventario.cantidadactual,\n" +
-"inventario.lote, inventario.idopp, inventario.facturano from inventario join productos \n" +
-"on productos.id=inventario.idproducto where inventario.cantidadactual>0;";
-        op=this.dbc.seleccionar(query);
- 
-        for (int i = 0; i < op.size(); i++) {    
+        try{
+            this.tabla_inventario=(DefaultTableModel) this.tbinventario.getModel();
+            this.tabla_inventario.setRowCount(0);
+            Inventario_DB in = new Inventario_DB(this.con);
+            List <Inventario> inventario = in.select();
+            for (int i = 0; i < inventario.size(); i++) {
+                Object[] obj = new Object[10];
+                obj[0]=inventario.get(i).getId();
+                obj[1]=inventario.get(i).getProduc().getClave();
+                obj[2]=inventario.get(i).getProduc().getNombre();
+                obj[3]=inventario.get(i).getFecha_entrada();
+                obj[4]=inventario.get(i).getCantidad_actual();
+                obj[5]=inventario.get(i).getLote();
+                obj[6]=inventario.get(i).getIdopp();
+                obj[7]=inventario.get(i).getFactura();
+                obj[8]=inventario.get(i).getCantidad();
+                obj[9]=inventario.get(i).getFecha_caducidad();
+                
+                this.tabla_inventario.addRow(obj);
+            }
             
-            this.tabla_inventario.addRow(op.get(i));
-        } 
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_inventario);
+            this.tbinventario.setRowSorter(tr);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        }
+
     }
-    
-    
+       
     public void habilitarinventario()
     {
            this.tbinventario.setEnabled(false);
             
            this.txtbuscarinventario.setEnabled(false);        
-
-           this.txtfechainventario.setEnabled(true);
-           this.txtfechainventario1.setEnabled(true);
-           this.txtcantidadinventario.setEnabled(true);
+           this.txtcantidad_actualinventario.setEnabled(true);
            this.txtloteinventario.setEnabled(true);
 
-           this.txtfactinventario.setEnabled(true);    
+           this.txtfactinventario.setEnabled(true); 
+           this.jdfecha_caducidad.setEnabled(true);
+           this.jdfecha.setEnabled(true);
 
            this.btnCancelarinventario.setEnabled(true);
            this.btnGuardarinventario.setEnabled(true);
@@ -2596,16 +2522,12 @@ public class Datos extends javax.swing.JFrame {
             this.tbinventario.setEnabled(true);
             
            this.txtbuscarinventario.setEnabled(true);        
-
-           this.txtfechainventario.setEnabled(false);
-           this.txtfechainventario1.setEnabled(false);
-           this.txtcantidadinventario.setEnabled(false);
+           this.txtcantidad_actualinventario.setEnabled(false);
            this.txtloteinventario.setEnabled(false);
-           
+           this.jdfecha_caducidad.setEnabled(false);
            this.txtfactinventario.setEnabled(false);  
-
-
-
+           this.jdfecha.setEnabled(false);
+           
            this.btnCancelarinventario.setEnabled(false);
            this.btnGuardarinventario.setEnabled(false);
            this.btnCambiarinventario.setEnabled(false);
@@ -2618,14 +2540,11 @@ public class Datos extends javax.swing.JFrame {
            this.txtbuscarinventario.setText("");        
            this.txtclaveinventario.setText("");  
            this.txtnombreinventario.setText("");  
-           this.txtfechainventario.setText("");  
-           this.txtfechainventario1.setText("");  
-           this.txtcantidadinventario.setText("");
+           this.txtcantidad_actualinventario.setText("");
            this.txtcantidadtinventario.setText("");  
            this.txtloteinventario.setText("");  
            this.txtidoppinventario.setText("");  
-           this.txtfactinventario.setText("");   
-           
+           this.txtfactinventario.setText("");      
     }
     
     
@@ -2634,6 +2553,12 @@ public class Datos extends javax.swing.JFrame {
         this.tbinventario.setRowSorter(tr);
 
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscarinventario.getText().toUpperCase(),2));
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
     }//GEN-LAST:event_txtbuscarinventarioKeyReleased
 
     private void btnCancelarinventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarinventarioActionPerformed
@@ -2644,33 +2569,30 @@ public class Datos extends javax.swing.JFrame {
     private void btnGuardarinventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarinventarioActionPerformed
         try{
             //hacer todo :V
-            if (this.txtcantidadinventario.getText().isEmpty() || this.txtloteinventario.getText().isEmpty() || this.txtfactinventario.getText().isEmpty() ||
-                this.txtfechainventario.getText().isEmpty() || this.txtfechainventario1.getText().isEmpty()) {
+            if (this.txtcantidad_actualinventario.getText().isEmpty() || this.txtloteinventario.getText().isEmpty() || this.txtfactinventario.getText().isEmpty() ||
+                this.jdfecha.getDate().toString().isEmpty()|| this.jdfecha_caducidad.getDate().toString().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
             }
             else
             {
-                if (this.txtcantidadinventario.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtfechainventario.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$") && this.txtfechainventario1.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$") ){
-
-                    String query="Update inventario set cantidadactual = ? , lote = ? ,   facturano = ? , fechaentrada = ? , fechacaducidad = ? where id = ? ";
-                    PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
-
-                    ps.setString(1, this.txtcantidadinventario.getText());
-                    ps.setString(2, this.txtloteinventario.getText());
-
-                    ps.setString(3, this.txtfactinventario.getText());
+                if (this.txtcantidad_actualinventario.getText().matches("^([0-9]+)(\\.[0-9]+)?$") ){
                     
+                    Inventario_DB in = new Inventario_DB(this.con);
+                    Inventario inventario = new Inventario();
+                    
+                    inventario.setCantidad_actual(Double.parseDouble(this.txtcantidad_actualinventario.getText()));
+                    inventario.setLote(this.txtloteinventario.getText());
+                    inventario.setFactura(this.txtfactinventario.getText());
+                    
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-                    ps.setString(4, fechadividir(this.txtfechainventario,1));
-                    ps.setString(5, fechadividir(this.txtfechainventario1,1));
-
-                    ps.setInt(6, Integer.parseInt(this.txtnoentradainventario.getText()));
-
-                    ps.executeUpdate();
-                    ps.close();
+                    inventario.setFecha_entrada(fechadividir(formatter.format(this.jdfecha.getDate()),1));
+                    inventario.setFecha_caducidad(fechadividir(formatter.format(this.jdfecha_caducidad.getDate()),1));
+                    inventario.setId(Integer.parseInt(this.txtnoentradainventario.getText()));
+                    
+                    in.update(inventario);
 
                     creaciontablainventario();
-
                     limpiarinventario();
                     deshabilitarinventario();
 
@@ -2683,13 +2605,15 @@ public class Datos extends javax.swing.JFrame {
         }
         catch(Exception ex)
         {
-             JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+             JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez "+ ex);
             try {
-                this.dbc = new DBcontrolador ();
+                if (this.con.isClosed() || this.con.isReadOnly()) {
+                this.con.close();
+                this.con=Conexion.getConnection();
+                }
             } catch (SQLException ex1) {
                 Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            this.con=this.dbc.getCnx();
         }
 
     }//GEN-LAST:event_btnGuardarinventarioActionPerformed
@@ -2702,22 +2626,29 @@ public class Datos extends javax.swing.JFrame {
     private void tbinventarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbinventarioMouseClicked
         try
         {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            this.jdfecha_caducidad.setDateFormatString("dd/MM/yyyy");
+            this.jdfecha.setDateFormatString("dd/MM/yyyy");
+
             this.columnainventario=this.tbinventario.getSelectedRow();
 
             this.txtnoentradainventario.setText(this.tbinventario.getValueAt(this.columnainventario, 0).toString());
             this.txtclaveinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 1).toString());
             this.txtnombreinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 2).toString());
-            this.txtfechainventario.setText(this.tbinventario.getValueAt(this.columnainventario, 3).toString());
-            this.txtfechainventario1.setText(this.tbinventario.getValueAt(this.columnainventario, 4).toString());
-            this.txtcantidadtinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 5).toString());
-            this.txtcantidadinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 6).toString());
-            this.txtloteinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 7).toString());
-            this.txtidoppinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 8).toString());
-            this.txtfactinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 9).toString());
+            Date date = formatter.parse(fechadividir(this.tbinventario.getValueAt(this.columnainventario, 3).toString(),0));
+            this.jdfecha.setDate(date);
             
-            this.txtfechainventario.setText(fechadividir(this.txtfechainventario,0));
-            this.txtfechainventario1.setText(fechadividir(this.txtfechainventario1,0));
-
+            this.txtcantidad_actualinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 4).toString());
+            this.txtloteinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 5).toString());
+            this.txtidoppinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 6).toString());
+            this.txtfactinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 7).toString());
+            this.txtcantidadtinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 8).toString());     
+            
+            date = formatter.parse(fechadividir(this.tbinventario.getValueAt(this.columnainventario, 9).toString(),0));
+            this.jdfecha_caducidad.setDate(date);
+            
+            
+           
             this.btnCambiarinventario.setEnabled(true);
         }
         catch(Exception ex)
@@ -2725,9 +2656,85 @@ public class Datos extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_tbinventarioMouseClicked
-
-    //clientes    
+    //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="Clientes">
+
+    
+    public void creaciontablaclientes()
+    {
+        
+        try{
+            this.tabla_clientes=(DefaultTableModel) this.tbclientes.getModel();
+            this.tabla_clientes.setRowCount(0);
+            Clientes_DB in = new Clientes_DB(this.con);
+            List <Clientes> cliente = in.select();
+            
+            for (int i = 0; i < cliente.size(); i++) {
+                Object[] obj = new Object[22];
+                obj[0]=cliente.get(i).getId();
+                obj[1]=cliente.get(i).getNombre();
+                obj[2]=cliente.get(i).getTelefono();
+                obj[3]=cliente.get(i).getCelular();
+                obj[4]=cliente.get(i).getCorreo();
+                obj[5]=cliente.get(i).getDelegacion();
+                obj[6]=cliente.get(i).getColonia();
+                obj[7]=cliente.get(i).getCalle();
+                obj[8]=cliente.get(i).getNo_int();
+                obj[9]=cliente.get(i).getNo_ext();
+                obj[10]=cliente.get(i).getRfc();
+                obj[11]=cliente.get(i).getPago();
+                obj[12]=cliente.get(i).getCuenta();
+                obj[13]=cliente.get(i).getContacto();
+                obj[14]=cliente.get(i).getEstatus();
+                
+                obj[15]=cliente.get(i).getNombref();               
+                obj[16]=cliente.get(i).getColoniaf();
+                obj[17]=cliente.get(i).getCallef();
+                obj[18]=cliente.get(i).getNo_intf();
+                obj[19]=cliente.get(i).getNo_extf();
+                obj[20]=cliente.get(i).getDelegacionf();
+                obj[21]=cliente.get(i).getVendedor();
+                
+                this.tabla_clientes.addRow(obj);
+            }
+            
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_clientes);
+            this.tbclientes.setRowSorter(tr);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
+            
+            List<String> dele =in.combo_dele();
+            for (int i = 0; i < dele.size(); i++) {
+                this.cbdelegacioncliente.addItem(dele.get(i));
+                this.cbdelegacionclientef.addItem(dele.get(i));
+            }
+
+            List<String> pago  =in.combo_pago();
+            for (int i = 0; i < pago.size(); i++) {
+                this.cbmodopagocliente.addItem(pago.get(i));
+            }
+            
+            List<String> vendedor =in.combo_vendedor();
+            for (int i = 0; i < vendedor.size(); i++) {
+                this.cbvendedorcliente.addItem(vendedor.get(i));
+            }
+            
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        }
+  
+    }
+   
      public void habilitarcliente()
     {
        this.btnCancelarcliente.setEnabled(true);
@@ -2738,7 +2745,7 @@ public class Datos extends javax.swing.JFrame {
        this.txtnombreclientes.setEnabled(true);
        this.txttelefonoclientes.setEnabled(true);
        this.txtcelularclientes.setEnabled(true);
-       this.cbdelegacion1.setEnabled(true);
+       this.cbdelegacioncliente.setEnabled(true);
        this.txtcoloniaclientes.setEnabled(true);
        this.txtcalleclientes.setEnabled(true);
        this.txtcorreoclientes.setEnabled(true);
@@ -2750,15 +2757,15 @@ public class Datos extends javax.swing.JFrame {
        this.txtcalleclientes1.setEnabled(true);
        this.txtnointclientes1.setEnabled(true);
        this.txtnoextclientes1.setEnabled(true);
-       this.cbdelegacion2.setEnabled(true);
+       this.cbdelegacionclientef.setEnabled(true);
        
        this.txtrfcclientes.setEnabled(true);
-       this.cbmodopago.setEnabled(true);
+       this.cbmodopagocliente.setEnabled(true);
        this.txtcuentaclientes.setEnabled(true);
        this.txtcontactoclientes.setEnabled(true);
        this.chestatusclientes.setEnabled(true);
        
-       this.cbvendedor.setEnabled(true);
+       this.cbvendedorcliente.setEnabled(true);
        
        
        this.txtbuscarclientes.setEnabled(false);
@@ -2774,7 +2781,7 @@ public class Datos extends javax.swing.JFrame {
        this.txtnombreclientes.setEnabled(false);
        this.txttelefonoclientes.setEnabled(false);
        this.txtcelularclientes.setEnabled(false);
-       this.cbdelegacion1.setEnabled(false);
+       this.cbdelegacioncliente.setEnabled(false);
        this.txtcoloniaclientes.setEnabled(false);
        this.txtcalleclientes.setEnabled(false);
        this.txtcorreoclientes.setEnabled(false);
@@ -2786,15 +2793,15 @@ public class Datos extends javax.swing.JFrame {
        this.txtcalleclientes1.setEnabled(false);
        this.txtnointclientes1.setEnabled(false);
        this.txtnoextclientes1.setEnabled(false);
-       this.cbdelegacion2.setEnabled(false);
+       this.cbdelegacionclientef.setEnabled(false);
        
        this.txtrfcclientes.setEnabled(false);
-       this.cbmodopago.setEnabled(false);
+       this.cbmodopagocliente.setEnabled(false);
        this.txtcuentaclientes.setEnabled(false);
        this.txtcontactoclientes.setEnabled(false);
        this.chestatusclientes.setEnabled(false);
        
-       this.cbvendedor.setEnabled(false);
+       this.cbvendedorcliente.setEnabled(false);
        
        this.txtbuscarclientes.setEnabled(true);
     }
@@ -2821,12 +2828,37 @@ public class Datos extends javax.swing.JFrame {
 
        this.txtcuentaclientes.setText("");
        this.txtcontactoclientes.setText("");
+       this.txtidclientes.setText("");
        this.chestatusclientes.setSelected(false);
        
        
        this.txtbuscarclientes.setText("");
     }
     
+     public boolean validar_cliente()
+     {
+         boolean valida =true;
+         
+         if (!this.txtcorreoclientes.getText().isEmpty()) {
+            if (!this.txtcorreoclientes.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
+                valida=false;
+            }
+        }
+
+        if (!this.txtrfcclientes.getText().isEmpty()) {
+            if (!this.txtrfcclientes.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")) {
+                valida=false;
+            }
+        }
+        if (!this.txtcuentaclientes.getText().isEmpty()) {
+            if (!this.txtcuentaclientes.getText().matches("^[0-9]{4}$")) {
+                valida=false;
+            }
+        }
+         return valida;
+     }
+     
+     
     private void btnCancelarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarclienteActionPerformed
         deshabilitarcliente();
         limpiarcliente();
@@ -2835,151 +2867,114 @@ public class Datos extends javax.swing.JFrame {
     private void btnGuardarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarclienteActionPerformed
         try
         {
-            if(this.txtnointclientes.getText().isEmpty())
-            {
-                this.txtnointclientes.setText(" ");
-                
-            }
-            
-            if(this.txtnoextclientes.getText().isEmpty())
-            {
-                this.txtnoextclientes.setText(" ");
-                
-            }
-            if(this.txtnointclientes1.getText().isEmpty())
-            {
-                this.txtnointclientes1.setText(" ");
-                
-            }
-            
-            if(this.txtnoextclientes1.getText().isEmpty())
-            {
-                this.txtnoextclientes1.setText(" ");
-                
-            }
-            if (this.txtnombreclientes.getText().isEmpty() || this.txttelefonoclientes.getText().isEmpty() || this.txtcorreoclientes.getText().isEmpty() || this.txtcelularclientes.getText().isEmpty() ||
-                this.txtcoloniaclientes.getText().isEmpty() || this.txtcalleclientes.getText().isEmpty() || this.txtnoextclientes.getText().isEmpty() || this.txtnointclientes.getText().isEmpty()
-                || this.txtrfcclientes.getText().isEmpty() || this.txtcuentaclientes.getText().isEmpty() || this.txtcontactoclientes.getText().isEmpty() ||
-                this.txtnombreclientes1.getText().isEmpty() || this.txtcoloniaclientes1.getText().isEmpty() || this.txtcalleclientes1.getText().isEmpty()
-                || this.txtnoextclientes1.getText().isEmpty() || this.txtnointclientes1.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-            }
-            else
-            {
-                if (this.txtcorreoclientes.getText().matches("^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*(.[a-zA-Z]{2,4})$")
-                    && this.txtcuentaclientes.getText().matches("^[0-9]{4}$") && this.txtrfcclientes.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")) {
-
+            if (this.validar_cliente()) {
+                if (!this.txtnombreclientes.getText().isEmpty()) {
                     if(this.seleccionclientes==1)
                     {
-                        String query="Insert into clientes (nombre,telefono,celular,correo,iddelegacion,colonia,calle,noint,noext,rfc,idmpago,cuenta,contacto,estatus, nombrefact, coloniafact, callefact, nointfact, noextfact, delefact, idvendedor) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
-
-                        ps.setString(1, this.txtnombreclientes.getText());
-                        ps.setString(2, this.txttelefonoclientes.getText());
-                        ps.setString(3, this.txtcelularclientes.getText());
-                        ps.setString(4, this.txtcorreoclientes.getText());
-
-                        ps.setInt(5, this.cbdelegacion1.getSelectedIndex()+1);
-
-                        ps.setString(6, this.txtcoloniaclientes.getText() );
-                        ps.setString(7, this.txtcalleclientes.getText());
-                        ps.setString(8, this.txtnointclientes.getText());
-                        ps.setString(9, this.txtnoextclientes.getText());
-
-                        ps.setString(10, this.txtrfcclientes.getText());
-                        ps.setInt(11, this.cbmodopago.getSelectedIndex()+1);
-                        ps.setInt(12, Integer.parseInt(this.txtcuentaclientes.getText()));
-                        ps.setString(13, this.txtcontactoclientes.getText());
+                        Clientes_DB  cb = new  Clientes_DB(this.con);
+                        Clientes cliente = new Clientes();
+                        
+                        cliente.setNombre(this.txtnombreclientes.getText());
+                        cliente.setTelefono(this.txttelefonoclientes.getText());
+                        cliente.setCelular(this.txtcelularclientes.getText());
+                        cliente.setCorreo(this.txtcorreoclientes.getText());
+                        cliente.setDelegacion(this.cbdelegacioncliente.getSelectedIndex()+1+"");
+                        cliente.setColonia(this.txtcoloniaclientes.getText() );
+                        cliente.setCalle(this.txtcalleclientes.getText());
+                        cliente.setNo_int(this.txtnointclientes.getText());
+                        cliente.setNo_ext(this.txtnoextclientes.getText());
+                        cliente.setRfc(this.txtrfcclientes.getText());
+                        cliente.setPago(this.cbmodopagocliente.getSelectedIndex()+1+"");
+                        cliente.setCuenta(this.txtcuentaclientes.getText());
+                        cliente.setContacto(this.txtcontactoclientes.getText());
 
                         if (this.chestatusclientes.isSelected()) {
-                            ps.setInt(14, 2);
+                            cliente.setEstatus(2+"");
                         }
                         else
                         {
-                            ps.setInt(14, 1);
+                            cliente.setEstatus(1+"");
                         }
 
-                        ps.setString(15, this.txtnombreclientes1.getText());
-                        ps.setString(16, this.txtcoloniaclientes1.getText() );
-                        ps.setString(17, this.txtcalleclientes1.getText());
-                        ps.setString(18, this.txtnointclientes1.getText());
-                        ps.setString(19, this.txtnoextclientes1.getText());
-                        ps.setInt(20, this.cbdelegacion2.getSelectedIndex()+1);
-                        ps.setInt(21, this.cbvendedor.getSelectedIndex()+1);
+                        cliente.setNombref(this.txtnombreclientes1.getText());
+                        cliente.setColoniaf(this.txtcoloniaclientes1.getText() );
+                        cliente.setCallef(this.txtcalleclientes1.getText());
+                        cliente.setNo_intf(this.txtnointclientes1.getText());
+                        cliente.setNo_extf(this.txtnoextclientes1.getText());
+                        cliente.setDelegacionf(this.cbdelegacionclientef.getSelectedIndex()+1+"");
+                        cliente.setVendedor(this.cbvendedorcliente.getSelectedIndex()+1+"");
 
-                        ps.executeUpdate();
-                        ps.close();
+                        cb.insert(cliente);
 
-                        creaciontablaclientes();
                     }
                     if(this.seleccionclientes==2)
                     {
-                        String query="Update clientes set nombre = ? , telefono = ?, celular = ? ,   correo = ? ,  iddelegacion = ? , colonia = ? , calle = ? ,  noint = ? ,  noext= ? , rfc = ? ,idmpago = ?,cuenta = ?,contacto = ?,estatus = ? , "
-                        + " nombrefact = ? , coloniafact = ?, callefact = ?, nointfact = ?, noextfact = ?, delefact = ?, idvendedor= ?  where id = ? ";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
-
-                        ps.setString(1, this.txtnombreclientes.getText());
-                        ps.setString(2, this.txttelefonoclientes.getText());
-                        ps.setString(3, this.txtcelularclientes.getText());
-                        ps.setString(4, this.txtcorreoclientes.getText());
-
-                        ps.setInt(5, this.cbdelegacion1.getSelectedIndex()+1);
-
-                        ps.setString(6, this.txtcoloniaclientes.getText() );
-                        ps.setString(7, this.txtcalleclientes.getText());
-                        ps.setString(8, this.txtnointclientes.getText());
-                        ps.setString(9, this.txtnoextclientes.getText());
-
-                        ps.setString(10, this.txtrfcclientes.getText());
-                        ps.setInt(11, this.cbmodopago.getSelectedIndex()+1);
-                        ps.setInt(12, Integer.parseInt(this.txtcuentaclientes.getText()));
-                        ps.setString(13, this.txtcontactoclientes.getText());
+                        Clientes_DB  cb = new  Clientes_DB(this.con);
+                        Clientes cliente = new Clientes();
+                        
+                        cliente.setNombre(this.txtnombreclientes.getText());
+                        cliente.setTelefono(this.txttelefonoclientes.getText());
+                        cliente.setCelular(this.txtcelularclientes.getText());
+                        cliente.setCorreo(this.txtcorreoclientes.getText());
+                        cliente.setDelegacion(this.cbdelegacioncliente.getSelectedIndex()+1+"");
+                        cliente.setColonia(this.txtcoloniaclientes.getText() );
+                        cliente.setCalle(this.txtcalleclientes.getText());
+                        cliente.setNo_int(this.txtnointclientes.getText());
+                        cliente.setNo_ext(this.txtnoextclientes.getText());
+                        cliente.setRfc(this.txtrfcclientes.getText());
+                        cliente.setPago(this.cbmodopagocliente.getSelectedIndex()+1+"");
+                        cliente.setCuenta(this.txtcuentaclientes.getText());
+                        cliente.setContacto(this.txtcontactoclientes.getText());
 
                         if (this.chestatusclientes.isSelected()) {
-                            ps.setInt(14, 2);
+                            cliente.setEstatus(2+"");
                         }
                         else
                         {
-                            ps.setInt(14, 1);
+                            cliente.setEstatus(1+"");
                         }
 
-                        ps.setString(15, this.txtnombreclientes1.getText());
-                        ps.setString(16, this.txtcoloniaclientes1.getText() );
-                        ps.setString(17, this.txtcalleclientes1.getText());
-                        ps.setString(18, this.txtnointclientes1.getText());
-                        ps.setString(19, this.txtnoextclientes1.getText());
-                        ps.setInt(20, this.cbdelegacion2.getSelectedIndex()+1);
-                        ps.setInt(21, this.cbvendedor.getSelectedIndex()+1);
-                        ps.setInt(22, Integer.parseInt(this.txtidclientes.getText()));
-                        ps.executeUpdate();
-                        ps.close();
-
-                        creaciontablaclientes();
-
+                        cliente.setNombref(this.txtnombreclientes1.getText());
+                        cliente.setColoniaf(this.txtcoloniaclientes1.getText() );
+                        cliente.setCallef(this.txtcalleclientes1.getText());
+                        cliente.setNo_intf(this.txtnointclientes1.getText());
+                        cliente.setNo_extf(this.txtnoextclientes1.getText());
+                        cliente.setDelegacionf(this.cbdelegacionclientef.getSelectedIndex()+1+"");
+                        cliente.setVendedor(this.cbvendedorcliente.getSelectedIndex()+1+"");
+                        cliente.setId(Integer.parseInt(this.txtidclientes.getText()));
+                        
+                        cb.update(cliente);
+                        
                     }
+                    creaciontablaclientes();
 
                     this.seleccionvendedor=0;
                     deshabilitarcliente();
                     limpiarcliente();
-
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
+                    JOptionPane.showMessageDialog(null, "Campo nombre esta vacio");
                 }
             }
+            else{
+                JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
+            }
+            
 
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
-             JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
-            try {
-                this.dbc = new DBcontrolador ();
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
             } catch (SQLException ex1) {
                 Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            this.con=this.dbc.getCnx();
         }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        } 
     }//GEN-LAST:event_btnGuardarclienteActionPerformed
 
     private void btnCambiarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarclienteActionPerformed
@@ -2994,7 +2989,7 @@ public class Datos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarclienteActionPerformed
 
     private void txtbuscarclientesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarclientesKeyReleased
-        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla4);
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_clientes);
         this.tbclientes.setRowSorter(tr);
 
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscarclientes.getText().toUpperCase(),1,15));
@@ -3010,13 +3005,13 @@ public class Datos extends javax.swing.JFrame {
             this.txttelefonoclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 2).toString());
             this.txtcelularclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 3).toString());
             this.txtcorreoclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 4).toString());
-            this.cbdelegacion1.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 5).toString());
+            this.cbdelegacioncliente.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 5).toString());
             this.txtcoloniaclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 6).toString());
             this.txtcalleclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 7).toString());
             this.txtnointclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 8).toString());
             this.txtnoextclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 9).toString());
             this.txtrfcclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 10).toString());
-            this.cbmodopago.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 11).toString());
+            this.cbmodopagocliente.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 11).toString());
             this.txtcuentaclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 12).toString());
             this.txtcontactoclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 13).toString());
 
@@ -3025,7 +3020,9 @@ public class Datos extends javax.swing.JFrame {
             this.txtcalleclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 17).toString());
             this.txtnointclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 18).toString());
             this.txtnoextclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 19).toString());
-            this.cbdelegacion2.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 20).toString());
+            this.cbdelegacionclientef.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 20).toString());
+            
+            this.cbvendedorcliente.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 21).toString());
 
             if ( Integer.parseInt(this.tbclientes.getValueAt(this.columnacliente, 14).toString() ) == 1 )
             {
@@ -3043,8 +3040,75 @@ public class Datos extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_tbclientesMouseClicked
+    
 
-    //proveedor    
+//</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Proveedores">
+
+     public void creaciontablaproveedor()
+    {
+         try{
+            this.tabla_proveedor=(DefaultTableModel) this.tbproveedor.getModel();
+            this.tabla_proveedor.setRowCount(0);
+            Proveedores_DB in = new Proveedores_DB(this.con);
+            List <Proveedores> provee = in.select();
+            for (int i = 0; i < provee.size(); i++) {
+                Object[] obj = new Object[14];
+                obj[0]=provee.get(i).getId();
+                obj[1]=provee.get(i).getNombre();
+                obj[2]=provee.get(i).getTelefono();
+                obj[3]=provee.get(i).getCorreo();
+                obj[4]=provee.get(i).getCp();
+                obj[5]=provee.get(i).getColonia();
+                obj[6]=provee.get(i).getCalle();
+                obj[7]=provee.get(i).getNoint();
+                obj[8]=provee.get(i).getNoext();
+                obj[9]=provee.get(i).getRfc();
+                obj[10]=provee.get(i).getIdmpago();
+                obj[11]=provee.get(i).getCuenta();
+                obj[12]=provee.get(i).getContacto();
+                obj[13]=provee.get(i).getSistema_calidad();
+                
+                this.tabla_proveedor.addRow(obj);
+            }
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_proveedor);
+            this.tbproveedor.setRowSorter(tr);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
+            
+            List<String>pago= in.combo_pago();
+             for (int i = 0; i < pago.size(); i++) {
+                 this.cbmodopagoproveedor.addItem(pago.get(i));
+             }
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error :"+ ex);
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
+        }
+    }
+    
+    
     public void habilitarproveedor()
     {
        this.btnCancelarproveedor.setEnabled(true);
@@ -3062,7 +3126,7 @@ public class Datos extends javax.swing.JFrame {
        this.txtnoextproveedor.setEnabled(true);
        this.txtsistemacalidad.setEnabled(true);
        this.txtrfcproveedor.setEnabled(true);
-       this.cbmodopago1.setEnabled(true);
+       this.cbmodopagoproveedor.setEnabled(true);
        this.txtcuentaproveedor.setEnabled(true);
        this.txtcontactoproveedor.setEnabled(true);
        
@@ -3087,7 +3151,7 @@ public class Datos extends javax.swing.JFrame {
        this.txtnoextproveedor.setEnabled(false);
        
        this.txtrfcproveedor.setEnabled(false);
-       this.cbmodopago1.setEnabled(false);
+       this.cbmodopagoproveedor.setEnabled(false);
        this.txtcuentaproveedor.setEnabled(false);
        this.txtcontactoproveedor.setEnabled(false);
     
@@ -3114,6 +3178,33 @@ public class Datos extends javax.swing.JFrame {
    
     }    
      
+    public boolean validar_proveedor()
+    {
+        boolean validado= true;
+        
+        if (!this.txtcorreoproveedor.getText().isEmpty()) {
+            if (!this.txtcorreoproveedor.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
+                validado=false;
+            }
+        }
+        if (!this.txtcpproveedor.getText().isEmpty()) {
+            if (!this.txtcpproveedor.getText().matches("^[0-9]{5}$")) {
+                validado=false;
+            }
+        }
+        if (!this.txtrfcproveedor.getText().isEmpty()) {
+            if (!this.txtrfcproveedor.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")) {
+                validado=false;
+            }
+        }
+        if (!this.txtcuentaproveedor.getText().isEmpty()) {
+            if (!this.txtcuentaproveedor.getText().matches("^[0-9]{4}$")) {
+                validado=false;
+            }
+        }
+        
+        return validado;
+    }
     
     private void btnCancelarproveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarproveedorActionPerformed
         deshabilitarproveedor();
@@ -3123,106 +3214,91 @@ public class Datos extends javax.swing.JFrame {
     private void btnGuardarproveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarproveedorActionPerformed
         try
         {
-            if(this.txtnointproveedor.getText().isEmpty())
-            {
-                this.txtnointproveedor.setText(" ");
-                
-            }
             
-            if(this.txtnoextproveedor.getText().isEmpty())
-            {
-                this.txtnoextproveedor.setText(" ");
-                
-            }
-
-            if (this.txtnombreproveedor.getText().isEmpty() || this.txttelefonoproveedor.getText().isEmpty() || this.txtcorreoproveedor.getText().isEmpty() || this.txtcpproveedor.getText().isEmpty() ||
-                this.txtcoloniaproveedor.getText().isEmpty() || this.txtcalleproveedor.getText().isEmpty() || this.txtnoextproveedor.getText().isEmpty() || this.txtnointproveedor.getText().isEmpty()
-                || this.txtrfcproveedor.getText().isEmpty() || this.txtcuentaproveedor.getText().isEmpty() || this.txtcontactoproveedor.getText().isEmpty() || this.txtsistemacalidad.getText().isEmpty()   ) {
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-            }
-            else
-            {
-                if (this.txtcorreoproveedor.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")
-                    && this.txtcuentaproveedor.getText().matches("^[0-9]{4}$") && this.txtrfcproveedor.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")|| this.txtcpproveedor.getText().matches("^[0-9]+$") ) {
-
+            if (this.validar_proveedor()) {
+                if (!this.txtnombreproveedor.getText().isEmpty()) {
                     if(this.seleccionproveedor==1) 
                     {
-                        String query="Insert into proveedores (nombre,telefono,correo,cp,colonia,calle,noint,noext,rfc,idmpago,cuenta,contacto, sistema_calidad) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
+                        Proveedores proveedor = new Proveedores();
+                        Proveedores_DB pr = new Proveedores_DB(this.con);
+                        
+                        proveedor.setNombre(this.txtnombreproveedor.getText());
+                        proveedor.setTelefono(this.txttelefonoproveedor.getText());
+                        proveedor.setCorreo(this.txtcorreoproveedor.getText());
+                        proveedor.setCp(this.txtcpproveedor.getText());
+                        proveedor.setColonia(this.txtcoloniaproveedor.getText() );
+                        proveedor.setCalle(this.txtcalleproveedor.getText());
+                        proveedor.setNoint(this.txtnointproveedor.getText());
+                        proveedor.setNoext(this.txtnoextproveedor.getText());
 
-                        ps.setString(1, this.txtnombreproveedor.getText());
-                        ps.setString(2, this.txttelefonoproveedor.getText());
-                        ps.setString(3, this.txtcorreoproveedor.getText());
+                        proveedor.setRfc(this.txtrfcproveedor.getText());
+                        proveedor.setIdmpago(this.cbmodopagoproveedor.getSelectedIndex()+1+"");
+                        proveedor.setCuenta(this.txtcuentaproveedor.getText());
+                        proveedor.setContacto(this.txtcontactoproveedor.getText());
+                        proveedor.setSistema_calidad(this.txtsistemacalidad.getText());
 
-                        ps.setString(4, this.txtcpproveedor.getText());
-
-                        ps.setString(5, this.txtcoloniaproveedor.getText() );
-                        ps.setString(6, this.txtcalleproveedor.getText());
-                        ps.setString(7, this.txtnointproveedor.getText());
-                        ps.setString(8, this.txtnoextproveedor.getText());
-
-                        ps.setString(9, this.txtrfcproveedor.getText());
-                        ps.setInt(10, this.cbmodopago1.getSelectedIndex()+1);
-                        ps.setInt(11, Integer.parseInt(this.txtcuentaproveedor.getText()));
-                        ps.setString(12, this.txtcontactoproveedor.getText());
-                        ps.setString(13, this.txtsistemacalidad.getText());
-
-                        ps.executeUpdate();
-                        ps.close();
-
-                        creaciontablaproveedor();
+                        pr.insert(proveedor);
                     }
                     if(this.seleccionproveedor==2)
                     {
-                        String query="Update proveedores set nombre = ? , telefono = ? ,   correo = ? ,  cp = ? , colonia = ? , calle = ? ,  noint = ? ,  noext= ? , rfc = ? ,idmpago = ?,cuenta = ?,contacto = ?, sistema_calidad = ?  where id = ? ";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
+                        Proveedores proveedor = new Proveedores();
+                        Proveedores_DB pr = new Proveedores_DB(this.con);
+                        
+                        proveedor.setNombre(this.txtnombreproveedor.getText());
+                        proveedor.setTelefono(this.txttelefonoproveedor.getText());
+                        proveedor.setCorreo(this.txtcorreoproveedor.getText());
+                        proveedor.setCp(this.txtcpproveedor.getText());
+                        proveedor.setColonia(this.txtcoloniaproveedor.getText() );
+                        proveedor.setCalle(this.txtcalleproveedor.getText());
+                        proveedor.setNoint(this.txtnointproveedor.getText());
+                        proveedor.setNoext(this.txtnoextproveedor.getText());
 
-                        ps.setString(1, this.txtnombreproveedor.getText());
-                        ps.setString(2, this.txttelefonoproveedor.getText());
-                        ps.setString(3, this.txtcorreoproveedor.getText());
-
-                        ps.setString(4, this.txtcpproveedor.getText());
-
-                        ps.setString(5, this.txtcoloniaproveedor.getText() );
-                        ps.setString(6, this.txtcalleproveedor.getText());
-                        ps.setString(7, this.txtnointproveedor.getText());
-                        ps.setString(8, this.txtnoextproveedor.getText());
-
-                        ps.setString(9, this.txtrfcproveedor.getText());
-                        ps.setInt(10, this.cbmodopago1.getSelectedIndex()+1);
-                        ps.setInt(11, Integer.parseInt(this.txtcuentaproveedor.getText()));
-                        ps.setString(12, this.txtcontactoproveedor.getText());
-                        ps.setString(13, this.txtsistemacalidad.getText());
-
-                        ps.setInt(14, Integer.parseInt(this.txtidproveedor.getText()));
-                        ps.executeUpdate();
-                        ps.close();
-
-                        creaciontablaproveedor();
-
+                        proveedor.setRfc(this.txtrfcproveedor.getText());
+                        proveedor.setIdmpago(this.cbmodopagoproveedor.getSelectedIndex()+1+"");
+                        proveedor.setCuenta(this.txtcuentaproveedor.getText());
+                        proveedor.setContacto(this.txtcontactoproveedor.getText());
+                        proveedor.setSistema_calidad(this.txtsistemacalidad.getText());
+                      
+                        proveedor.setId(Integer.parseInt(this.txtidproveedor.getText()));
+                        
+                        pr.update(proveedor);
+                        
                     }
-
+                    creaciontablaproveedor();
                     this.seleccionproveedor=0;
                     deshabilitarproveedor();
                     limpiarproveedor();
-
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
+                    JOptionPane.showMessageDialog(null, "El campo nombre esta vacio");
                 }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
             }
 
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
-             JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
             try {
-                this.dbc = new DBcontrolador ();
+                this.con=Conexion.getConnection();
             } catch (SQLException ex1) {
                 Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            this.con=this.dbc.getCnx();
+            
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error :"+ ex);
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
         }
     }//GEN-LAST:event_btnGuardarproveedorActionPerformed
 
@@ -3238,10 +3314,17 @@ public class Datos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarproveedorActionPerformed
 
     private void txtbuscarproveedorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarproveedorKeyReleased
-        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla5);
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_proveedor);
         this.tbproveedor.setRowSorter(tr);
 
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscarproveedor.getText().toUpperCase(),1));
+
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        int columnIndexToSort = 0;
+        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+        tr.setSortKeys(sortKeys);
+        tr.sort();
     }//GEN-LAST:event_txtbuscarproveedorKeyReleased
 
     private void tbproveedorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbproveedorMouseClicked
@@ -3259,7 +3342,7 @@ public class Datos extends javax.swing.JFrame {
             this.txtnointproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 7).toString());
             this.txtnoextproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 8).toString());
             this.txtrfcproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 9).toString());
-            this.cbmodopago1.setSelectedItem(this.tbproveedor.getValueAt(this.columnaproveedor, 10).toString());
+            this.cbmodopagoproveedor.setSelectedItem(this.tbproveedor.getValueAt(this.columnaproveedor, 10).toString());
             this.txtcuentaproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 11).toString());
             this.txtcontactoproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 12).toString());
             this.txtsistemacalidad.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 13).toString());
@@ -3271,29 +3354,68 @@ public class Datos extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_tbproveedorMouseClicked
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Vendedores">
 
-    
-    //vendedores   
-       
-    
     public void creaciontablavendedores()
     {
-
-        this.tabla_vendedores=(DefaultTableModel) this.tbvendedores.getModel();
-        
-        this.tabla_vendedores.setRowCount(0);
-
-        ArrayList <String[]> op = new ArrayList<>();
-        
-        String query="select vendedores.id , vendedores.nombre, vendedores.telefono, vendedores.correo,\n" +
-        " delegacion.nombre, vendedores.colonia, vendedores.calle,vendedores.noint,vendedores.noext\n" +
-        " from vendedores join delegacion on vendedores.iddelegacion = delegacion.id";
-        op=this.dbc.seleccionar(query);
- 
-        for (int i = 0; i < op.size(); i++) {    
+        try{
+            this.tabla_vendedores=(DefaultTableModel) this.tbvendedores.getModel();
+            this.tabla_vendedores.setRowCount(0);
+            Vendedores_DB in = new Vendedores_DB(this.con);
+            List <Vendedor> inventario = in.select();
+            for (int i = 0; i < inventario.size(); i++) {
+                Object[] obj = new Object[9];
+                obj[0]=inventario.get(i).getId();
+                obj[1]=inventario.get(i).getNombre();
+                obj[2]=inventario.get(i).getTelefono();
+                obj[3]=inventario.get(i).getCorreo();
+                obj[4]=inventario.get(i).getDele_muni();
+                obj[5]=inventario.get(i).getColonia();
+                obj[6]=inventario.get(i).getCalle();
+                obj[7]=inventario.get(i).getNoint();
+                obj[8]=inventario.get(i).getNoext();
+                
+                this.tabla_vendedores.addRow(obj);
+            }
             
-            this.tabla_vendedores.addRow(op.get(i));
-        } 
+            TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_vendedores);
+            this.tbvendedores.setRowSorter(tr);
+            List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+            int columnIndexToSort = 0;
+            sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+            tr.setSortKeys(sortKeys);
+            tr.sort();
+            
+            
+            List <String> dele = in.combo_dele();
+            for (int i = 0; i <dele.size(); i++) {
+                this.cbdelegacionvendedor.addItem(dele.get(i));
+            }
+            
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error :"+ ex);
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
+        }
         
     }
     
@@ -3304,7 +3426,7 @@ public class Datos extends javax.swing.JFrame {
         this.txtnombrevendedor.setEnabled(false);
         this.txttelefonovendedor.setEnabled(false);
         this.txtcorreovendedor.setEnabled(false);
-        this.cbdelegacion.setEnabled(false);
+        this.cbdelegacionvendedor.setEnabled(false);
         this.txtcoloniavendedor.setEnabled(false);
         this.txtcallevendedor.setEnabled(false);
         this.txtnoextvendedor.setEnabled(false);
@@ -3327,7 +3449,7 @@ public class Datos extends javax.swing.JFrame {
        
        this.txtnombrevendedor.setEnabled(true);
        this.txttelefonovendedor.setEnabled(true);
-       this.cbdelegacion.setEnabled(true);
+       this.cbdelegacionvendedor.setEnabled(true);
        this.txtcoloniavendedor.setEnabled(true);
        this.txtcallevendedor.setEnabled(true);
        this.txtcorreovendedor.setEnabled(true);
@@ -3359,90 +3481,81 @@ public class Datos extends javax.swing.JFrame {
     private void btnGuardarvendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarvendedorActionPerformed
         try
         {
-            if(this.txtnointvendedor.getText().isEmpty())
-            {
-                this.txtnointvendedor.setText(" ");
-                
+            boolean validacion=true;
+            if (!this.txtcorreovendedor.getText().isEmpty()) {
+                if (!this.txtcorreovendedor.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
+                    validacion=false;
+                }
             }
-            
-            if(this.txtnoextvendedor.getText().isEmpty())
-            {
-                this.txtnoextvendedor.setText(" ");
-                
-            }
-            if (this.txtnombrevendedor.getText().isEmpty() || this.txttelefonovendedor.getText().isEmpty() || this.txtcorreovendedor.getText().isEmpty() ||
-                this.txtcoloniavendedor.getText().isEmpty() || this.txtcallevendedor.getText().isEmpty() || this.txtnoextvendedor.getText().isEmpty() || this.txtnointvendedor.getText().isEmpty() ) {
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-            }
-            else
-            {
-                if (this.txtcorreovendedor.getText().matches("^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)*(.[a-zA-Z]{2,4})$") ) {
-
+            if (!this.txtnombrevendedor.getText().isEmpty()) {
+                if (validacion) {
                     if(this.seleccionvendedor==1)
-                    {
-                        String query="Insert into vendedores (nombre,telefono,correo,iddelegacion,colonia,calle,noint,noext) values (?,?,?,?,?,?,?,?)";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
+                    {         
+                        Vendedores_DB db = new Vendedores_DB(this.con);
+                        Vendedor vende= new Vendedor();
+                        vende.setNombre(this.txtnombrevendedor.getText());
+                        vende.setTelefono(this.txttelefonovendedor.getText());
+                        vende.setCorreo(this.txtcorreovendedor.getText());
+                        vende.setDele_muni(this.cbdelegacionvendedor.getSelectedIndex()+1+"");
+                        vende.setColonia(this.txtcoloniavendedor.getText() );
+                        vende.setCalle(this.txtcallevendedor.getText());
+                        vende.setNoint(this.txtnointvendedor.getText());
+                        vende.setNoext(this.txtnoextvendedor.getText());
 
-                        ps.setString(1, this.txtnombrevendedor.getText());
-                        ps.setString(2, this.txttelefonovendedor.getText());
-                        ps.setString(3, this.txtcorreovendedor.getText());
-
-                        ps.setInt(4, this.cbdelegacion.getSelectedIndex()+1);
-
-                        ps.setString(5, this.txtcoloniavendedor.getText() );
-                        ps.setString(6, this.txtcallevendedor.getText());
-                        ps.setString(7, this.txtnointvendedor.getText());
-                        ps.setString(8, this.txtnoextvendedor.getText());
-
-                        ps.executeUpdate();
-                        ps.close();
-
-                        creaciontablavendedores();
+                        db.insert(vende);
                     }
                     if(this.seleccionvendedor==2)
                     {
-                        String query="Update vendedores set nombre = ? , telefono = ? ,   correo = ? ,  iddelegacion = ? , colonia = ? , calle = ? ,  noint = ? ,  noext= ?  where id = ? ";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
 
-                        ps.setString(1, this.txtnombrevendedor.getText());
-                        ps.setString(2, this.txttelefonovendedor.getText());
-                        ps.setString(3, this.txtcorreovendedor.getText());
-
-                        ps.setInt(4, this.cbdelegacion.getSelectedIndex()+1);
-
-                        ps.setString(5, this.txtcoloniavendedor.getText() );
-                        ps.setString(6, this.txtcallevendedor.getText());
-                        ps.setString(7, this.txtnointvendedor.getText());
-                        ps.setString(8, this.txtnoextvendedor.getText());
-
-                        ps.setInt(9, Integer.parseInt(this.txtidvendedor.getText() ));
-                        ps.executeUpdate();
-                        ps.close();
-
-                        creaciontablavendedores();
+                        Vendedores_DB db = new Vendedores_DB(this.con);
+                        Vendedor vende= new Vendedor();
+                        vende.setNombre(this.txtnombrevendedor.getText());
+                        vende.setTelefono(this.txttelefonovendedor.getText());
+                        vende.setCorreo(this.txtcorreovendedor.getText());
+                        vende.setDele_muni(this.cbdelegacionvendedor.getSelectedIndex()+1+"");
+                        vende.setColonia(this.txtcoloniavendedor.getText() );
+                        vende.setCalle(this.txtcallevendedor.getText());
+                        vende.setNoint(this.txtnointvendedor.getText());
+                        vende.setNoext(this.txtnoextvendedor.getText());
+                        vende.setId(Integer.parseInt(this.txtidvendedor.getText()));
+                        db.update(vende);
 
                     }
-
+                    creaciontablavendedores();
                     this.seleccionvendedor=0;
                     deshabilitarvendedor();
-                    combobox();
-
+                    creaciontablaclientes();
                 }
                 else
                 {
                     JOptionPane.showMessageDialog(null, "Algun campo tiene informacion incorrecta");
                 }
             }
+            else
+            {
+                 JOptionPane.showMessageDialog(null, "El nombre esta vacio");
+            }
+            
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
             JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
             try {
-                this.dbc = new DBcontrolador ();
+                this.con=Conexion.getConnection();
             } catch (SQLException ex1) {
                 Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            this.con=this.dbc.getCnx();
+            
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error :"+ ex);
+            try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            
         }
     }//GEN-LAST:event_btnGuardarvendedorActionPerformed
 
@@ -3463,6 +3576,13 @@ public class Datos extends javax.swing.JFrame {
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_vendedores);
         this.tbvendedores.setRowSorter(tr);
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscarvendedores.getText().toUpperCase(),1,4));
+
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        int columnIndexToSort = 0;
+        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+        tr.setSortKeys(sortKeys);
+        tr.sort();
     }//GEN-LAST:event_txtbuscarvendedoresKeyReleased
 
     private void tbvendedoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbvendedoresMouseClicked
@@ -3474,7 +3594,7 @@ public class Datos extends javax.swing.JFrame {
             this.txtnombrevendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 1).toString());
             this.txttelefonovendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 2).toString());
             this.txtcorreovendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 3).toString());
-            this.cbdelegacion.setSelectedItem(this.tbvendedores.getValueAt(this.columnavendedor, 4).toString());
+            this.cbdelegacionvendedor.setSelectedItem(this.tbvendedores.getValueAt(this.columnavendedor, 4).toString());
             this.txtcoloniavendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 5).toString());
             this.txtcallevendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 6).toString());
             this.txtnointvendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 7).toString());
@@ -3487,7 +3607,10 @@ public class Datos extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_tbvendedoresMouseClicked
-
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Ingredientes">
+    
 //Ingrediente       
     public void colocarproductoin(Producto pro)
     {
@@ -3656,10 +3779,19 @@ public class Datos extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnElegir_ingredienteActionPerformed
 
+    //</editor-fold>
     
-    
+    //<editor-fold defaultstate="collapsed" desc="Pruebas">
     
     //Prueba
+
+    public void combo_prueba() throws SQLException{
+        Pruebas_DB pr = new Pruebas_DB(this.con);
+        List <String> combo = pr.combo_categoria();
+        for (int i = 0; i < combo.size(); i++) {
+            this.cbcategoriaprueba.addItem(combo.get(i));
+        }
+    }
     
     public void insertarpro_prueba(Producto pro)
     {
@@ -3675,7 +3807,7 @@ public class Datos extends javax.swing.JFrame {
     public void actualizarprueba()
     {
         try{
-         this.tabla_pruebas=(DefaultTableModel) this.tbpruebas.getModel();
+        this.tabla_pruebas=(DefaultTableModel) this.tbpruebas.getModel();
         
         this.tabla_pruebas.setRowCount(0);
 
@@ -3805,7 +3937,9 @@ public class Datos extends javax.swing.JFrame {
   
         }
     }//GEN-LAST:event_btnquitarpruebaActionPerformed
+    
 
+//</editor-fold>
  
     /**
      * @param args the command line arguments
@@ -3883,15 +4017,15 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JButton btnquitarprueba;
     private javax.swing.JComboBox<String> cbcategoriaproducto;
     private javax.swing.JComboBox<String> cbcategoriaprueba;
-    private javax.swing.JComboBox<String> cbdelegacion;
-    private javax.swing.JComboBox<String> cbdelegacion1;
-    private javax.swing.JComboBox<String> cbdelegacion2;
+    private javax.swing.JComboBox<String> cbdelegacioncliente;
+    private javax.swing.JComboBox<String> cbdelegacionclientef;
+    private javax.swing.JComboBox<String> cbdelegacionvendedor;
     private javax.swing.JComboBox<String> cbmedidaproducto;
-    private javax.swing.JComboBox<String> cbmodopago;
-    private javax.swing.JComboBox<String> cbmodopago1;
-    private javax.swing.JComboBox<String> cbmoneda;
+    private javax.swing.JComboBox<String> cbmodopagocliente;
+    private javax.swing.JComboBox<String> cbmodopagoproveedor;
+    private javax.swing.JComboBox<String> cbmonedaproducto;
     private javax.swing.JComboBox<String> cbprocesoproducto;
-    private javax.swing.JComboBox<String> cbvendedor;
+    private javax.swing.JComboBox<String> cbvendedorcliente;
     private javax.swing.JCheckBox chestatusclientes;
     private javax.swing.JCheckBox chivaproducto;
     private javax.swing.JLabel jLabel1;
@@ -3988,6 +4122,8 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private com.toedter.calendar.JDateChooser jdfecha;
+    private com.toedter.calendar.JDateChooser jdfecha_caducidad;
     private javax.swing.JLabel lbcantidad2;
     private javax.swing.JLabel lblcaducidad;
     private javax.swing.JLabel lbliva;
@@ -4012,7 +4148,7 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JTextField txtcalleclientes1;
     private javax.swing.JTextField txtcalleproveedor;
     private javax.swing.JTextField txtcallevendedor;
-    private javax.swing.JTextField txtcantidadinventario;
+    private javax.swing.JTextField txtcantidad_actualinventario;
     private javax.swing.JTextField txtcantidadtinventario;
     private javax.swing.JTextField txtcelularclientes;
     private javax.swing.JTextField txtclaveingrediente;
@@ -4033,8 +4169,6 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JTextField txtcuentaproveedor;
     private javax.swing.JTextField txtdeterminacion;
     private javax.swing.JTextField txtfactinventario;
-    private javax.swing.JTextField txtfechainventario;
-    private javax.swing.JTextField txtfechainventario1;
     private javax.swing.JTextField txtidclientes;
     private javax.swing.JTextField txtidingrediente;
     private javax.swing.JTextField txtidoppinventario;

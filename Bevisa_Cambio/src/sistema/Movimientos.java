@@ -33,6 +33,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import negocio.Ingrediente;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -1109,31 +1110,58 @@ public class Movimientos extends javax.swing.JFrame {
                 String ingrefaltante="";
                 ArrayList <String[]> op = new ArrayList<>();
                 ArrayList <String[]> op2 = new ArrayList<>();
+                ArrayList <String[]> ingredientes = new ArrayList<>();
+                
                 boolean sipasa=true;
+                boolean existe=true;
+                
                 //validacion
+                
+                //hacer lista con todos los ingredientes
                 for (int i = 0; i < this.tabla4.getRowCount(); i++) {
+                    //Ingredientes de un producto
                     query="select idproducto, cantidad from ingredientes where idproductofinal= " + this.tabla4.getValueAt(i, 0).toString();
                     op= this.dbc.seleccionar(query);
                     for (int j = 0; j < op.size(); j++) {
-                        query="select sum(inventario.cantidadactual), productos.nombre from inventario join productos on productos.id = inventario.idproducto where fechacaducidad >= '"+this.fechadividir(txtfechaopc, 2) +"' and idproducto = "+ op.get(j)[0];
-                        op2=this.dbc.seleccionar(query);
-                        if (op2.get(0)[0]== null) {
-                            ingrefaltante += "Requiere "+Double.parseDouble(this.tabla4.getValueAt(i, 4).toString())* Double.parseDouble(op.get(j)[1])  +" de "+op2.get(0)[1] +"\n";
-                            sipasa=false;
-                        }
-                        else
-                        {
-                            if (Double.parseDouble(op2.get(0)[0]) < Double.parseDouble(op.get(j)[1]) *  Double.parseDouble(this.tabla4.getValueAt(i, 4).toString())) {
-                            sipasa=false;
-                            double falta = Double.parseDouble(op.get(j)[1]) *  Double.parseDouble(this.tabla4.getValueAt(i, 4).toString()) - Double.parseDouble(op2.get(0)[0]);
-                            ingrefaltante += "Requiere "+falta+" de "+op2.get(0)[1] +"\n";
+                        //multiplicar por la cantidad
+                        op.get(j)[1]= Double.parseDouble(op.get(j)[1]) *  Double.parseDouble(this.tabla4.getValueAt(i, 4).toString())+"";
+                        //Para saber si ya esta seleccionado (dentro de op2)
+                        existe=true;
+                        for (int k = 0; k < op2.size(); k++) {
+                            if (op.get(j)[0].equals(op2.get(k)[0])) {
+                                double cantidad = Double.parseDouble(op.get(j)[1]);
+                                op2.get(k)[1]=(cantidad+Double.parseDouble(op2.get(k)[1]))+"";
+                                existe=false;
                             }
                         }
-                       
-
+                        if(existe)
+                        op2.add(op.get(j));
                     }
                     op.clear();
                 }
+                
+                //Comparar con el inventario
+                for (int i = 0; i < op2.size(); i++) {
+                    query="select sum(inventario.cantidadactual), productos.nombre from inventario join productos on productos.id = inventario.idproducto where fechacaducidad >= '"+this.fechadividir(txtfechaopc, 2) +"' and idproducto = "+ op2.get(i)[0];
+                    op=this.dbc.seleccionar(query);
+                    
+                    if (op.get(0)[0]== null) {
+                        ingrefaltante += "Requiere "+Double.parseDouble(op2.get(i)[1])  +" de "+op.get(0)[1] +"\n";
+                        sipasa=false;
+                        
+                    }
+                    else
+                    {
+                        if (Double.parseDouble(op.get(0)[0]) < Double.parseDouble(op2.get(i)[1])) {
+                        sipasa=false;
+                        double falta = Double.parseDouble(op2.get(i)[1])- Double.parseDouble(op.get(0)[0]);
+                        ingrefaltante += "Requiere "+falta+" de "+op.get(0)[1] +"\n";
+                        }
+                    }
+                }
+                
+                
+                
                 boolean ordencliente=true;
                 for (int i = 0; i < this.tabla4.getRowCount(); i++) {
                     if (this.tabla4.getValueAt(i, 5) == null) {
@@ -1143,136 +1171,136 @@ public class Movimientos extends javax.swing.JFrame {
 
                 if (sipasa) {
                     if (ordencliente) {
-                        double preciototal=0;
-                        for (int i = 0; i < this.tabla4.getRowCount(); i++) {
-                            System.out.println(i);
-                            query="Select pventa from productos where id = "+ this.tabla4.getValueAt(i, 0).toString();
-                            op=this.dbc.seleccionar(query);
-                            preciototal+=Double.parseDouble(op.get(0)[0])* Double.parseDouble(this.tabla4.getValueAt(i, 4).toString());
-                            op.clear();
-                        }
+                        
+                        if (JOptionPane.showConfirmDialog(null, "¿Desea hacer la orden?", "Ingredientes correctos", JOptionPane.YES_NO_OPTION)==0) {
+                            double preciototal=0;
+                            for (int i = 0; i < this.tabla4.getRowCount(); i++) {
+                                System.out.println(i);
+                                query="Select pventa from productos where id = "+ this.tabla4.getValueAt(i, 0).toString();
+                                op=this.dbc.seleccionar(query);
+                                preciototal+=Double.parseDouble(op.get(0)[0])* Double.parseDouble(this.tabla4.getValueAt(i, 4).toString());
+                                op.clear();
+                            }
 
-                        query="Insert into opclientes(idcliente,ptotal, fecha) values (?,?,?)";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
+                            query="Insert into opclientes(idcliente,ptotal, fecha) values (?,?,?)";
+                            PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
 
-                        ps.setInt(1, Integer.parseInt(this.txtidclienteopc.getText()) );
+                            ps.setInt(1, Integer.parseInt(this.txtidclienteopc.getText()) );
 
-                        ps.setDouble(2, preciototal );
+                            ps.setDouble(2, preciototal );
 
-                        ps.setString(3, this.fechadividir(txtfechaopc, 2));
-
-                        ps.executeUpdate();
-                        ps.close();
-
-                        query = "select MAX(id) from opclientes";
-
-                        int index = Integer.parseInt(this.dbc.seleccionarid(query) );
-
-                        query ="Insert into pedidos_opc(idopc,idproducto,cantidad,noordencliente) values (?,?,?,?)";
-
-                        for (int i = 0; i < this.tabla4.getRowCount(); i++) {
-
-                            ps= this.dbc.getCnx().prepareStatement(query);
-                            ps.setDouble(1, index);
-                            ps.setInt(2, Integer.parseInt(this.tabla4.getValueAt(i, 0).toString()));
-                            ps.setDouble(3, Double.parseDouble(this.tabla4.getValueAt(i, 4).toString()));
-                            ps.setString(4, this.tabla4.getValueAt(i, 5).toString());
-                            ps.executeUpdate();
-                            ps.close();
-                        }
-
-                        //crearodernproduccion
-                        for (int i = 0; i < this.tabla4.getRowCount(); i++) {
-                            query ="Insert into ordenes_prod(idopc,idproduc,fecha,cantidad) values (?,?,?,?)";
-                            ps = this.dbc.getCnx().prepareStatement(query);
-                            ps.setDouble(1, index);
-                            ps.setInt(2, Integer.parseInt(this.tabla4.getValueAt(i, 0).toString()));
                             ps.setString(3, this.fechadividir(txtfechaopc, 2));
-                            ps.setDouble(4, Double.parseDouble(this.tabla4.getValueAt(i, 4).toString()));
+
                             ps.executeUpdate();
                             ps.close();
-                            query = "select MAX(id) from ordenes_prod";
 
-                            int indexodp = Integer.parseInt(this.dbc.seleccionarid(query) );
+                            query = "select MAX(id) from opclientes";
 
-                            //inventario e ingredientes
+                            int index = Integer.parseInt(this.dbc.seleccionarid(query) );
 
-                            double cantidad=Double.parseDouble(this.tabla4.getValueAt(i, 4).toString());
-                            ArrayList <String[]> op1 = new ArrayList<>();
-                            query="select * from ingredientes where idproductofinal = "+ this.tabla4.getValueAt(i, 0).toString();
-                            op=this.dbc.seleccionar(query);
-                            for (int j = 0; j < op.size(); j++) {
+                            query ="Insert into pedidos_opc(idopc,idproducto,cantidad,noordencliente) values (?,?,?,?)";
 
-                                query="select * from inventario where idproducto = "+op.get(j)[2] +" and cantidadactual > 0 and fechacaducidad >= '"+this.fechadividir(txtfechaopc, 2)+"'";
-                                op1=this.dbc.seleccionar(query);
-                                double cantidad2=cantidad * Double.parseDouble(op.get(j)[3]);
-                                for (int k = 0; k < op1.size(); k++) {
+                            for (int i = 0; i < this.tabla4.getRowCount(); i++) {
 
-                                    if (cantidad2 != 0) {
+                                ps= this.dbc.getCnx().prepareStatement(query);
+                                ps.setDouble(1, index);
+                                ps.setInt(2, Integer.parseInt(this.tabla4.getValueAt(i, 0).toString()));
+                                ps.setDouble(3, Double.parseDouble(this.tabla4.getValueAt(i, 4).toString()));
+                                ps.setString(4, this.tabla4.getValueAt(i, 5).toString());
+                                ps.executeUpdate();
+                                ps.close();
+                            }
 
-                                        double aux =Double.parseDouble(op1.get(k)[3]) - cantidad2;
-                                        if (aux >= 0) {
-                                            query="insert into mp_odp (idodp,idinven,cantidad,costo) values (?,?,?,?)";
-                                            ps= this.dbc.getCnx().prepareStatement(query);
-                                            ps.setDouble(1, indexodp);
-                                            ps.setInt(2, Integer.parseInt(op1.get(k)[0]));
-                                            ps.setDouble(3, cantidad2);
-                                            double costo =Double.parseDouble(op1.get(k)[8])/Double.parseDouble(op1.get(k)[7]) * cantidad2;
-                                            ps.setDouble(4, costo);
-                                            ps.executeUpdate();
-                                            ps.close();
+                            //crearodernproduccion
+                            for (int i = 0; i < this.tabla4.getRowCount(); i++) {
+                                query ="Insert into ordenes_prod(idopc,idproduc,fecha,cantidad) values (?,?,?,?)";
+                                ps = this.dbc.getCnx().prepareStatement(query);
+                                ps.setDouble(1, index);
+                                ps.setInt(2, Integer.parseInt(this.tabla4.getValueAt(i, 0).toString()));
+                                ps.setString(3, this.fechadividir(txtfechaopc, 2));
+                                ps.setDouble(4, Double.parseDouble(this.tabla4.getValueAt(i, 4).toString()));
+                                ps.executeUpdate();
+                                ps.close();
+                                query = "select MAX(id) from ordenes_prod";
 
-                                            query="update inventario set cantidadactual = ? where id = ? ";
-                                            ps= this.dbc.getCnx().prepareStatement(query);
-                                            ps.setDouble(1, aux);
-                                            ps.setInt(2, Integer.parseInt(op1.get(k)[0]));
-                                            ps.executeUpdate();
-                                            ps.close();
+                                int indexodp = Integer.parseInt(this.dbc.seleccionarid(query) );
 
-                                            cantidad2=0;
-                                        }
-                                        else
-                                        {
-                                            query="insert into mp_odp (idodp,idinven,cantidad,costo) values (?,?,?,?)";
-                                            ps= this.dbc.getCnx().prepareStatement(query);
-                                            ps.setDouble(1, indexodp);
-                                            ps.setInt(2, Integer.parseInt(op1.get(k)[0]));
-                                            ps.setDouble(3, Double.parseDouble(op1.get(k)[3]));
-                                            double costo =Double.parseDouble(op1.get(k)[8])/Double.parseDouble(op1.get(k)[7]) * Double.parseDouble(op1.get(k)[3]);
-                                            ps.setDouble(4, costo);
-                                            ps.executeUpdate();
-                                            ps.close();
+                                //inventario e ingredientes
 
-                                            query="update inventario set cantidadactual = ? where id = ?";
-                                            ps= this.dbc.getCnx().prepareStatement(query);
-                                            ps.setDouble(1, 0);
-                                            ps.setInt(2, Integer.parseInt(op1.get(k)[0]));
-                                            ps.executeUpdate();
-                                            ps.close();
+                                double cantidad=Double.parseDouble(this.tabla4.getValueAt(i, 4).toString());
+                                ArrayList <String[]> op1 = new ArrayList<>();
+                                query="select * from ingredientes where idproductofinal = "+ this.tabla4.getValueAt(i, 0).toString();
+                                op=this.dbc.seleccionar(query);
+                                for (int j = 0; j < op.size(); j++) {
 
-                                            cantidad2=cantidad2-Double.parseDouble(op1.get(k)[3]);
+                                    query="select * from inventario where idproducto = "+op.get(j)[2] +" and cantidadactual > 0 and fechacaducidad >= '"+this.fechadividir(txtfechaopc, 2)+"'";
+                                    op1=this.dbc.seleccionar(query);
+                                    double cantidad2=cantidad * Double.parseDouble(op.get(j)[3]);
+                                    for (int k = 0; k < op1.size(); k++) {
+
+                                        if (cantidad2 != 0) {
+
+                                            double aux =Double.parseDouble(op1.get(k)[3]) - cantidad2;
+                                            if (aux >= 0) {
+                                                query="insert into mp_odp (idodp,idinven,cantidad,costo) values (?,?,?,?)";
+                                                ps= this.dbc.getCnx().prepareStatement(query);
+                                                ps.setDouble(1, indexodp);
+                                                ps.setInt(2, Integer.parseInt(op1.get(k)[0]));
+                                                ps.setDouble(3, cantidad2);
+                                                double costo =Double.parseDouble(op1.get(k)[8])/Double.parseDouble(op1.get(k)[7]) * cantidad2;
+                                                ps.setDouble(4, costo);
+                                                ps.executeUpdate();
+                                                ps.close();
+
+                                                query="update inventario set cantidadactual = ? where id = ? ";
+                                                ps= this.dbc.getCnx().prepareStatement(query);
+                                                ps.setDouble(1, aux);
+                                                ps.setInt(2, Integer.parseInt(op1.get(k)[0]));
+                                                ps.executeUpdate();
+                                                ps.close();
+
+                                                cantidad2=0;
+                                            }
+                                            else
+                                            {
+                                                query="insert into mp_odp (idodp,idinven,cantidad,costo) values (?,?,?,?)";
+                                                ps= this.dbc.getCnx().prepareStatement(query);
+                                                ps.setDouble(1, indexodp);
+                                                ps.setInt(2, Integer.parseInt(op1.get(k)[0]));
+                                                ps.setDouble(3, Double.parseDouble(op1.get(k)[3]));
+                                                double costo =Double.parseDouble(op1.get(k)[8])/Double.parseDouble(op1.get(k)[7]) * Double.parseDouble(op1.get(k)[3]);
+                                                ps.setDouble(4, costo);
+                                                ps.executeUpdate();
+                                                ps.close();
+
+                                                query="update inventario set cantidadactual = ? where id = ?";
+                                                ps= this.dbc.getCnx().prepareStatement(query);
+                                                ps.setDouble(1, 0);
+                                                ps.setInt(2, Integer.parseInt(op1.get(k)[0]));
+                                                ps.executeUpdate();
+                                                ps.close();
+
+                                                cantidad2=cantidad2-Double.parseDouble(op1.get(k)[3]);
+                                            }
+
                                         }
 
                                     }
-                                    
-                                }
-                                
-                                op1.clear();
 
-                            }
-                             //reporte 
-                            JasperReport reporte; //Creo el objeto reporte
-                            // Ubicacion del Reporte
-                           String path = s+"\\Reportes\\ODP.jasper";
+                                    op1.clear();
+
+                                }
+                                //reporte 
+                                JasperReport reporte; //Creo el objeto reporte
+                                // Ubicacion del Reporte
+                                String path = s+"\\Reportes\\ODP.jasper";
                            try {
                                
                                reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
                                Map idodp = new HashMap();
                                idodp.put("ID_ODP", indexodp);
                                JasperPrint jprint = JasperFillManager.fillReport(path, idodp, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
-                               File d = new File(s+"\\ODP");
-                               File pdf = File.createTempFile("ODP-"+indexodp+"---", ".pdf",d);
-                               JasperExportManager.exportReportToPdfStream(jprint, new FileOutputStream(pdf));
+                               JasperExportManager.exportReportToPdfFile(jprint, s+"\\ODP\\ODP-"+indexodp+".pdf");
                                JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
                                viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
                                viewer.setVisible(true); //Inicializamos la vista del Reporte
@@ -1281,21 +1309,19 @@ public class Movimientos extends javax.swing.JFrame {
                                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                            }
 
+                            }
+                            this.btnAgregarpro1.setEnabled(false);
+                            this.btnquitarpro1.setEnabled(false);
+                            this.btnaceptaropp1.setEnabled(false);
+
+                            this.txtidclienteopc.setText("");
+                            this.txtfechaopc.setText("");
+                            this.txtnombrecliente.setText("");
+                            this.txtidopc.setText("");
+
+                            this.tabla4.setRowCount(0);
+                            combo();
                         }
-
-                        this.btnAgregarpro1.setEnabled(false);
-                        this.btnquitarpro1.setEnabled(false);
-                        this.btnaceptaropp1.setEnabled(false);
-
-                        this.txtidclienteopc.setText("");
-                        this.txtfechaopc.setText("");
-                        this.txtnombrecliente.setText("");
-                        this.txtidopc.setText("");
-
-                        this.tabla4.setRowCount(0);
-                        combo();
-
-                       
 
                     }
                     else
@@ -1691,12 +1717,12 @@ public class Movimientos extends javax.swing.JFrame {
                     props.setProperty("mail.smtp.host", "smtp.gmail.com");
                     props.setProperty("mail.smtp.starttls.enable", "true");
                     props.setProperty("mail.smtp.port","587");
-                    props.setProperty("mail.smtp.user", "X");
+                    props.setProperty("mail.smtp.user", "bevisagaleria@gmail.com");
                     props.setProperty("mail.smtp.auth", "true");
                     Session session = Session.getDefaultInstance(props);
 
                     BodyPart texto = new MimeBodyPart();
-                    texto.setText("Mando orden de compra,favor de confirmar fecha indicada de enrega ");
+                    texto.setText("Mando orden de compra,favor de confirmar fecha indicada de entrega ");
                     BodyPart adjunto = new MimeBodyPart();
                     adjunto.setDataHandler(new DataHandler(new FileDataSource(s+"\\ODC\\ODC-"+index+".pdf")));
                     adjunto.setFileName("ODC.pdf");
@@ -1708,14 +1734,14 @@ public class Movimientos extends javax.swing.JFrame {
                     
                     MimeMessage message = new MimeMessage(session);
 
-                    message.setFrom(new InternetAddress("X"));
+                    message.setFrom(new InternetAddress("bevisagaleria@gmail.com"));
                     message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.correo));
 
                     message.setSubject("Orden de Compra");
                     message.setContent(multiParte);
                     //t.connect("bevisagaleria@gmail.com","bevisairlandesa");
                     Transport t = session.getTransport("smtp");
-                    t.connect("XX","X");
+                    t.connect("bevisagaleria@gmail.com","bevisairlandesa");
                     t.sendMessage(message,message.getAllRecipients());
                     t.close();
                 }

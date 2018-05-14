@@ -3,6 +3,17 @@ package negocio;
 
 public class Vendedor {
 
+    public Vendedor() {
+        this.nombre="";
+        this.telefono="";
+        this.correo="";
+        this.dele_muni="";
+        this.colonia="";
+        this.calle="";
+        this.noext="";
+        this.noint="";
+    }
+
     private int id;
     private String nombre;
     private String telefono;

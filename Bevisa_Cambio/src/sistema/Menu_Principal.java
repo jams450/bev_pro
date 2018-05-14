@@ -12,11 +12,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -65,7 +61,7 @@ public class Menu_Principal extends javax.swing.JFrame {
     public void notificaciones()
     {
         try{
-            if (this.con==null) {
+            if (this.con==null || this.con.isClosed()) {
                 this.con=Conexion.getConnection();
             }
             //this.con.commit();
@@ -400,19 +396,19 @@ public class Menu_Principal extends javax.swing.JFrame {
                 .addGap(196, 196, 196))
         );
 
-        jLabel9.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("SansSerif", 0, 24)); // NOI18N
         jLabel9.setText("Bienvenido");
 
-        jLabel10.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         jLabel10.setText("Fecha :");
 
-        jLabel11.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         jLabel11.setText("Usuario :");
 
-        lblnombre.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        lblnombre.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         lblnombre.setText("USS");
 
-        lblfecha.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        lblfecha.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         lblfecha.setText("date");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -421,7 +417,7 @@ public class Menu_Principal extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(38, 38, 38)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -489,11 +485,10 @@ public class Menu_Principal extends javax.swing.JFrame {
     private void jpdatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpdatosMouseClicked
         try{
             this.setVisible(false);
-            this.dbc = new DBcontrolador ();
             Datos d = new Datos(this, this.con);
             d.setVisible(true);
         
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Menu_Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
         

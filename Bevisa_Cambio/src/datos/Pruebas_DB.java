@@ -24,6 +24,8 @@ public class Pruebas_DB {
     
     private final String DELETE="Delete from pruebas where idproducto = ? and determinacion = '?' ";
     
+    private final String CATEGORIA="select * from categoria_prueba";
+    
     public List<Prueba> select_pr(int id) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -52,6 +54,30 @@ public class Pruebas_DB {
             }
         }
         
+    }
+    
+    public List<String> combo_categoria() throws SQLException
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> categoria = new ArrayList<>();
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(CATEGORIA);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String nombre = rs.getString(2);   
+                categoria.add(nombre);
+            }    
+            return categoria;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
     }
     
     public int insert(Prueba pr,int cate) throws SQLException 

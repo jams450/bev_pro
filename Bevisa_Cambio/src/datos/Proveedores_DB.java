@@ -22,6 +22,8 @@ public class Proveedores_DB {
     
     private final String UPDATE="Update proveedores set nombre = ? , telefono = ? ,   correo = ? ,  cp = ? , colonia = ? , calle = ? ,  noint = ? ,  noext= ? , rfc = ? ,idmpago = ?,cuenta = ?,contacto = ?, sistema_calidad = ?  where id = ? ";
     
+    private final String PAGO = "select * from modo_pago";
+    
     public Proveedores_DB(Connection userConn) {  //constructor
         this.userConn = userConn;
     }
@@ -49,9 +51,10 @@ public class Proveedores_DB {
                 prov.setNoint(rs.getString(8));
                 prov.setNoext(rs.getString(9));
                 prov.setRfc(rs.getString(10));
-                prov.setCuenta(rs.getString(11));
-                prov.setContacto(rs.getString(12));
-                prov.setSistema_calidad(rs.getString(13));               
+                prov.setIdmpago(rs.getString(11));
+                prov.setCuenta(rs.getString(12));
+                prov.setContacto(rs.getString(13));
+                prov.setSistema_calidad(rs.getString(14));               
                 proveedores.add(prov); //ir añadiendo a la lista el nuevo proveedor
             }
             return proveedores; 
@@ -63,6 +66,30 @@ public class Proveedores_DB {
             }
         }
         
+    }
+    
+    public List<String> combo_pago() throws SQLException
+    {
+         Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> combo = new ArrayList<>();
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(PAGO);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String nombre = rs.getString(2);      
+                combo.add(nombre);      
+            }
+            return combo;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
     }
     
     public int insert(Proveedores prov) throws SQLException 
