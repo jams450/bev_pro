@@ -25,6 +25,9 @@ public class Clientes_DB {
     private final String UPDATE="Update clientes set nombre = ? , telefono = ?, celular = ? ,   correo = ? ,  iddelegacion = ? , colonia = ? , calle = ? ,  noint = ? ,  noext= ? , rfc = ? ,idmpago = ?,cuenta = ?,contacto = ?,estatus = ? , "
                         + " nombrefact = ? , coloniafact = ?, callefact = ?, nointfact = ?, noextfact = ?, delefact = ?, idvendedor= ?  where id = ? ";
     
+    private final String DELE="select * from delegacion;";
+    private final String PAGO="select * from modo_pago";
+    private final String VENDEDOR="select id,nombre from vendedores";
     
     public Clientes_DB(Connection userConn) {
         this.userConn = userConn;
@@ -78,6 +81,78 @@ public class Clientes_DB {
             }
         }
         
+    }
+    
+    public List<String> combo_dele() throws SQLException
+    {
+         Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> combo = new ArrayList<>();
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(DELE);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String nombre = rs.getString(2);      
+                combo.add(nombre);      
+            }
+            return combo;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
+    }
+    
+    public List<String> combo_pago() throws SQLException
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> combo = new ArrayList<>();
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(PAGO);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String nombre = rs.getString(2);      
+                combo.add(nombre);      
+            }
+            return combo;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
+    }
+    
+    public List<String> combo_vendedor() throws SQLException
+    {
+         Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> combo = new ArrayList<>();
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(VENDEDOR);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String nombre = rs.getString(2);      
+                combo.add(nombre);    
+            }
+            return combo;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
     }
     
     public int insert(Clientes client) throws SQLException 

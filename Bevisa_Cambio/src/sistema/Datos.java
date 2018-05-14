@@ -8,7 +8,6 @@ import java.awt.Dimension;
 
 import java.awt.Toolkit;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -37,6 +35,9 @@ import javax.swing.UIManager;
  */
 public class Datos extends javax.swing.JFrame {
     
+    
+    //<editor-fold defaultstate="collapsed" desc="Variables">
+    
     //produtos
     private DefaultTableModel tabla_productos;
     //ingredientes
@@ -52,8 +53,6 @@ public class Datos extends javax.swing.JFrame {
     //inventario
     private DefaultTableModel tabla_inventario;
     
-    
-
     private int columnaingrediente;
     private int columnavendedor;
     private int columnacliente;
@@ -71,15 +70,14 @@ public class Datos extends javax.swing.JFrame {
     private int seleccionproveedor;
 
     private Menu_Principal mp;
-    
-    
-    private  DBcontrolador dbc;
     private Connection con;
+    
+   //</editor-fold>
 
     /**
      *
-     * @param mp 
-     * @param con
+     * @param mp Menu Principal
+     * @param con La Conexion
      */
     public Datos(Menu_Principal mp, Connection con) {
         
@@ -96,14 +94,12 @@ public class Datos extends javax.swing.JFrame {
             
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-            this.dbc = new DBcontrolador();
-            this.tablaproductos();
-          
+            this.tablaproductos();        
             creaciontablavendedores();
             creaciontablaclientes();
             creaciontablaproveedor(); 
             creaciontablainventario();  
-            combobox();
+            this.combo_prueba();
             
         }
         catch(Exception ex)
@@ -113,76 +109,6 @@ public class Datos extends javax.swing.JFrame {
         
     }
 
-    //llenado de combo (se junta mas de una pestaña)
-    public void combobox()
-    {
-        String query="select * from categoria;";
-        ArrayList <String[]> op = new ArrayList<>();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbcategoriaproducto.addItem(op.get(i)[1]);
-        }
-        
-        query="select * from umedida;";
-        op.clear();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbmedidaproducto.addItem(op.get(i)[1]);
-        }
-
-        query="select * from procesos;";
-        op.clear();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbprocesoproducto.addItem(op.get(i)[1]);
-        }
-        
-        query="select * from delegacion;";
-        op.clear();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbdelegacion.addItem(op.get(i)[1]);
-        }
-        
-        query="select * from delegacion;";
-        op.clear();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbdelegacion1.addItem(op.get(i)[1]);
-            this.cbdelegacion2.addItem(op.get(i)[1]);  
-        }
-        op.clear();
-        query="select * from modo_pago";
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbmodopago.addItem(op.get(i)[1]);
-            this.cbmodopago1.addItem(op.get(i)[1]);
-        }
-        
-        op.clear();
-        query="select * from categoria_prueba";
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbcategoriaprueba.addItem(op.get(i)[1]);
-        }
-        
-        op.clear();
-        query="select id,nombre from vendedores";
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbvendedor.addItem(op.get(i)[1]);
-        }
-        
-        op.clear();
-        query="select * from monedas;";
-        op = new ArrayList<>();
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbmoneda.addItem(op.get(i)[1]);
-        }
-        
-        
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -223,7 +149,7 @@ public class Datos extends javax.swing.JFrame {
         lbliva = new javax.swing.JLabel();
         txtpeso_producto = new javax.swing.JTextField();
         lblpeso = new javax.swing.JLabel();
-        cbmoneda = new javax.swing.JComboBox<>();
+        cbmonedaproducto = new javax.swing.JComboBox<>();
         lbcantidad2 = new javax.swing.JLabel();
         Ingredientes = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
@@ -299,7 +225,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel21 = new javax.swing.JLabel();
         txttelefonovendedor = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
-        cbdelegacion = new javax.swing.JComboBox<>();
+        cbdelegacionvendedor = new javax.swing.JComboBox<>();
         jLabel23 = new javax.swing.JLabel();
         txtnombrevendedor = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
@@ -346,7 +272,7 @@ public class Datos extends javax.swing.JFrame {
         txtrfcproveedor = new javax.swing.JTextField();
         jLabel56 = new javax.swing.JLabel();
         jLabel57 = new javax.swing.JLabel();
-        cbmodopago1 = new javax.swing.JComboBox<>();
+        cbmodopagoproveedor = new javax.swing.JComboBox<>();
         txtcuentaproveedor = new javax.swing.JTextField();
         jLabel58 = new javax.swing.JLabel();
         txtcontactoproveedor = new javax.swing.JTextField();
@@ -365,7 +291,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel32 = new javax.swing.JLabel();
         txttelefonoclientes = new javax.swing.JTextField();
         jLabel33 = new javax.swing.JLabel();
-        cbdelegacion1 = new javax.swing.JComboBox<>();
+        cbdelegacioncliente = new javax.swing.JComboBox<>();
         jLabel34 = new javax.swing.JLabel();
         txtnombreclientes = new javax.swing.JTextField();
         jLabel35 = new javax.swing.JLabel();
@@ -383,7 +309,7 @@ public class Datos extends javax.swing.JFrame {
         btnCancelarcliente = new javax.swing.JButton();
         txtnoextclientes = new javax.swing.JTextField();
         jLabel41 = new javax.swing.JLabel();
-        cbmodopago = new javax.swing.JComboBox<>();
+        cbmodopagocliente = new javax.swing.JComboBox<>();
         txtcuentaclientes = new javax.swing.JTextField();
         jLabel42 = new javax.swing.JLabel();
         txtcontactoclientes = new javax.swing.JTextField();
@@ -404,10 +330,10 @@ public class Datos extends javax.swing.JFrame {
         jLabel74 = new javax.swing.JLabel();
         jLabel75 = new javax.swing.JLabel();
         jLabel76 = new javax.swing.JLabel();
-        cbdelegacion2 = new javax.swing.JComboBox<>();
+        cbdelegacionclientef = new javax.swing.JComboBox<>();
         jLabel40 = new javax.swing.JLabel();
         txtcelularclientes = new javax.swing.JTextField();
-        cbvendedor = new javax.swing.JComboBox<>();
+        cbvendedorcliente = new javax.swing.JComboBox<>();
         jLabel77 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
 
@@ -620,8 +546,8 @@ public class Datos extends javax.swing.JFrame {
         lblpeso.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblpeso.setText("Peso:");
 
-        cbmoneda.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbmoneda.setEnabled(false);
+        cbmonedaproducto.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbmonedaproducto.setEnabled(false);
 
         lbcantidad2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lbcantidad2.setText("Moneda :");
@@ -671,7 +597,7 @@ public class Datos extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(chivaproducto)
-                            .addComponent(cbmoneda, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cbmonedaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(164, 164, 164)))
                 .addGap(0, 32, Short.MAX_VALUE))
         );
@@ -728,7 +654,7 @@ public class Datos extends javax.swing.JFrame {
                     .addComponent(lblpeso, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbmoneda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbmonedaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbcantidad2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1242,9 +1168,9 @@ public class Datos extends javax.swing.JFrame {
         jLabel22.setText("Correo :");
         Vendedores.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 180, -1, -1));
 
-        cbdelegacion.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbdelegacion.setEnabled(false);
-        Vendedores.add(cbdelegacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 210, 220, -1));
+        cbdelegacionvendedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbdelegacionvendedor.setEnabled(false);
+        Vendedores.add(cbdelegacionvendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 210, 220, -1));
 
         jLabel23.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel23.setText("Delegacion :");
@@ -1537,7 +1463,7 @@ public class Datos extends javax.swing.JFrame {
         txtrfcproveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtrfcproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtrfcproveedor.setEnabled(false);
-        txtrfcproveedor.setNextFocusableComponent(cbmodopago1);
+        txtrfcproveedor.setNextFocusableComponent(cbmodopagoproveedor);
         Proovedores.add(txtrfcproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 320, 240, -1));
 
         jLabel56.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1548,10 +1474,10 @@ public class Datos extends javax.swing.JFrame {
         jLabel57.setText("Pago: ");
         Proovedores.add(jLabel57, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 350, -1, -1));
 
-        cbmodopago1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbmodopago1.setEnabled(false);
-        cbmodopago1.setNextFocusableComponent(txtcuentaproveedor);
-        Proovedores.add(cbmodopago1, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 350, 190, -1));
+        cbmodopagoproveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbmodopagoproveedor.setEnabled(false);
+        cbmodopagoproveedor.setNextFocusableComponent(txtcuentaproveedor);
+        Proovedores.add(cbmodopagoproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 350, 190, -1));
 
         txtcuentaproveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcuentaproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
@@ -1680,10 +1606,10 @@ public class Datos extends javax.swing.JFrame {
         jLabel33.setText("Correo :");
         Clientes.add(jLabel33, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 170, -1, -1));
 
-        cbdelegacion1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbdelegacion1.setEnabled(false);
-        cbdelegacion1.setNextFocusableComponent(txtcoloniaclientes);
-        Clientes.add(cbdelegacion1, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 200, 200, -1));
+        cbdelegacioncliente.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbdelegacioncliente.setEnabled(false);
+        cbdelegacioncliente.setNextFocusableComponent(txtcoloniaclientes);
+        Clientes.add(cbdelegacioncliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 200, 200, -1));
 
         jLabel34.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel34.setText("Delegacion :");
@@ -1712,7 +1638,7 @@ public class Datos extends javax.swing.JFrame {
         txtcorreoclientes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcorreoclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcorreoclientes.setEnabled(false);
-        txtcorreoclientes.setNextFocusableComponent(cbdelegacion1);
+        txtcorreoclientes.setNextFocusableComponent(cbdelegacioncliente);
         Clientes.add(txtcorreoclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 170, 200, -1));
 
         jLabel37.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1781,17 +1707,17 @@ public class Datos extends javax.swing.JFrame {
         txtnoextclientes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtnoextclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtnoextclientes.setEnabled(false);
-        txtnoextclientes.setNextFocusableComponent(cbmodopago);
+        txtnoextclientes.setNextFocusableComponent(cbmodopagocliente);
         Clientes.add(txtnoextclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 320, 200, -1));
 
         jLabel41.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel41.setText("Pago: ");
         Clientes.add(jLabel41, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 350, -1, -1));
 
-        cbmodopago.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbmodopago.setEnabled(false);
-        cbmodopago.setNextFocusableComponent(txtcuentaclientes);
-        Clientes.add(cbmodopago, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 350, 200, -1));
+        cbmodopagocliente.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbmodopagocliente.setEnabled(false);
+        cbmodopagocliente.setNextFocusableComponent(txtcuentaclientes);
+        Clientes.add(cbmodopagocliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 350, 200, -1));
 
         txtcuentaclientes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcuentaclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
@@ -1866,7 +1792,7 @@ public class Datos extends javax.swing.JFrame {
         txtnoextclientes1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtnoextclientes1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtnoextclientes1.setEnabled(false);
-        txtnoextclientes1.setNextFocusableComponent(cbdelegacion2);
+        txtnoextclientes1.setNextFocusableComponent(cbdelegacionclientef);
         Clientes.add(txtnoextclientes1, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 290, 190, -1));
 
         jLabel72.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1889,9 +1815,9 @@ public class Datos extends javax.swing.JFrame {
         jLabel76.setText("Delegacion :");
         Clientes.add(jLabel76, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 320, -1, -1));
 
-        cbdelegacion2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbdelegacion2.setEnabled(false);
-        Clientes.add(cbdelegacion2, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 320, 190, -1));
+        cbdelegacionclientef.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbdelegacionclientef.setEnabled(false);
+        Clientes.add(cbdelegacionclientef, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 320, 190, -1));
 
         jLabel40.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel40.setText("Celular :");
@@ -1903,9 +1829,9 @@ public class Datos extends javax.swing.JFrame {
         txtcelularclientes.setNextFocusableComponent(txtcorreoclientes);
         Clientes.add(txtcelularclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 140, 200, -1));
 
-        cbvendedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        cbvendedor.setEnabled(false);
-        Clientes.add(cbvendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 350, 190, -1));
+        cbvendedorcliente.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbvendedorcliente.setEnabled(false);
+        Clientes.add(cbvendedorcliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 350, 190, -1));
 
         jLabel77.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel77.setText("Vendedor :");
@@ -1940,6 +1866,15 @@ public class Datos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+
+
+    //cuando se cierra   
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.mp.setVisible(true);
+        this.mp.notificaciones();
+        this.dispose();
+    }//GEN-LAST:event_formWindowClosing
+
     //metodo para pasar de dd/mm/yyyy a yyyy-mm-dd
     public String fechadividir(String  jt, int i ){
         String fi ="";
@@ -1956,18 +1891,9 @@ public class Datos extends javax.swing.JFrame {
         }
         return fi;
     }
-  
-    
-    //cuando se cierra   
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        this.mp.setVisible(true);
-        this.mp.notificaciones();
-        this.dispose();
-    }//GEN-LAST:event_formWindowClosing
 
-   
-   
-    //Productos
+    //<editor-fold defaultstate="collapsed" desc="Productos">
+
      public void tablaproductos()
     {
         try{
@@ -2001,6 +1927,31 @@ public class Datos extends javax.swing.JFrame {
 
             tr.setSortKeys(sortKeys);
             tr.sort();
+            
+            
+            //combo
+            List <String> combo =pro.combo_categoria();
+            for (int i = 0; i < combo.size(); i++) {
+            this.cbcategoriaproducto.addItem(combo.get(i));
+            }
+            combo.clear();
+            
+            combo =pro.combo_medida();
+            for (int i = 0; i < combo.size(); i++) {
+            this.cbmedidaproducto.addItem(combo.get(i));
+            }
+            combo.clear();
+            combo =pro.combo_moneda();
+            for (int i = 0; i < combo.size(); i++) {
+            this.cbmonedaproducto.addItem(combo.get(i));
+            }
+            
+            combo.clear();
+            combo =pro.combo_proceso();
+            for (int i = 0; i < combo.size(); i++) {
+            this.cbprocesoproducto.addItem(combo.get(i));
+            }
+            
         }
         catch(SQLException ex)
         {
@@ -2043,7 +1994,7 @@ public class Datos extends javax.swing.JFrame {
            this.btnCancelar_producto.setEnabled(true);
            this.btnGuardar_producto.setEnabled(true);
            this.chivaproducto.setEnabled(true);
-           this.cbmoneda.setEnabled(true);
+           this.cbmonedaproducto.setEnabled(true);
            
            this.txtcaducidadproducto.setEnabled(true);
     }
@@ -2068,7 +2019,7 @@ public class Datos extends javax.swing.JFrame {
            this.btnCancelar_producto.setEnabled(false);
            this.btnGuardar_producto.setEnabled(false);
            this.chivaproducto.setEnabled(false);
-           this.cbmoneda.setEnabled(false);
+           this.cbmonedaproducto.setEnabled(false);
            this.txtcaducidadproducto.setEnabled(false);
 
            
@@ -2120,7 +2071,7 @@ public class Datos extends javax.swing.JFrame {
                                 {
                                     pro.setIva(0);
                                 }
-                                p.insert_mp(pro, medida, cate,this.cbmoneda.getSelectedIndex()+1);
+                                p.insert_mp(pro, medida, cate,this.cbmonedaproducto.getSelectedIndex()+1);
                                 tablaproductos();
                                 deshabilitar();
                             }
@@ -2142,7 +2093,7 @@ public class Datos extends javax.swing.JFrame {
                                 {
                                     pro.setIva(0);
                                 }
-                                p.update_mp(pro, medida, cate,this.cbmoneda.getSelectedIndex()+1);
+                                p.update_mp(pro, medida, cate,this.cbmonedaproducto.getSelectedIndex()+1);
                                 tablaproductos();
                             }
                             this.seleccionproducto=0;
@@ -2232,7 +2183,7 @@ public class Datos extends javax.swing.JFrame {
                             {
                                 producto.setIva(0);
                             }
-                            pro.insert_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmoneda.getSelectedIndex()+1);
+                            pro.insert_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmonedaproducto.getSelectedIndex()+1);
                             this.tablaproductos();
                         }
                         if(this.seleccionproducto==2)
@@ -2251,7 +2202,7 @@ public class Datos extends javax.swing.JFrame {
                             {
                                 producto.setIva(0);
                             }
-                            pro.update_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmoneda.getSelectedIndex()+1);
+                            pro.update_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmonedaproducto.getSelectedIndex()+1);
                             this.tablaproductos();
                         }
                         this.seleccionproducto=0;
@@ -2489,7 +2440,7 @@ public class Datos extends javax.swing.JFrame {
                 this.cbprocesoproducto.setSelectedItem(this.tbproductos.getValueAt(columna, 8).toString());
                 this.txtcaducidadproducto.setText(this.tbproductos.getValueAt(columna, 9).toString());
                 this.txtpeso_producto.setText(this.tbproductos.getValueAt(columna, 10).toString());
-                this.cbmoneda.setSelectedItem(this.tbproductos.getValueAt(columna, 11).toString());
+                this.cbmonedaproducto.setSelectedItem(this.tbproductos.getValueAt(columna, 11).toString());
                 this.btnCambiar_producto.setEnabled(true);
             }
 
@@ -2500,10 +2451,12 @@ public class Datos extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_tbproductosMouseClicked
+ 
 
+
+//</editor-fold>
      
-//inventario
-    
+    //<editor-fold defaultstate="collapsed" desc="Inventario">
      public void creaciontablainventario()
     {  
         try{
@@ -2654,11 +2607,13 @@ public class Datos extends javax.swing.JFrame {
         {
              JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez "+ ex);
             try {
-                this.dbc = new DBcontrolador ();
+                if (this.con.isClosed() || this.con.isReadOnly()) {
+                this.con.close();
+                this.con=Conexion.getConnection();
+                }
             } catch (SQLException ex1) {
                 Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            this.con=this.dbc.getCnx();
         }
 
     }//GEN-LAST:event_btnGuardarinventarioActionPerformed
@@ -2701,8 +2656,10 @@ public class Datos extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_tbinventarioMouseClicked
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Clientes">
 
-    //clientes    
     
     public void creaciontablaclientes()
     {
@@ -2750,6 +2707,23 @@ public class Datos extends javax.swing.JFrame {
 
             tr.setSortKeys(sortKeys);
             tr.sort();
+            
+            List<String> dele =in.combo_dele();
+            for (int i = 0; i < dele.size(); i++) {
+                this.cbdelegacioncliente.addItem(dele.get(i));
+                this.cbdelegacionclientef.addItem(dele.get(i));
+            }
+
+            List<String> pago  =in.combo_pago();
+            for (int i = 0; i < pago.size(); i++) {
+                this.cbmodopagocliente.addItem(pago.get(i));
+            }
+            
+            List<String> vendedor =in.combo_vendedor();
+            for (int i = 0; i < vendedor.size(); i++) {
+                this.cbvendedorcliente.addItem(vendedor.get(i));
+            }
+            
         }
         catch(SQLException ex)
         {
@@ -2771,7 +2745,7 @@ public class Datos extends javax.swing.JFrame {
        this.txtnombreclientes.setEnabled(true);
        this.txttelefonoclientes.setEnabled(true);
        this.txtcelularclientes.setEnabled(true);
-       this.cbdelegacion1.setEnabled(true);
+       this.cbdelegacioncliente.setEnabled(true);
        this.txtcoloniaclientes.setEnabled(true);
        this.txtcalleclientes.setEnabled(true);
        this.txtcorreoclientes.setEnabled(true);
@@ -2783,15 +2757,15 @@ public class Datos extends javax.swing.JFrame {
        this.txtcalleclientes1.setEnabled(true);
        this.txtnointclientes1.setEnabled(true);
        this.txtnoextclientes1.setEnabled(true);
-       this.cbdelegacion2.setEnabled(true);
+       this.cbdelegacionclientef.setEnabled(true);
        
        this.txtrfcclientes.setEnabled(true);
-       this.cbmodopago.setEnabled(true);
+       this.cbmodopagocliente.setEnabled(true);
        this.txtcuentaclientes.setEnabled(true);
        this.txtcontactoclientes.setEnabled(true);
        this.chestatusclientes.setEnabled(true);
        
-       this.cbvendedor.setEnabled(true);
+       this.cbvendedorcliente.setEnabled(true);
        
        
        this.txtbuscarclientes.setEnabled(false);
@@ -2807,7 +2781,7 @@ public class Datos extends javax.swing.JFrame {
        this.txtnombreclientes.setEnabled(false);
        this.txttelefonoclientes.setEnabled(false);
        this.txtcelularclientes.setEnabled(false);
-       this.cbdelegacion1.setEnabled(false);
+       this.cbdelegacioncliente.setEnabled(false);
        this.txtcoloniaclientes.setEnabled(false);
        this.txtcalleclientes.setEnabled(false);
        this.txtcorreoclientes.setEnabled(false);
@@ -2819,15 +2793,15 @@ public class Datos extends javax.swing.JFrame {
        this.txtcalleclientes1.setEnabled(false);
        this.txtnointclientes1.setEnabled(false);
        this.txtnoextclientes1.setEnabled(false);
-       this.cbdelegacion2.setEnabled(false);
+       this.cbdelegacionclientef.setEnabled(false);
        
        this.txtrfcclientes.setEnabled(false);
-       this.cbmodopago.setEnabled(false);
+       this.cbmodopagocliente.setEnabled(false);
        this.txtcuentaclientes.setEnabled(false);
        this.txtcontactoclientes.setEnabled(false);
        this.chestatusclientes.setEnabled(false);
        
-       this.cbvendedor.setEnabled(false);
+       this.cbvendedorcliente.setEnabled(false);
        
        this.txtbuscarclientes.setEnabled(true);
     }
@@ -2904,13 +2878,13 @@ public class Datos extends javax.swing.JFrame {
                         cliente.setTelefono(this.txttelefonoclientes.getText());
                         cliente.setCelular(this.txtcelularclientes.getText());
                         cliente.setCorreo(this.txtcorreoclientes.getText());
-                        cliente.setDelegacion(this.cbdelegacion1.getSelectedIndex()+1+"");
+                        cliente.setDelegacion(this.cbdelegacioncliente.getSelectedIndex()+1+"");
                         cliente.setColonia(this.txtcoloniaclientes.getText() );
                         cliente.setCalle(this.txtcalleclientes.getText());
                         cliente.setNo_int(this.txtnointclientes.getText());
                         cliente.setNo_ext(this.txtnoextclientes.getText());
                         cliente.setRfc(this.txtrfcclientes.getText());
-                        cliente.setPago(this.cbmodopago.getSelectedIndex()+1+"");
+                        cliente.setPago(this.cbmodopagocliente.getSelectedIndex()+1+"");
                         cliente.setCuenta(this.txtcuentaclientes.getText());
                         cliente.setContacto(this.txtcontactoclientes.getText());
 
@@ -2927,8 +2901,8 @@ public class Datos extends javax.swing.JFrame {
                         cliente.setCallef(this.txtcalleclientes1.getText());
                         cliente.setNo_intf(this.txtnointclientes1.getText());
                         cliente.setNo_extf(this.txtnoextclientes1.getText());
-                        cliente.setDelegacionf(this.cbdelegacion2.getSelectedIndex()+1+"");
-                        cliente.setVendedor(this.cbvendedor.getSelectedIndex()+1+"");
+                        cliente.setDelegacionf(this.cbdelegacionclientef.getSelectedIndex()+1+"");
+                        cliente.setVendedor(this.cbvendedorcliente.getSelectedIndex()+1+"");
 
                         cb.insert(cliente);
 
@@ -2942,13 +2916,13 @@ public class Datos extends javax.swing.JFrame {
                         cliente.setTelefono(this.txttelefonoclientes.getText());
                         cliente.setCelular(this.txtcelularclientes.getText());
                         cliente.setCorreo(this.txtcorreoclientes.getText());
-                        cliente.setDelegacion(this.cbdelegacion1.getSelectedIndex()+1+"");
+                        cliente.setDelegacion(this.cbdelegacioncliente.getSelectedIndex()+1+"");
                         cliente.setColonia(this.txtcoloniaclientes.getText() );
                         cliente.setCalle(this.txtcalleclientes.getText());
                         cliente.setNo_int(this.txtnointclientes.getText());
                         cliente.setNo_ext(this.txtnoextclientes.getText());
                         cliente.setRfc(this.txtrfcclientes.getText());
-                        cliente.setPago(this.cbmodopago.getSelectedIndex()+1+"");
+                        cliente.setPago(this.cbmodopagocliente.getSelectedIndex()+1+"");
                         cliente.setCuenta(this.txtcuentaclientes.getText());
                         cliente.setContacto(this.txtcontactoclientes.getText());
 
@@ -2965,8 +2939,8 @@ public class Datos extends javax.swing.JFrame {
                         cliente.setCallef(this.txtcalleclientes1.getText());
                         cliente.setNo_intf(this.txtnointclientes1.getText());
                         cliente.setNo_extf(this.txtnoextclientes1.getText());
-                        cliente.setDelegacionf(this.cbdelegacion2.getSelectedIndex()+1+"");
-                        cliente.setVendedor(this.cbvendedor.getSelectedIndex()+1+"");
+                        cliente.setDelegacionf(this.cbdelegacionclientef.getSelectedIndex()+1+"");
+                        cliente.setVendedor(this.cbvendedorcliente.getSelectedIndex()+1+"");
                         cliente.setId(Integer.parseInt(this.txtidclientes.getText()));
                         
                         cb.update(cliente);
@@ -3031,13 +3005,13 @@ public class Datos extends javax.swing.JFrame {
             this.txttelefonoclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 2).toString());
             this.txtcelularclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 3).toString());
             this.txtcorreoclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 4).toString());
-            this.cbdelegacion1.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 5).toString());
+            this.cbdelegacioncliente.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 5).toString());
             this.txtcoloniaclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 6).toString());
             this.txtcalleclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 7).toString());
             this.txtnointclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 8).toString());
             this.txtnoextclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 9).toString());
             this.txtrfcclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 10).toString());
-            this.cbmodopago.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 11).toString());
+            this.cbmodopagocliente.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 11).toString());
             this.txtcuentaclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 12).toString());
             this.txtcontactoclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 13).toString());
 
@@ -3046,9 +3020,9 @@ public class Datos extends javax.swing.JFrame {
             this.txtcalleclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 17).toString());
             this.txtnointclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 18).toString());
             this.txtnoextclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 19).toString());
-            this.cbdelegacion2.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 20).toString());
+            this.cbdelegacionclientef.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 20).toString());
             
-            this.cbvendedor.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 21).toString());
+            this.cbvendedorcliente.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 21).toString());
 
             if ( Integer.parseInt(this.tbclientes.getValueAt(this.columnacliente, 14).toString() ) == 1 )
             {
@@ -3066,9 +3040,12 @@ public class Datos extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_tbclientesMouseClicked
-
-    //proveedor    
     
+
+//</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Proveedores">
+
      public void creaciontablaproveedor()
     {
          try{
@@ -3103,6 +3080,11 @@ public class Datos extends javax.swing.JFrame {
 
             tr.setSortKeys(sortKeys);
             tr.sort();
+            
+            List<String>pago= in.combo_pago();
+             for (int i = 0; i < pago.size(); i++) {
+                 this.cbmodopagoproveedor.addItem(pago.get(i));
+             }
         }
         catch(SQLException ex)
         {
@@ -3144,7 +3126,7 @@ public class Datos extends javax.swing.JFrame {
        this.txtnoextproveedor.setEnabled(true);
        this.txtsistemacalidad.setEnabled(true);
        this.txtrfcproveedor.setEnabled(true);
-       this.cbmodopago1.setEnabled(true);
+       this.cbmodopagoproveedor.setEnabled(true);
        this.txtcuentaproveedor.setEnabled(true);
        this.txtcontactoproveedor.setEnabled(true);
        
@@ -3169,7 +3151,7 @@ public class Datos extends javax.swing.JFrame {
        this.txtnoextproveedor.setEnabled(false);
        
        this.txtrfcproveedor.setEnabled(false);
-       this.cbmodopago1.setEnabled(false);
+       this.cbmodopagoproveedor.setEnabled(false);
        this.txtcuentaproveedor.setEnabled(false);
        this.txtcontactoproveedor.setEnabled(false);
     
@@ -3250,7 +3232,7 @@ public class Datos extends javax.swing.JFrame {
                         proveedor.setNoext(this.txtnoextproveedor.getText());
 
                         proveedor.setRfc(this.txtrfcproveedor.getText());
-                        proveedor.setIdmpago(this.cbmodopago1.getSelectedIndex()+1+"");
+                        proveedor.setIdmpago(this.cbmodopagoproveedor.getSelectedIndex()+1+"");
                         proveedor.setCuenta(this.txtcuentaproveedor.getText());
                         proveedor.setContacto(this.txtcontactoproveedor.getText());
                         proveedor.setSistema_calidad(this.txtsistemacalidad.getText());
@@ -3272,7 +3254,7 @@ public class Datos extends javax.swing.JFrame {
                         proveedor.setNoext(this.txtnoextproveedor.getText());
 
                         proveedor.setRfc(this.txtrfcproveedor.getText());
-                        proveedor.setIdmpago(this.cbmodopago1.getSelectedIndex()+1+"");
+                        proveedor.setIdmpago(this.cbmodopagoproveedor.getSelectedIndex()+1+"");
                         proveedor.setCuenta(this.txtcuentaproveedor.getText());
                         proveedor.setContacto(this.txtcontactoproveedor.getText());
                         proveedor.setSistema_calidad(this.txtsistemacalidad.getText());
@@ -3360,7 +3342,7 @@ public class Datos extends javax.swing.JFrame {
             this.txtnointproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 7).toString());
             this.txtnoextproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 8).toString());
             this.txtrfcproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 9).toString());
-            this.cbmodopago1.setSelectedItem(this.tbproveedor.getValueAt(this.columnaproveedor, 10).toString());
+            this.cbmodopagoproveedor.setSelectedItem(this.tbproveedor.getValueAt(this.columnaproveedor, 10).toString());
             this.txtcuentaproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 11).toString());
             this.txtcontactoproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 12).toString());
             this.txtsistemacalidad.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 13).toString());
@@ -3372,9 +3354,10 @@ public class Datos extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_tbproveedorMouseClicked
-
+    //</editor-fold>
     
-    //vendedores   
+    //<editor-fold defaultstate="collapsed" desc="Vendedores">
+
     public void creaciontablavendedores()
     {
         try{
@@ -3405,6 +3388,13 @@ public class Datos extends javax.swing.JFrame {
 
             tr.setSortKeys(sortKeys);
             tr.sort();
+            
+            
+            List <String> dele = in.combo_dele();
+            for (int i = 0; i <dele.size(); i++) {
+                this.cbdelegacionvendedor.addItem(dele.get(i));
+            }
+            
         }
         catch(SQLException ex)
         {
@@ -3436,7 +3426,7 @@ public class Datos extends javax.swing.JFrame {
         this.txtnombrevendedor.setEnabled(false);
         this.txttelefonovendedor.setEnabled(false);
         this.txtcorreovendedor.setEnabled(false);
-        this.cbdelegacion.setEnabled(false);
+        this.cbdelegacionvendedor.setEnabled(false);
         this.txtcoloniavendedor.setEnabled(false);
         this.txtcallevendedor.setEnabled(false);
         this.txtnoextvendedor.setEnabled(false);
@@ -3459,7 +3449,7 @@ public class Datos extends javax.swing.JFrame {
        
        this.txtnombrevendedor.setEnabled(true);
        this.txttelefonovendedor.setEnabled(true);
-       this.cbdelegacion.setEnabled(true);
+       this.cbdelegacionvendedor.setEnabled(true);
        this.txtcoloniavendedor.setEnabled(true);
        this.txtcallevendedor.setEnabled(true);
        this.txtcorreovendedor.setEnabled(true);
@@ -3506,7 +3496,7 @@ public class Datos extends javax.swing.JFrame {
                         vende.setNombre(this.txtnombrevendedor.getText());
                         vende.setTelefono(this.txttelefonovendedor.getText());
                         vende.setCorreo(this.txtcorreovendedor.getText());
-                        vende.setDele_muni(this.cbdelegacion.getSelectedIndex()+1+"");
+                        vende.setDele_muni(this.cbdelegacionvendedor.getSelectedIndex()+1+"");
                         vende.setColonia(this.txtcoloniavendedor.getText() );
                         vende.setCalle(this.txtcallevendedor.getText());
                         vende.setNoint(this.txtnointvendedor.getText());
@@ -3522,7 +3512,7 @@ public class Datos extends javax.swing.JFrame {
                         vende.setNombre(this.txtnombrevendedor.getText());
                         vende.setTelefono(this.txttelefonovendedor.getText());
                         vende.setCorreo(this.txtcorreovendedor.getText());
-                        vende.setDele_muni(this.cbdelegacion.getSelectedIndex()+1+"");
+                        vende.setDele_muni(this.cbdelegacionvendedor.getSelectedIndex()+1+"");
                         vende.setColonia(this.txtcoloniavendedor.getText() );
                         vende.setCalle(this.txtcallevendedor.getText());
                         vende.setNoint(this.txtnointvendedor.getText());
@@ -3534,7 +3524,7 @@ public class Datos extends javax.swing.JFrame {
                     creaciontablavendedores();
                     this.seleccionvendedor=0;
                     deshabilitarvendedor();
-                    combobox();
+                    creaciontablaclientes();
                 }
                 else
                 {
@@ -3604,7 +3594,7 @@ public class Datos extends javax.swing.JFrame {
             this.txtnombrevendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 1).toString());
             this.txttelefonovendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 2).toString());
             this.txtcorreovendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 3).toString());
-            this.cbdelegacion.setSelectedItem(this.tbvendedores.getValueAt(this.columnavendedor, 4).toString());
+            this.cbdelegacionvendedor.setSelectedItem(this.tbvendedores.getValueAt(this.columnavendedor, 4).toString());
             this.txtcoloniavendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 5).toString());
             this.txtcallevendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 6).toString());
             this.txtnointvendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 7).toString());
@@ -3617,7 +3607,10 @@ public class Datos extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_tbvendedoresMouseClicked
-
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Ingredientes">
+    
 //Ingrediente       
     public void colocarproductoin(Producto pro)
     {
@@ -3786,10 +3779,19 @@ public class Datos extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnElegir_ingredienteActionPerformed
 
+    //</editor-fold>
     
-    
+    //<editor-fold defaultstate="collapsed" desc="Pruebas">
     
     //Prueba
+
+    public void combo_prueba() throws SQLException{
+        Pruebas_DB pr = new Pruebas_DB(this.con);
+        List <String> combo = pr.combo_categoria();
+        for (int i = 0; i < combo.size(); i++) {
+            this.cbcategoriaprueba.addItem(combo.get(i));
+        }
+    }
     
     public void insertarpro_prueba(Producto pro)
     {
@@ -3805,7 +3807,7 @@ public class Datos extends javax.swing.JFrame {
     public void actualizarprueba()
     {
         try{
-         this.tabla_pruebas=(DefaultTableModel) this.tbpruebas.getModel();
+        this.tabla_pruebas=(DefaultTableModel) this.tbpruebas.getModel();
         
         this.tabla_pruebas.setRowCount(0);
 
@@ -3935,7 +3937,9 @@ public class Datos extends javax.swing.JFrame {
   
         }
     }//GEN-LAST:event_btnquitarpruebaActionPerformed
+    
 
+//</editor-fold>
  
     /**
      * @param args the command line arguments
@@ -4013,15 +4017,15 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JButton btnquitarprueba;
     private javax.swing.JComboBox<String> cbcategoriaproducto;
     private javax.swing.JComboBox<String> cbcategoriaprueba;
-    private javax.swing.JComboBox<String> cbdelegacion;
-    private javax.swing.JComboBox<String> cbdelegacion1;
-    private javax.swing.JComboBox<String> cbdelegacion2;
+    private javax.swing.JComboBox<String> cbdelegacioncliente;
+    private javax.swing.JComboBox<String> cbdelegacionclientef;
+    private javax.swing.JComboBox<String> cbdelegacionvendedor;
     private javax.swing.JComboBox<String> cbmedidaproducto;
-    private javax.swing.JComboBox<String> cbmodopago;
-    private javax.swing.JComboBox<String> cbmodopago1;
-    private javax.swing.JComboBox<String> cbmoneda;
+    private javax.swing.JComboBox<String> cbmodopagocliente;
+    private javax.swing.JComboBox<String> cbmodopagoproveedor;
+    private javax.swing.JComboBox<String> cbmonedaproducto;
     private javax.swing.JComboBox<String> cbprocesoproducto;
-    private javax.swing.JComboBox<String> cbvendedor;
+    private javax.swing.JComboBox<String> cbvendedorcliente;
     private javax.swing.JCheckBox chestatusclientes;
     private javax.swing.JCheckBox chivaproducto;
     private javax.swing.JLabel jLabel1;

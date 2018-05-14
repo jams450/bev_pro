@@ -349,7 +349,7 @@
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="chivaproducto" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cbmoneda" min="-2" pref="141" max="-2" attributes="0"/>
+                                          <Component id="cbmonedaproducto" min="-2" pref="141" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="164" max="-2" attributes="0"/>
                                   </Group>
@@ -424,7 +424,7 @@
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="cbmoneda" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbmonedaproducto" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbcantidad2" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -706,7 +706,7 @@
                         <Property name="text" type="java.lang.String" value="Peso:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JComboBox" name="cbmoneda">
+                    <Component class="javax.swing.JComboBox" name="cbmonedaproducto">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Arial" size="12" style="0"/>
@@ -2004,7 +2004,7 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="cbdelegacion">
+                <Component class="javax.swing.JComboBox" name="cbdelegacionvendedor">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="12" style="0"/>
@@ -2794,7 +2794,7 @@
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                      <ComponentRef name="cbmodopago1"/>
+                      <ComponentRef name="cbmodopagoproveedor"/>
                     </Property>
                   </Properties>
                   <Constraints>
@@ -2829,7 +2829,7 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="cbmodopago1">
+                <Component class="javax.swing.JComboBox" name="cbmodopagoproveedor">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="12" style="0"/>
@@ -3275,7 +3275,7 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="cbdelegacion1">
+                <Component class="javax.swing.JComboBox" name="cbdelegacioncliente">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="12" style="0"/>
@@ -3384,7 +3384,7 @@
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                      <ComponentRef name="cbdelegacion1"/>
+                      <ComponentRef name="cbdelegacioncliente"/>
                     </Property>
                   </Properties>
                   <Constraints>
@@ -3547,7 +3547,7 @@
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                      <ComponentRef name="cbmodopago"/>
+                      <ComponentRef name="cbmodopagocliente"/>
                     </Property>
                   </Properties>
                   <Constraints>
@@ -3569,7 +3569,7 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="cbmodopago">
+                <Component class="javax.swing.JComboBox" name="cbmodopagocliente">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="12" style="0"/>
@@ -3825,7 +3825,7 @@
                     </Property>
                     <Property name="enabled" type="boolean" value="false"/>
                     <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                      <ComponentRef name="cbdelegacion2"/>
+                      <ComponentRef name="cbdelegacionclientef"/>
                     </Property>
                   </Properties>
                   <Constraints>
@@ -3899,7 +3899,7 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="cbdelegacion2">
+                <Component class="javax.swing.JComboBox" name="cbdelegacionclientef">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="12" style="0"/>
@@ -3950,7 +3950,7 @@
                     </Constraint>
                   </Constraints>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="cbvendedor">
+                <Component class="javax.swing.JComboBox" name="cbvendedorcliente">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Arial" size="12" style="0"/>

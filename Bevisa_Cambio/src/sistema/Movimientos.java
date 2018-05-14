@@ -33,6 +33,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import negocio.Ingrediente;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -1109,31 +1110,56 @@ public class Movimientos extends javax.swing.JFrame {
                 String ingrefaltante="";
                 ArrayList <String[]> op = new ArrayList<>();
                 ArrayList <String[]> op2 = new ArrayList<>();
+                ArrayList <String[]> ingredientes = new ArrayList<>();
+                
                 boolean sipasa=true;
+                boolean existe=true;
+                
                 //validacion
+                
+                //hacer lista con todos los ingredientes
                 for (int i = 0; i < this.tabla4.getRowCount(); i++) {
+                    //Ingredientes de un producto
                     query="select idproducto, cantidad from ingredientes where idproductofinal= " + this.tabla4.getValueAt(i, 0).toString();
                     op= this.dbc.seleccionar(query);
                     for (int j = 0; j < op.size(); j++) {
-                        query="select sum(inventario.cantidadactual), productos.nombre from inventario join productos on productos.id = inventario.idproducto where fechacaducidad >= '"+this.fechadividir(txtfechaopc, 2) +"' and idproducto = "+ op.get(j)[0];
-                        op2=this.dbc.seleccionar(query);
-                        if (op2.get(0)[0]== null) {
-                            ingrefaltante += "Requiere "+Double.parseDouble(this.tabla4.getValueAt(i, 4).toString())* Double.parseDouble(op.get(j)[1])  +" de "+op2.get(0)[1] +"\n";
-                            sipasa=false;
-                        }
-                        else
-                        {
-                            if (Double.parseDouble(op2.get(0)[0]) < Double.parseDouble(op.get(j)[1]) *  Double.parseDouble(this.tabla4.getValueAt(i, 4).toString())) {
-                            sipasa=false;
-                            double falta = Double.parseDouble(op.get(j)[1]) *  Double.parseDouble(this.tabla4.getValueAt(i, 4).toString()) - Double.parseDouble(op2.get(0)[0]);
-                            ingrefaltante += "Requiere "+falta+" de "+op2.get(0)[1] +"\n";
+                        //multiplicar por la cantidad
+                        op.get(j)[1]= Double.parseDouble(op.get(j)[1]) *  Double.parseDouble(this.tabla4.getValueAt(i, 4).toString())+"";
+                        //Para saber si ya esta seleccionado (dentro de op2)
+                        existe=true;
+                        for (int k = 0; k < op2.size(); k++) {
+                            if (op.get(j)[0].equals(op2.get(k)[0])) {
+                                double cantidad = Double.parseDouble(op.get(j)[1]);
+                                op2.get(k)[1]=(cantidad+Double.parseDouble(op2.get(k)[1]))+"";
+                                existe=false;
                             }
                         }
-                       
-
+                        if(existe)
+                        op2.add(op.get(j));
                     }
                     op.clear();
                 }
+                
+                //Comparar con el inventario
+                for (int i = 0; i < op2.size(); i++) {
+                    query="select sum(inventario.cantidadactual), productos.nombre from inventario join productos on productos.id = inventario.idproducto where fechacaducidad >= '"+this.fechadividir(txtfechaopc, 2) +"' and idproducto = "+ op2.get(i)[0];
+                    op=this.dbc.seleccionar(query);
+                    
+                    if (op.get(0)[0]== null) {
+                        ingrefaltante += "Requiere "+Double.parseDouble(op2.get(i)[1])  +" de "+op.get(0)[1] +"\n";
+                        sipasa=false;
+                        
+                    }
+                    else
+                    {
+                        if (Double.parseDouble(op.get(0)[0]) < Double.parseDouble(op2.get(i)[1])) {
+                        sipasa=false;
+                        double falta = Double.parseDouble(op2.get(i)[1])- Double.parseDouble(op.get(0)[0]);
+                        ingrefaltante += "Requiere "+falta+" de "+op.get(0)[1] +"\n";
+                        }
+                    }
+                }
+                
                 
                 
                 boolean ordencliente=true;

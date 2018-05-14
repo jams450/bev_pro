@@ -22,6 +22,8 @@ public class Proveedores_DB {
     
     private final String UPDATE="Update proveedores set nombre = ? , telefono = ? ,   correo = ? ,  cp = ? , colonia = ? , calle = ? ,  noint = ? ,  noext= ? , rfc = ? ,idmpago = ?,cuenta = ?,contacto = ?, sistema_calidad = ?  where id = ? ";
     
+    private final String PAGO = "select * from modo_pago";
+    
     public Proveedores_DB(Connection userConn) {  //constructor
         this.userConn = userConn;
     }
@@ -64,6 +66,30 @@ public class Proveedores_DB {
             }
         }
         
+    }
+    
+    public List<String> combo_pago() throws SQLException
+    {
+         Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> combo = new ArrayList<>();
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(PAGO);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String nombre = rs.getString(2);      
+                combo.add(nombre);      
+            }
+            return combo;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
     }
     
     public int insert(Proveedores prov) throws SQLException 

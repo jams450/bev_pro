@@ -45,6 +45,17 @@ public class Productos_DB {
             "Update productos set  clave = ?,nombre=? ,   idcategoria = ? ,  idmedida = ?, pventa=?,mesescaducidad=?,idproceso=?,smin=?,iva=? where id = ? ;";
     
     
+    private final String CATEGORIA= "select * from categoria;";
+    
+    private final String MEDIDA = "select * from umedida;";
+    
+    private final String MONEDA = "select * from monedas;";
+    
+    private final String PROCESO = "select * from procesos;";
+    
+    
+    
+    
     
     public Productos_DB(Connection userConn) {
         this.userConn = userConn;
@@ -85,6 +96,102 @@ public class Productos_DB {
             }
         }
         
+    }
+    
+    public List<String> combo_categoria() throws SQLException
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> categoria = new ArrayList<>();
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(CATEGORIA);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String nombre = rs.getString(2);      
+                categoria.add(nombre);
+            }
+            return categoria;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
+    }
+    
+    public List<String> combo_medida() throws SQLException
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> combo = new ArrayList<>();
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(MEDIDA);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String nombre = rs.getString(2);      
+                combo.add(nombre);    
+            }
+            return combo;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
+    }
+    
+    public List<String> combo_moneda() throws SQLException
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> combo = new ArrayList<>();
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(MONEDA);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String nombre = rs.getString(2);      
+                combo.add(nombre);      
+            }
+            return combo;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
+    }
+    
+    public List<String> combo_proceso() throws SQLException
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> combo = new ArrayList<>();
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(PROCESO);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String nombre = rs.getString(2);      
+                combo.add(nombre); ;      
+            }
+            return combo;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
     }
     
     

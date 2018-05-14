@@ -22,6 +22,8 @@ public class Vendedores_DB {
     
     private final String UPDATE="Update vendedores set nombre = ? , telefono = ? ,   correo = ? ,  iddelegacion = ? , colonia = ? , calle = ? ,  noint = ? ,  noext= ?  where id = ? ";
     
+    private final String DELE = "select * from delegacion;";
+    
     public List<Vendedor> select() throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -54,6 +56,30 @@ public class Vendedores_DB {
             }
         }
         
+    }
+    
+    public List<String> combo_dele() throws SQLException
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<String> combo = new ArrayList<>();
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(DELE);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String nombre = rs.getString(2);      
+                combo.add(nombre);      
+            }
+            return combo;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
     }
     
     public int insert(Vendedor vende) throws SQLException 

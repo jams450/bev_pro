@@ -12,11 +12,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -489,11 +485,10 @@ public class Menu_Principal extends javax.swing.JFrame {
     private void jpdatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpdatosMouseClicked
         try{
             this.setVisible(false);
-            this.dbc = new DBcontrolador ();
             Datos d = new Datos(this, this.con);
             d.setVisible(true);
         
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Menu_Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
         
