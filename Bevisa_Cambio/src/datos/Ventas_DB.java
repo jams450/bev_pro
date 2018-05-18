@@ -13,7 +13,7 @@ public class Ventas_DB {
     
      private java.sql.Connection userConn;
      
-     private final String INSERT="insert into ventas (fecha,idvendedor,idcliente,importe,iva,total,tipo,op) values(?,?,?,?,?,?,?,?)";
+     private final String INSERT="insert into ventas (fecha,idvendedor,idcliente,importe,iva,total,tipo,op,idestatus) values(?,?,?,?,?,?,?,?,1)";
      
      private final String INSERT_DV="insert into ventas_productos (idventa,idinven,idproducto,pventa,cantidad,importe,descuento,idescuento,iva,total,comision) values (?,?,?,?,?,?,?,?,?,?,?)";
      
@@ -32,6 +32,14 @@ public class Ventas_DB {
      private final String UPDATE_INV="update inventario set cantidadactual = ? where id = ?";
      
      private final String SELECT_ID="select MAX(id) from ventas";
+     
+     private final String SELECT_VENTA="select id from ventas where id= ? and idestatus= 1";
+     
+     private final String SELECT_DETALLE_VENTA="select idinven,cantidad from ventas_productos where idventa= ?";
+     
+     private final String UPDATE_VENTA="update ventas set idestatus = 2 where id= ?";
+     
+     private final String UPDATE_INV_CAN="update inventario set cantidadactual = cantidadactual + ? where id= ?";
      
      public Ventas_DB(Connection userConn) {
         this.userConn = userConn;
@@ -302,4 +310,44 @@ public class Ventas_DB {
         return rows;
     }
 
+    public boolean cancelacion(String id) throws SQLException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean si=false;
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(this.SELECT_VENTA);
+            stmt.setString(1, id);
+            rs = stmt.executeQuery();
+            if (rs.first()) {
+                si=true;
+                stmt = conn.prepareStatement(this.UPDATE_VENTA);
+                stmt.setString(1, id);
+                stmt.executeUpdate();
+                
+                stmt = conn.prepareStatement(this.SELECT_DETALLE_VENTA);
+                stmt.setString(1, id);
+                rs = stmt.executeQuery();
+                while(rs.next())
+                {
+                    stmt = conn.prepareStatement(this.UPDATE_INV_CAN);
+                    stmt.setInt(1, rs.getInt(2));
+                    stmt.setInt(2, rs.getInt(1));
+                    stmt.executeUpdate();
+                }
+            }
+            return si;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
+        
+    }
+
+    
+    
 }

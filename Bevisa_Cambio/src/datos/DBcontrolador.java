@@ -53,7 +53,7 @@ public class DBcontrolador {
     public DBcontrolador () throws SQLException{
         //java.sql.Connection cnx = null;
         String cnxStr="com.mysql.jdbc.Driver";
-        String url="jdbc:mysql://"+this.svr+"/"+this.bd;
+        String url="jdbc:mysql://"+this.svr+"/"+this.bd+"?useSSL=false";
         try{
             Class.forName(cnxStr);
             System.out.println("Controlador cargando...");

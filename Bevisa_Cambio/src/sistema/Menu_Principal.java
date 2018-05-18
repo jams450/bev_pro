@@ -545,7 +545,7 @@ public class Menu_Principal extends javax.swing.JFrame {
     private void jpventasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jpventasMouseClicked
         try {
             this.setVisible(false);
-            Ventas re = new Ventas(this, this.dbc);
+            Ventas re = new Ventas(this, this.con);
             re.setVisible(true);
         } catch (Exception ex) {
             Logger.getLogger(Menu_Principal.class.getName()).log(Level.SEVERE, null, ex);

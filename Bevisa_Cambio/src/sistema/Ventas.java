@@ -5,6 +5,7 @@
  */
 package sistema;
 
+import datos.Conexion;
 import negocio.*;
 import datos.DBcontrolador;
 import datos.Ventas_DB;
@@ -81,17 +82,12 @@ public class Ventas extends javax.swing.JFrame {
         return fi;
     }
     
-    public Ventas(Menu_Principal mp ,DBcontrolador dbc) throws SQLException {
+    public Ventas(Menu_Principal mp ,Connection con) throws SQLException {
         
-        this.mp=mp;
-        this.dbc = dbc;
-        if (this.dbc.getCnx()==null) {
-                this.dbc.conex();
-        }
         initComponents();
         this.venta = new negocio.Ventas();
-        
-        
+        this.con=con;
+        this.mp=mp;
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         
@@ -144,6 +140,7 @@ public class Ventas extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         txtidvendedor = new javax.swing.JTextField();
         btnelegircliente = new javax.swing.JButton();
+        btncancelacion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -305,7 +302,7 @@ public class Ventas extends javax.swing.JFrame {
                 btnelegirclienteKeyPressed(evt);
             }
         });
-        jPanel2.add(btnquitar, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 450, 223, -1));
+        jPanel2.add(btnquitar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 450, 223, -1));
 
         btnaceptar.setText("Aceptar");
         btnaceptar.setEnabled(false);
@@ -365,6 +362,19 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         jPanel2.add(btnelegircliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 105, 100, -1));
+
+        btncancelacion.setText("Cancelación de Ticket");
+        btncancelacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncancelacionActionPerformed(evt);
+            }
+        });
+        btncancelacion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btncancelacionbtnelegirclienteKeyPressed(evt);
+            }
+        });
+        jPanel2.add(btncancelacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 450, 190, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 1210, 500));
 
@@ -495,7 +505,6 @@ public class Ventas extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         this.mp.notificaciones();
-        this.setVisible(false);
         this.mp.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_formWindowClosing
@@ -664,15 +673,16 @@ public class Ventas extends javax.swing.JFrame {
                         
                         
                        
-                   } catch (Exception ex) {
-                       Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-                       JOptionPane.showMessageDialog(null, "Esta mal algo "+ex);
-                       try {
-                            this.dbc = new DBcontrolador ();
+                   } 
+                   catch(Exception ex)
+                    {
+                        JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+                         try {
+                            this.con=Conexion.getConnection();
                         } catch (SQLException ex1) {
-                            Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
+                            Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
                         }
-                   }
+                    }
                     
                 }
                 else
@@ -687,16 +697,17 @@ public class Ventas extends javax.swing.JFrame {
             }
 
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
-            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez" +ex);
-            try {
-                this.dbc = new DBcontrolador ();
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
             } catch (SQLException ex1) {
-                Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-           this.con=this.dbc.getCnx();
-           
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
         }
 
     }//GEN-LAST:event_btnaceptarActionPerformed
@@ -741,6 +752,36 @@ public class Ventas extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnelegirclienteKeyPressed
 
+    private void btncancelacionbtnelegirclienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btncancelacionbtnelegirclienteKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btncancelacionbtnelegirclienteKeyPressed
+
+    private void btncancelacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelacionActionPerformed
+        try{
+            Ventas_DB db = new Ventas_DB(this.con);
+            String respuesta = JOptionPane.showInputDialog(null, "Escribe el Folio del Ticket");
+            if (db.cancelacion(respuesta)) {
+                JOptionPane.showMessageDialog(null, "Ticket Cancelado");
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "No Existe el Ticket ");
+            }
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        }     
+    }//GEN-LAST:event_btncancelacionActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -780,6 +821,7 @@ public class Ventas extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnaceptar;
     private javax.swing.JButton btnagregar;
+    private javax.swing.JButton btncancelacion;
     private javax.swing.JButton btnelegircliente;
     private javax.swing.JButton btnquitar;
     private javax.swing.JButton btnvendedor;
