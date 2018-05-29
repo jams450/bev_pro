@@ -5,41 +5,40 @@
  */
 package sistema;
 
-import datos.DBcontrolador;
+import datos.Conexion;
+import datos.OrdenPedido_Clientes_DB;
+import datos.OrdenPedido_Provedores_DB;
 import java.awt.Dimension;
 import static java.awt.Frame.NORMAL;
 import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import negocio.Clientes;
+import negocio.Proveedores;
 
 /**
  *
  * @author JAMS
  */
-public class Elegir_Proveedor extends javax.swing.JFrame {
-    
+public class Elegir_ProveedorOPP extends javax.swing.JFrame {
 
-    
     private DefaultTableModel tabla;
     
-    private  DBcontrolador dbc;
-    private int columna;
-    
-    
+    private  Connection con;
     private Movimientos mov;
     private int opc;
     /**
      * Creates new form Elegir_Producto
      */
-    public Elegir_Proveedor(Movimientos mov,int opc) throws SQLException {
-        this.dbc = new DBcontrolador ();
+    public Elegir_ProveedorOPP(Movimientos mov,int opc, Connection con) throws SQLException {
+        this.con=con;
         initComponents();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
@@ -50,39 +49,54 @@ public class Elegir_Proveedor extends javax.swing.JFrame {
     
      public void creaciontabla(int opc)
     {
-        if(opc==1){
-            this.tabla=(DefaultTableModel) this.tbdatos.getModel();
+        OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB(this.con);
+        OrdenPedido_Clientes_DB dbc = new OrdenPedido_Clientes_DB(this.con);
+        try{
+            if(opc==1){
+                this.tabla=(DefaultTableModel) this.tbdatos.getModel();
+                this.tabla.setRowCount(0);
 
-            this.tabla.setRowCount(0);
+                List <Proveedores> prove = db.select_proveedores();
 
-            ArrayList <String[]> op = new ArrayList<>();
+                for (int i = 0; i < prove.size(); i++) {    
+                    Object[] obj = new Object[4];
+                    obj[0]=prove.get(i).getId();
+                    obj[1]=prove.get(i).getNombre();
+                    obj[2]=prove.get(i).getTelefono();
+                    obj[3]=prove.get(i).getCorreo();
+                    this.tabla.addRow(obj);
+                } 
 
-            String query="select proveedores.id, proveedores.nombre, proveedores.telefono, proveedores.correo  from proveedores";
-            op=this.dbc.seleccionar(query);
+            }
+            else
+            {
+                this.tabla=(DefaultTableModel) this.tbdatos.getModel();
+                this.tabla.setRowCount(0);
 
-            for (int i = 0; i < op.size(); i++) {    
+                List <Clientes> client = dbc.select_clientes();
 
-                this.tabla.addRow(op.get(i));
-            } 
-
+                for (int i = 0; i < client.size(); i++) {    
+                    Object[] obj = new Object[4];
+                    obj[0]=client.get(i).getId();
+                    obj[1]=client.get(i).getNombre();
+                    obj[2]=client.get(i).getTelefono();
+                    obj[3]=client.get(i).getCorreo();
+                    this.tabla.addRow(obj);
+                } 
+            }
         }
-        else
+        catch(SQLException ex)
         {
-            this.tabla=(DefaultTableModel) this.tbdatos.getModel();
-
-            this.tabla.setRowCount(0);
-
-            ArrayList <String[]> op = new ArrayList<>();
-
-            String query="select clientes.id, clientes.nombre, clientes.telefono, clientes.correo  from clientes";
-            op=this.dbc.seleccionar(query);
-
-            for (int i = 0; i < op.size(); i++) {    
-
-                this.tabla.addRow(op.get(i));
-            } 
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
-        
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        }  
     }
 
     /**
@@ -155,7 +169,6 @@ public class Elegir_Proveedor extends javax.swing.JFrame {
         tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tbdatos.setColumnSelectionAllowed(true);
         tbdatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        tbdatos.setRowSelectionAllowed(true);
         tbdatos.setShowHorizontalLines(false);
         tbdatos.setShowVerticalLines(false);
         tbdatos.getTableHeader().setReorderingAllowed(false);
@@ -259,12 +272,12 @@ public class Elegir_Proveedor extends javax.swing.JFrame {
     private void tbdatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbdatosMouseClicked
         try
         {
-            this.columna=this.tbdatos.getSelectedRow();
+            int columna=this.tbdatos.getSelectedRow();
 
-            this.txtid.setText(this.tbdatos.getValueAt(this.columna, 0).toString());
-            this.txtnombre.setText(this.tbdatos.getValueAt(this.columna, 1).toString());
-            this.txttelefono.setText(this.tbdatos.getValueAt(this.columna, 2).toString());
-            this.txtcorreo.setText(this.tbdatos.getValueAt(this.columna, 3).toString());
+            this.txtid.setText(this.tbdatos.getValueAt(columna, 0).toString());
+            this.txtnombre.setText(this.tbdatos.getValueAt(columna, 1).toString());
+            this.txttelefono.setText(this.tbdatos.getValueAt(columna, 2).toString());
+            this.txtcorreo.setText(this.tbdatos.getValueAt(columna, 3).toString());
             this.btnAceptar.setEnabled(true);
           
         }
@@ -277,16 +290,19 @@ public class Elegir_Proveedor extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         try{
             if(this.opc==1){
-            this.mov.idproveedor=Integer.parseInt(this.txtid.getText());
-            this.mov.nombreproveedor=this.txtnombre.getText();
-            this.mov.correo=this.txtcorreo.getText();
-            this.mov.colocarproveedor();
+                
+                Proveedores pro = new Proveedores();
+                pro.setId(Integer.parseInt(this.txtid.getText()));
+                pro.setNombre(this.txtnombre.getText());
+                pro.setCorreo(this.txtcorreo.getText());
+                this.mov.colocarproveedor(pro);
             }
             else
             {
-                this.mov.idcliente=Integer.parseInt(this.txtid.getText());
-                this.mov.nombrecliente=this.txtnombre.getText();
-                this.mov.colocarcliente();
+                Clientes cl = new Clientes();
+                cl.setId(Integer.parseInt(this.txtid.getText()));
+                cl.setNombre(this.txtnombre.getText());
+                this.mov.colocarcliente(cl);
               
             }
             this.mov.setEnabled(true);
@@ -295,7 +311,7 @@ public class Elegir_Proveedor extends javax.swing.JFrame {
         
         } 
         catch (Exception ex) {
-                Logger.getLogger(Elegir_Proveedor.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Elegir_ProveedorOPP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -321,14 +337,16 @@ public class Elegir_Proveedor extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Elegir_Proveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProveedorOPP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Elegir_Proveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProveedorOPP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Elegir_Proveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProveedorOPP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Elegir_Proveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProveedorOPP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

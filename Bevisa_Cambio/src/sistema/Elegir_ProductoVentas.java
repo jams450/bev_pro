@@ -5,43 +5,45 @@
  */
 package sistema;
 
-import datos.DBcontrolador;
+import datos.Ventas_DB;
+import java.awt.Color;
 import java.awt.Dimension;
 import static java.awt.Frame.NORMAL;
 import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import negocio.Producto;
 
 /**
  *
  * @author JAMS
  */
-public class Elegir_ProductoV extends javax.swing.JFrame {
+public class Elegir_ProductoVentas extends javax.swing.JFrame {
     
 
     
     private DefaultTableModel tabla;
-  
-    private  DBcontrolador dbc;
     private int columna;
     private int opc;
     
     
     private Ventas vpro;
+    private Connection con;
     /**
      * Creates new form Elegir_Producto
      */
-    public Elegir_ProductoV(Ventas p,DBcontrolador dbc) throws SQLException {
+    public Elegir_ProductoVentas(Ventas p,Connection con) throws SQLException {
         initComponents();
-        this.dbc = dbc;
+        
+        this.con=con;
         this.opc=opc;
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
@@ -51,25 +53,25 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
        
     }
     
-     public void creaciontabla()
+     public void creaciontabla() throws SQLException
     {
         
         this.tabla=(DefaultTableModel) this.tbdatos.getModel();
 
         this.tabla.setRowCount(0);
-
-        ArrayList <String[]> op = new ArrayList<>();
-
-        String query="select productos.id ,  productos.Clave, productos.Nombre from productos join umedida on productos.idmedida= umedida.id  where idcategoria = 2 or idcategoria = 4; ";
-        op=this.dbc.seleccionar(query);
-
-        for (int i = 0; i < op.size(); i++) {    
-
-            this.tabla.addRow(op.get(i));
+        
+        Ventas_DB db = new Ventas_DB(this.con);
+        
+        List<Producto> pro = db.select_prod();
+        for (int i = 0; i < pro.size(); i++) {    
+            Object[] obj = new Object[5];
+            obj[0]=pro.get(i).getId();
+            obj[1]=pro.get(i).getClave();
+            obj[2]=pro.get(i).getNombre();
+            obj[3]=pro.get(i).getPventa();
+            obj[4]=pro.get(i).getIva();
+            this.tabla.addRow(obj);
         } 
-
-        
-        
     }
 
     /**
@@ -127,14 +129,14 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Clave", "Nombre"
+                "ID", "Clave", "Nombre", "Precio", "Iva"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -146,10 +148,9 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
             }
         });
         tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tbdatos.setCellSelectionEnabled(false);
+        tbdatos.setColumnSelectionAllowed(true);
         tbdatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tbdatos.setGridColor(new java.awt.Color(204, 204, 204));
-        tbdatos.setRowSelectionAllowed(true);
         tbdatos.setShowHorizontalLines(false);
         tbdatos.setShowVerticalLines(false);
         tbdatos.getTableHeader().setReorderingAllowed(false);
@@ -220,6 +221,11 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
         jPanel2.add(lbcantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 170, -1, -1));
 
         txtcantidad.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtcantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcantidadKeyReleased(evt);
+            }
+        });
         jPanel2.add(txtcantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 170, 200, -1));
 
         btnAceptar.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -238,6 +244,11 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
         jPanel2.add(lbcantidad1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 200, -1, -1));
 
         txtcomision.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtcomision.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcomisionKeyReleased(evt);
+            }
+        });
         jPanel2.add(txtcomision, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 200, 200, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 56, 880, 290));
@@ -266,18 +277,35 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         try{
           
+            boolean valida=true;
+            
             if (this.txtdescuento.getText().isEmpty()) {
                 this.txtdescuento.setText("0");
             }
             
-            if (this.txtcantidad.getText().matches("^[0-9]+$")  && this.txtcomision.getText().matches("^[0-9]*(.[0-9]+)?$")) {
-                String[] c = new String[6];
+            if (!this.txtcantidad.getText().matches("^[0-9]+$")) {
+                valida=false;
+                this.txtcantidad.setBackground(Color.decode("#FFCCCC"));
+            }
+            
+            if (!this.txtcomision.getText().matches("^[0-9]*(.[0-9]+)?$")) {
+                valida=false;
+                this.txtcomision.setBackground(Color.decode("#FFCCCC"));
+            }
+           
+            
+            if (valida) {
+
+                String[] c = new String[8];
+                
                 c[0]=this.txtid.getText();
                 c[1]=this.txtclave.getText();
                 c[2]=this.txtnombre.getText();
                 c[3]=this.txtdescuento.getText();
                 c[4]=this.txtcantidad.getText();
                 c[5]=this.txtcomision.getText();
+                c[6]=this.tbdatos.getValueAt(this.columna, 3).toString();
+                c[7]=this.tbdatos.getValueAt(this.columna, 4).toString();
                 this.vpro.colocarproducto(c);
                 this.vpro.setEnabled(true);
                 this.vpro.setState(NORMAL);
@@ -291,7 +319,7 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
         
         } 
         catch (Exception ex) {
-                Logger.getLogger(Elegir_ProductoV.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Elegir_ProductoVentas.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -318,6 +346,19 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tbdatosMouseClicked
 
+    public void regresar_color(JTextField jx)
+    {
+        jx.setBackground(Color.WHITE);
+    }
+    
+    private void txtcantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcantidadKeyReleased
+        regresar_color(txtcantidad);
+    }//GEN-LAST:event_txtcantidadKeyReleased
+
+    private void txtcomisionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcomisionKeyReleased
+        regresar_color(txtcomision);
+    }//GEN-LAST:event_txtcomisionKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -335,14 +376,16 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Elegir_ProductoV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProductoVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Elegir_ProductoV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProductoVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Elegir_ProductoV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProductoVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Elegir_ProductoV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProductoVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

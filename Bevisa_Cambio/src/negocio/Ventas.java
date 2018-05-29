@@ -14,9 +14,11 @@ public class Ventas {
     private String tipo;
     private String op;
     
-    private ArrayList<Producto> productos;
-    
-    
+    private ArrayList<DetalleVenta> detvta;
+
+    public Ventas() {
+        this.detvta = new ArrayList();
+    }
 
     public int getId() {
         return id;
@@ -90,14 +92,12 @@ public class Ventas {
         this.op = op;
     }
 
-    public ArrayList<Producto> getProductos() {
-        return productos;
+    public ArrayList<DetalleVenta> getDetalle() {
+        return detvta;
     }
 
-    public void setProductos(ArrayList<Producto> productos) {
-        this.productos = productos;
+    public void setDetalle(ArrayList<DetalleVenta> detvta) {
+        this.detvta = detvta;
     }
-    
-    
     
 }

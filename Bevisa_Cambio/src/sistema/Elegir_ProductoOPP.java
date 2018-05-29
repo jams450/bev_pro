@@ -5,20 +5,23 @@
  */
 package sistema;
 
-import datos.DBcontrolador;
+import datos.Conexion;
+import datos.OrdenPedido_Clientes_DB;
+import datos.OrdenPedido_Provedores_DB;
+import java.awt.Color;
 import java.awt.Dimension;
 import static java.awt.Frame.NORMAL;
 import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import negocio.Producto;
 
 /**
  *
@@ -26,10 +29,8 @@ import javax.swing.table.TableRowSorter;
  */
 public class Elegir_ProductoOPP extends javax.swing.JFrame {
     
-
-    
     private DefaultTableModel tabla;
-    private  DBcontrolador dbc;
+    private Connection con;
     
     private int columna;
     private int opc;
@@ -39,9 +40,9 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
     /**
      * Creates new form Elegir_Producto
      */
-    public Elegir_ProductoOPP(Movimientos p, int opc) throws SQLException {
+    public Elegir_ProductoOPP(Movimientos p, int opc,Connection con) throws SQLException {
         initComponents();
-        this.dbc = new DBcontrolador ();
+        this.con=con;
         combo();
         this.opc=opc;
         creaciontabla();
@@ -59,60 +60,77 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
     
      public void creaciontabla()
     {
+        OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB (this.con);
+        OrdenPedido_Clientes_DB dbc = new OrdenPedido_Clientes_DB (this.con);
         
-        if (this.opc==1) {
-            this.tabla=(DefaultTableModel) this.tbdatos.getModel();
-
-            this.tabla.setRowCount(0);
-
-            ArrayList <String[]> op = new ArrayList<>();
-
-            String query="select productos.id , productos.Nombre, productos.Clave, umedida.nombre,productos.pventa,productos.iva,monedas.nombre "
-                    + "from productos join umedida on productos.idmedida= umedida.id join monedas on monedas.id=productos.idmoneda  where idcategoria = 1 or idcategoria = 3 ";
-            op=this.dbc.seleccionar(query);
-
-            for (int i = 0; i < op.size(); i++) {    
-
-                this.tabla.addRow(op.get(i));
-            }  
-        }
-        else
+        try
         {
-            
-            
-            this.tabla=(DefaultTableModel) this.tbdatos.getModel();
-
-            this.tabla.setRowCount(0);
-
-            ArrayList <String[]> op = new ArrayList<>();
-
-            String query="select productos.id , productos.Nombre, productos.Clave, umedida.nombre,productos.pventa,productos.iva,monedas.nombre "
-                    + " from productos join umedida on productos.idmedida= umedida.id join monedas on monedas.id=productos.idmoneda where idcategoria = 2 or idcategoria = 4   ";
-            op=this.dbc.seleccionar(query);
-
-            for (int i = 0; i < op.size(); i++) {    
-
-                this.tabla.addRow(op.get(i));
-            }     
-            
-            this.chivaproducto.setVisible(false);
-            this.lbliva.setVisible(false);
-            this.cbmoneda.setVisible(false);
-            this.lbcantidad1.setVisible(false);
-            this.txtpunitario.setVisible(false);
-            this.lbcantidad2.setVisible(false);
+            if (this.opc==1) {
+                this.tabla=(DefaultTableModel) this.tbdatos.getModel();
+                this.tabla.setRowCount(0);
+                List <Producto> pro = db.select_productos();
+                for (int i = 0; i < pro.size(); i++) {    
+                    Object[] obj = new Object[7];
+                    obj[0]=pro.get(i).getId();
+                    obj[1]=pro.get(i).getNombre();
+                    obj[2]=pro.get(i).getClave();
+                    obj[3]=pro.get(i).getMedida();
+                    obj[4]=pro.get(i).getPventa();
+                    obj[5]=pro.get(i).getIva();
+                    obj[6]=pro.get(i).getMoneda();
+                    this.tabla.addRow(obj);
+                }  
         }
+            else
+            {
+                this.tabla=(DefaultTableModel) this.tbdatos.getModel();
+                this.tabla.setRowCount(0);
+                List <Producto> pro = dbc.select_productos();
+                for (int i = 0; i < pro.size(); i++) {    
+                    Object[] obj = new Object[7];
+                    obj[0]=pro.get(i).getId();
+                    obj[1]=pro.get(i).getNombre();
+                    obj[2]=pro.get(i).getClave();
+                    obj[3]=pro.get(i).getMedida();
+                    obj[4]=pro.get(i).getPventa();
+                    obj[5]=pro.get(i).getIva();
+                    obj[6]=pro.get(i).getMoneda();
+                    this.tabla.addRow(obj);
+                }   
+
+                this.chivaproducto.setVisible(false);
+                this.lbliva.setVisible(false);
+                this.cbmoneda.setVisible(false);
+                this.lbcantidad1.setVisible(false);
+                this.txtpunitario.setVisible(false);
+                this.lbcantidad2.setVisible(false);
+            }
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        } 
+        
+        
+        
            
         
     }
      
-     public void combo()
+     public void combo() throws SQLException
      {
-        String query="select * from monedas;";
-        ArrayList <String[]> op = new ArrayList<>();
-        op=this.dbc.seleccionar(query);
+        OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB (this.con);
+        List <String> op=db.select_monedas();
         for (int i = 0; i < op.size(); i++) {
-            this.cbmoneda.addItem(op.get(i)[1]);
+            this.cbmoneda.addItem(op.get(i));
         }
      }
 
@@ -220,11 +238,6 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
         btnAceptar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnAceptar.setText("Aceptar");
         btnAceptar.setEnabled(false);
-        btnAceptar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnAceptarMouseClicked(evt);
-            }
-        });
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAceptarActionPerformed(evt);
@@ -330,18 +343,49 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAceptarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMouseClicked
-        try
-        {
-            
-            
-        }
-        catch(Exception ex)
-        {
-            System.out.println("Algo esta mal");
-        }
-    }//GEN-LAST:event_btnAceptarMouseClicked
+    private boolean valida_vacio(int opc)
+    {
+        boolean valida=true;
 
+        if (this.txtcantidad.getText().isEmpty()) {
+            valida = false;
+            this.txtcantidad.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (this.txtpunitario.getText().isEmpty()) {
+            valida = false;
+            this.txtpunitario.setBackground(Color.decode("#FFCCCC"));
+        }
+        return valida;
+    }
+    
+    private boolean valida_formato(int opc)
+    {
+        boolean valida=true;
+        switch(opc)
+        {
+            case 1:
+                if (!this.txtcantidad.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+                    valida = false;
+                    this.txtcantidad.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (!this.txtpunitario.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+                    valida = false;
+                    this.txtpunitario.setBackground(Color.decode("#FFCCCC"));
+                }
+                break;
+                
+            case 2:
+                if (!this.txtcantidad.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+                    valida = false;
+                    this.txtcantidad.setBackground(Color.decode("#FFCCCC"));
+                }
+                
+                break;
+        }
+        
+        return valida;
+    }
+    
     private void txtbuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarKeyReleased
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla);
         this.tbdatos.setRowSorter(tr);
@@ -384,30 +428,28 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
         
         if (this.opc==1) {
             
-            if (this.txtcantidad.getText().isEmpty() || this.txtpunitario.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-            }
-            else
-            {
-                if (this.txtcantidad.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtpunitario.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
-                    this.mov.pro.setNombre(this.txtnombre.getText());
-                    this.mov.pro.setClave(this.txtclave.getText());
-                    this.mov.pro.setId(Integer.parseInt(this.txtid.getText()));  
-                    this.mov.pro.setMedida(this.txtmedida.getText());
-                    this.mov.pro.setPventa(Double.parseDouble(this.txtpunitario.getText()));
-                    this.mov.pro.setStockmin(Double.parseDouble(this.txtcantidad.getText()));
+            if (valida_vacio(1)) {
+                
+                if (valida_formato(1)) {
+                    Producto pro = new Producto();
+                    pro.setNombre(this.txtnombre.getText());
+                    pro.setClave(this.txtclave.getText());
+                    pro.setId(Integer.parseInt(this.txtid.getText()));  
+                    pro.setMedida(this.txtmedida.getText());
+                    pro.setPventa(Double.parseDouble(this.txtpunitario.getText()));
+                    pro.setStockmin(Double.parseDouble(this.txtcantidad.getText()));
                     if (this.chivaproducto.isSelected()) {
-                       this.mov.pro.setIva(1); 
+                       pro.setIva(1); 
                     }
                     else
                     {
-                        this.mov.pro.setIva(0);
+                       pro.setIva(0);
                     }
                     
-                    this.mov.moneda=this.cbmoneda.getSelectedItem().toString();
+                    pro.setMoneda(this.cbmoneda.getSelectedItem().toString());
                     this.mov.idmoneda=this.cbmoneda.getSelectedIndex()+1;
 
-                    this.mov.colocarproducto();
+                    this.mov.colocarproducto(pro);
                     this.mov.setEnabled(true);
                     this.mov.setState(NORMAL);
                     this.dispose(); 
@@ -417,11 +459,15 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Formato invalido");
                 }
             }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+            }
             
         }
         else
         {
-            if (this.txtcantidad.getText().matches("^([0-9]+)(\\.[0-9]+)?$") )
+            if (valida_formato(2) )
             {
                 this.mov.pro.setNombre(this.txtnombre.getText());
                 this.mov.pro.setClave(this.txtclave.getText());

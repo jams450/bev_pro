@@ -3,8 +3,6 @@ package negocio;
 
 public class Inventario {
 
-    
-
     private int id;
     private Producto produc;
     private String fecha_entrada;

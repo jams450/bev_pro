@@ -1,7 +1,9 @@
 
 package sistema;
 
+import datos.Conexion;
 import datos.DBcontrolador;
+import datos.OrdenPedido_Provedores_DB;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -13,7 +15,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,10 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.table.DefaultTableModel;
 import negocio.Producto;
 import funciones.n2t;
+import java.awt.Color;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -33,20 +38,22 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import negocio.Ingrediente;
+import negocio.Clientes;
+import negocio.Inventario;
+import negocio.OrdenPedido_Provedores;
+import negocio.Proveedores;
+import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 
-/**
- *
- * @author JAMS
- */
 public class Movimientos extends javax.swing.JFrame {
+
 
     public int idproveedor;
     public String nombreproveedor;
@@ -63,18 +70,18 @@ public class Movimientos extends javax.swing.JFrame {
     public int columnaopc;
     
     private  DBcontrolador dbc;
-    private Connection cnx;
+    private Connection con;
     
     
     ArrayList <Double> preciosopp = new ArrayList<>();
     
     //OPP
-    private DefaultTableModel tabla;
+    private DefaultTableModel tabla_OPP;
     //Compra
-    private DefaultTableModel tabla2;
-    private DefaultTableModel tabla3;
+    private DefaultTableModel tabla_Compra1;
+    private DefaultTableModel tabla_Compra2;
     //OPC
-    private DefaultTableModel tabla4;
+    private DefaultTableModel tabla_OPC;
     
     //pruebas
     private DefaultTableModel sensoriales;
@@ -97,25 +104,23 @@ public class Movimientos extends javax.swing.JFrame {
     /**
      * Creates new form Movimientos
      */
-    public Movimientos(Menu_Principal mp, DBcontrolador dbc) throws SQLException {
+    public Movimientos(Menu_Principal mp, Connection con) throws SQLException {
         initComponents();
+        ((JTextField) this.jdfechaopp.getDateEditor()).setEditable(false); 
         this.mp=mp;
+        this.con=con;
         
-        this.pro= new Producto();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-        this.tabla=(DefaultTableModel) this.tbproductosopp.getModel();
-        this.tabla2=(DefaultTableModel) this.tbproductosopp1.getModel();
-        this.tabla3=(DefaultTableModel) this.tbproductosopp2.getModel();
-        this.tabla4=(DefaultTableModel) this.tbopc.getModel();
+        this.tabla_OPP=(DefaultTableModel) this.tbproductosopp.getModel();
+        this.tabla_Compra1=(DefaultTableModel) this.tbproductosCOM.getModel();
+        this.tabla_Compra2=(DefaultTableModel) this.tbproductosCOM2.getModel();
+        this.tabla_OPC=(DefaultTableModel) this.tbopc.getModel();
         this.sensoriales=(DefaultTableModel) this.tbliberacionsensoriales.getModel();
         this.micro=(DefaultTableModel) this.tblieracionmicrobiologicas.getModel();
         this.fisico=(DefaultTableModel) this.tblieracionfisicoquimicas.getModel();
-        this.dbc = dbc;
-        if (this.dbc.getCnx()==null) {
-                this.dbc.conex();
-            }
         combo();
+        
         Path c = Paths.get("");
         s = c.toAbsolutePath().toString();
     }
@@ -134,71 +139,72 @@ public class Movimientos extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         OPP = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
-        txtidordenproveedores = new javax.swing.JTextField();
+        txtidOPP = new javax.swing.JTextField();
         jLabel31 = new javax.swing.JLabel();
-        txtidproveedor = new javax.swing.JTextField();
+        txtidproveedorOPP = new javax.swing.JTextField();
         jLabel47 = new javax.swing.JLabel();
-        txtnombreproveedor = new javax.swing.JTextField();
+        txtnombreproveedorOPP = new javax.swing.JTextField();
         jLabel51 = new javax.swing.JLabel();
-        btnElegir = new javax.swing.JButton();
+        btnElegir_proveedorOPP = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbproductosopp = new javax.swing.JTable();
-        btnAgregarpro = new javax.swing.JButton();
-        btnquitarpro = new javax.swing.JButton();
-        txtfecha = new javax.swing.JTextField();
+        btnAgregarproOPP = new javax.swing.JButton();
+        btnquitarproOPP = new javax.swing.JButton();
         btnaceptaropp = new javax.swing.JButton();
         jLabel43 = new javax.swing.JLabel();
-        cbcondicion_pago = new javax.swing.JComboBox<>();
+        cbcondicion_pagoOPP = new javax.swing.JComboBox<>();
         jLabel55 = new javax.swing.JLabel();
+        jdfechaopp = new com.toedter.calendar.JDateChooser();
         Compra = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jLabel33 = new javax.swing.JLabel();
-        txtidproveedor1 = new javax.swing.JTextField();
+        txtidproveedorCOM = new javax.swing.JTextField();
         jLabel48 = new javax.swing.JLabel();
-        txtnombreproveedor1 = new javax.swing.JTextField();
+        txtnombreproveedorCOM = new javax.swing.JTextField();
         jLabel52 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tbproductosopp1 = new javax.swing.JTable();
-        btnAgregarproc = new javax.swing.JButton();
-        btnquitarproc = new javax.swing.JButton();
-        txtfecha1 = new javax.swing.JTextField();
+        tbproductosCOM = new javax.swing.JTable();
+        btnAgregarproCOM = new javax.swing.JButton();
+        btnquitarproCOM = new javax.swing.JButton();
+        txtfechapedidocompra = new javax.swing.JTextField();
         jLabel34 = new javax.swing.JLabel();
-        btnaceptarc = new javax.swing.JButton();
+        btnaceptarCOM = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
-        tbproductosopp2 = new javax.swing.JTable();
-        cbopp = new javax.swing.JComboBox<>();
-        cbproductosc = new javax.swing.JComboBox<>();
+        tbproductosCOM2 = new javax.swing.JTable();
+        cboppCOM = new javax.swing.JComboBox<>();
+        cbproductosCOM = new javax.swing.JComboBox<>();
         jLabel35 = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
         jLabel37 = new javax.swing.JLabel();
-        txtcantidadcompra = new javax.swing.JTextField();
-        txtcapacidadcompra = new javax.swing.JTextField();
+        txtcantidadcompraCOM = new javax.swing.JTextField();
+        txtcapacidadcompraCOM = new javax.swing.JTextField();
         jLabel38 = new javax.swing.JLabel();
-        txtfechaentrada = new javax.swing.JTextField();
         jLabel39 = new javax.swing.JLabel();
         txtlotecompra = new javax.swing.JTextField();
         jLabel40 = new javax.swing.JLabel();
-        txtfactno = new javax.swing.JTextField();
+        txtfactnoCOM = new javax.swing.JTextField();
         jLabel45 = new javax.swing.JLabel();
-        txtcaducidad = new javax.swing.JTextField();
+        jdfecha_caducidadcompra = new com.toedter.calendar.JDateChooser();
+        jdfecha_entradacompra = new com.toedter.calendar.JDateChooser();
+        btncancelarCOM = new javax.swing.JButton();
         OPC = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         txtidopc = new javax.swing.JTextField();
         jLabel41 = new javax.swing.JLabel();
         txtidclienteopc = new javax.swing.JTextField();
         jLabel49 = new javax.swing.JLabel();
-        txtnombrecliente = new javax.swing.JTextField();
+        txtnombreclienteOPC = new javax.swing.JTextField();
         jLabel53 = new javax.swing.JLabel();
-        btnElegir1 = new javax.swing.JButton();
+        btnElegirClienteOPC = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         tbopc = new javax.swing.JTable();
-        btnAgregarpro1 = new javax.swing.JButton();
-        btnquitarpro1 = new javax.swing.JButton();
-        txtfechaopc = new javax.swing.JTextField();
+        btnAgregarproOPC = new javax.swing.JButton();
+        btnquitarproOPC = new javax.swing.JButton();
         jLabel42 = new javax.swing.JLabel();
-        btnaceptaropp1 = new javax.swing.JButton();
+        btnaceptarOPC = new javax.swing.JButton();
+        jDfechaopc = new com.toedter.calendar.JDateChooser();
         LOP = new javax.swing.JPanel();
-        cbodp = new javax.swing.JComboBox<>();
+        cbodpLIB = new javax.swing.JComboBox<>();
         jLabel44 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
@@ -211,15 +217,15 @@ public class Movimientos extends javax.swing.JFrame {
         tblieracionfisicoquimicas = new javax.swing.JTable();
         jLabel21 = new javax.swing.JLabel();
         jLabel46 = new javax.swing.JLabel();
-        txtfechaliberacion = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         jScrollPane8 = new javax.swing.JScrollPane();
-        txtcomentarios = new javax.swing.JTextArea();
-        btnaceptar = new javax.swing.JButton();
+        txtcomentariosLIB = new javax.swing.JTextArea();
+        btnaceptarLIB = new javax.swing.JButton();
         jLabel50 = new javax.swing.JLabel();
         txtproductoliberacion = new javax.swing.JTextField();
         jLabel54 = new javax.swing.JLabel();
         txtproductoidliberacion = new javax.swing.JTextField();
+        jdfechaLIB = new com.toedter.calendar.JDateChooser();
         jLabel13 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -241,41 +247,41 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel14.setText("Orden de Pedido a Proveedores");
         OPP.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 0, -1, 39));
 
-        txtidordenproveedores.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtidordenproveedores.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtidordenproveedores.setEnabled(false);
-        OPP.add(txtidordenproveedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(151, 45, 118, -1));
+        txtidOPP.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtidOPP.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtidOPP.setEnabled(false);
+        OPP.add(txtidOPP, new org.netbeans.lib.awtextra.AbsoluteConstraints(151, 45, 118, -1));
 
         jLabel31.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel31.setText("ID Orden :");
         OPP.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(78, 48, -1, -1));
 
-        txtidproveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtidproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtidproveedor.setEnabled(false);
-        OPP.add(txtidproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(151, 72, 118, -1));
+        txtidproveedorOPP.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtidproveedorOPP.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtidproveedorOPP.setEnabled(false);
+        OPP.add(txtidproveedorOPP, new org.netbeans.lib.awtextra.AbsoluteConstraints(151, 72, 118, -1));
 
         jLabel47.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel47.setText("ID Proveedor :");
         OPP.add(jLabel47, new org.netbeans.lib.awtextra.AbsoluteConstraints(56, 75, -1, -1));
 
-        txtnombreproveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtnombreproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtnombreproveedor.setEnabled(false);
-        OPP.add(txtnombreproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(151, 103, 450, -1));
+        txtnombreproveedorOPP.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtnombreproveedorOPP.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtnombreproveedorOPP.setEnabled(false);
+        OPP.add(txtnombreproveedorOPP, new org.netbeans.lib.awtextra.AbsoluteConstraints(151, 103, 450, -1));
 
         jLabel51.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel51.setText("Nombre :");
         OPP.add(jLabel51, new org.netbeans.lib.awtextra.AbsoluteConstraints(82, 106, -1, -1));
 
-        btnElegir.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnElegir.setText("Elegir");
-        btnElegir.addActionListener(new java.awt.event.ActionListener() {
+        btnElegir_proveedorOPP.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnElegir_proveedorOPP.setText("Elegir");
+        btnElegir_proveedorOPP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnElegirActionPerformed(evt);
+                btnElegir_proveedorOPPActionPerformed(evt);
             }
         });
-        OPP.add(btnElegir, new org.netbeans.lib.awtextra.AbsoluteConstraints(471, 72, 130, -1));
+        OPP.add(btnElegir_proveedorOPP, new org.netbeans.lib.awtextra.AbsoluteConstraints(471, 72, 130, -1));
 
         tbproductosopp.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -294,11 +300,6 @@ public class Movimientos extends javax.swing.JFrame {
             }
         });
         tbproductosopp.getTableHeader().setReorderingAllowed(false);
-        tbproductosopp.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbproductosoppMouseClicked(evt);
-            }
-        });
         jScrollPane2.setViewportView(tbproductosopp);
         if (tbproductosopp.getColumnModel().getColumnCount() > 0) {
             tbproductosopp.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -312,29 +313,25 @@ public class Movimientos extends javax.swing.JFrame {
 
         OPP.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 1240, 230));
 
-        btnAgregarpro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnAgregarpro.setText("Agregar Producto");
-        btnAgregarpro.setEnabled(false);
-        btnAgregarpro.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregarproOPP.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnAgregarproOPP.setText("Agregar Producto");
+        btnAgregarproOPP.setEnabled(false);
+        btnAgregarproOPP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarproActionPerformed(evt);
+                btnAgregarproOPPActionPerformed(evt);
             }
         });
-        OPP.add(btnAgregarpro, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 420, -1, -1));
+        OPP.add(btnAgregarproOPP, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 420, -1, -1));
 
-        btnquitarpro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnquitarpro.setText("Quitar Producto");
-        btnquitarpro.setEnabled(false);
-        btnquitarpro.addActionListener(new java.awt.event.ActionListener() {
+        btnquitarproOPP.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnquitarproOPP.setText("Quitar Producto");
+        btnquitarproOPP.setEnabled(false);
+        btnquitarproOPP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnquitarproActionPerformed(evt);
+                btnquitarproOPPActionPerformed(evt);
             }
         });
-        OPP.add(btnquitarpro, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 420, 160, -1));
-
-        txtfecha.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtfecha.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        OPP.add(txtfecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 40, 190, -1));
+        OPP.add(btnquitarproOPP, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 420, 160, -1));
 
         btnaceptaropp.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnaceptaropp.setText("Aceptar");
@@ -350,11 +347,15 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel43.setText("Condicion de pago:");
         OPP.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 80, -1, -1));
 
-        OPP.add(cbcondicion_pago, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 80, 130, 20));
+        OPP.add(cbcondicion_pagoOPP, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 80, 130, 20));
 
         jLabel55.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel55.setText("Fecha:");
         OPP.add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 40, -1, -1));
+
+        jdfechaopp.setDateFormatString("dd/MM/yyyy");
+        jdfechaopp.setEnabled(false);
+        OPP.add(jdfechaopp, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 40, 190, -1));
 
         jTabbedPane1.addTab("Orden de Pedido a Proveedores", OPP);
 
@@ -369,25 +370,25 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel33.setText("ID Orden :");
         Compra.add(jLabel33, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 40, -1, -1));
 
-        txtidproveedor1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtidproveedor1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtidproveedor1.setEnabled(false);
-        Compra.add(txtidproveedor1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, 118, -1));
+        txtidproveedorCOM.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtidproveedorCOM.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtidproveedorCOM.setEnabled(false);
+        Compra.add(txtidproveedorCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, 118, -1));
 
         jLabel48.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel48.setText("ID Proveedor :");
         Compra.add(jLabel48, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 70, -1, -1));
 
-        txtnombreproveedor1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtnombreproveedor1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtnombreproveedor1.setEnabled(false);
-        Compra.add(txtnombreproveedor1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 100, 410, -1));
+        txtnombreproveedorCOM.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtnombreproveedorCOM.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtnombreproveedorCOM.setEnabled(false);
+        Compra.add(txtnombreproveedorCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 100, 440, -1));
 
         jLabel52.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel52.setText("Nombre :");
         Compra.add(jLabel52, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 100, -1, -1));
 
-        tbproductosopp1.setModel(new javax.swing.table.DefaultTableModel(
+        tbproductosCOM.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -403,59 +404,59 @@ public class Movimientos extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tbproductosopp1.setEnabled(false);
-        tbproductosopp1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane3.setViewportView(tbproductosopp1);
-        if (tbproductosopp1.getColumnModel().getColumnCount() > 0) {
-            tbproductosopp1.getColumnModel().getColumn(0).setPreferredWidth(30);
-            tbproductosopp1.getColumnModel().getColumn(1).setPreferredWidth(230);
-            tbproductosopp1.getColumnModel().getColumn(2).setPreferredWidth(50);
-            tbproductosopp1.getColumnModel().getColumn(3).setPreferredWidth(50);
-            tbproductosopp1.getColumnModel().getColumn(4).setPreferredWidth(100);
+        tbproductosCOM.setEnabled(false);
+        tbproductosCOM.getTableHeader().setReorderingAllowed(false);
+        jScrollPane3.setViewportView(tbproductosCOM);
+        if (tbproductosCOM.getColumnModel().getColumnCount() > 0) {
+            tbproductosCOM.getColumnModel().getColumn(0).setPreferredWidth(30);
+            tbproductosCOM.getColumnModel().getColumn(1).setPreferredWidth(230);
+            tbproductosCOM.getColumnModel().getColumn(2).setPreferredWidth(50);
+            tbproductosCOM.getColumnModel().getColumn(3).setPreferredWidth(50);
+            tbproductosCOM.getColumnModel().getColumn(4).setPreferredWidth(100);
         }
 
         Compra.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 610, 230));
 
-        btnAgregarproc.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnAgregarproc.setText("Agregar Producto");
-        btnAgregarproc.setEnabled(false);
-        btnAgregarproc.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregarproCOM.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnAgregarproCOM.setText("Agregar Producto");
+        btnAgregarproCOM.setEnabled(false);
+        btnAgregarproCOM.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarprocActionPerformed(evt);
+                btnAgregarproCOMActionPerformed(evt);
             }
         });
-        Compra.add(btnAgregarproc, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 410, -1, -1));
+        Compra.add(btnAgregarproCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 410, -1, -1));
 
-        btnquitarproc.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnquitarproc.setText("Quitar Producto");
-        btnquitarproc.setEnabled(false);
-        btnquitarproc.addActionListener(new java.awt.event.ActionListener() {
+        btnquitarproCOM.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnquitarproCOM.setText("Quitar Producto");
+        btnquitarproCOM.setEnabled(false);
+        btnquitarproCOM.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnquitarprocActionPerformed(evt);
+                btnquitarproCOMActionPerformed(evt);
             }
         });
-        Compra.add(btnquitarproc, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 410, -1, -1));
+        Compra.add(btnquitarproCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 410, -1, -1));
 
-        txtfecha1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtfecha1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtfecha1.setEnabled(false);
-        Compra.add(txtfecha1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 40, 121, -1));
+        txtfechapedidocompra.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtfechapedidocompra.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtfechapedidocompra.setEnabled(false);
+        Compra.add(txtfechapedidocompra, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 40, 150, -1));
 
         jLabel34.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel34.setText("Fecha Pedido:");
         Compra.add(jLabel34, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 40, -1, -1));
 
-        btnaceptarc.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnaceptarc.setText("Aceptar");
-        btnaceptarc.setEnabled(false);
-        btnaceptarc.addActionListener(new java.awt.event.ActionListener() {
+        btnaceptarCOM.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnaceptarCOM.setText("Aceptar");
+        btnaceptarCOM.setEnabled(false);
+        btnaceptarCOM.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnaceptarcActionPerformed(evt);
+                btnaceptarCOMActionPerformed(evt);
             }
         });
-        Compra.add(btnaceptarc, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 450, 107, -1));
+        Compra.add(btnaceptarCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 450, 107, -1));
 
-        tbproductosopp2.setModel(new javax.swing.table.DefaultTableModel(
+        tbproductosCOM2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -471,32 +472,27 @@ public class Movimientos extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tbproductosopp2.getTableHeader().setReorderingAllowed(false);
-        tbproductosopp2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbproductosopp2MouseClicked(evt);
-            }
-        });
-        jScrollPane4.setViewportView(tbproductosopp2);
-        if (tbproductosopp2.getColumnModel().getColumnCount() > 0) {
-            tbproductosopp2.getColumnModel().getColumn(0).setPreferredWidth(30);
-            tbproductosopp2.getColumnModel().getColumn(1).setPreferredWidth(230);
-            tbproductosopp2.getColumnModel().getColumn(2).setPreferredWidth(100);
-            tbproductosopp2.getColumnModel().getColumn(3).setPreferredWidth(100);
-            tbproductosopp2.getColumnModel().getColumn(4).setPreferredWidth(100);
-            tbproductosopp2.getColumnModel().getColumn(5).setPreferredWidth(100);
+        tbproductosCOM2.getTableHeader().setReorderingAllowed(false);
+        jScrollPane4.setViewportView(tbproductosCOM2);
+        if (tbproductosCOM2.getColumnModel().getColumnCount() > 0) {
+            tbproductosCOM2.getColumnModel().getColumn(0).setPreferredWidth(30);
+            tbproductosCOM2.getColumnModel().getColumn(1).setPreferredWidth(230);
+            tbproductosCOM2.getColumnModel().getColumn(2).setPreferredWidth(100);
+            tbproductosCOM2.getColumnModel().getColumn(3).setPreferredWidth(100);
+            tbproductosCOM2.getColumnModel().getColumn(4).setPreferredWidth(100);
+            tbproductosCOM2.getColumnModel().getColumn(5).setPreferredWidth(100);
         }
 
         Compra.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 150, 590, 230));
 
-        cbopp.addActionListener(new java.awt.event.ActionListener() {
+        cboppCOM.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboppActionPerformed(evt);
+                cboppCOMActionPerformed(evt);
             }
         });
-        Compra.add(cbopp, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 40, 118, -1));
+        Compra.add(cboppCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 40, 118, -1));
 
-        Compra.add(cbproductosc, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 410, 170, -1));
+        Compra.add(cbproductosCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 410, 170, -1));
 
         jLabel35.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel35.setText("Producto :");
@@ -510,24 +506,19 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel37.setText("Capacidad:");
         Compra.add(jLabel37, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 390, -1, -1));
 
-        txtcantidadcompra.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtcantidadcompra.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtcantidadcompra.setEnabled(false);
-        Compra.add(txtcantidadcompra, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 410, 121, -1));
+        txtcantidadcompraCOM.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtcantidadcompraCOM.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtcantidadcompraCOM.setEnabled(false);
+        Compra.add(txtcantidadcompraCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 410, 121, -1));
 
-        txtcapacidadcompra.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtcapacidadcompra.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtcapacidadcompra.setEnabled(false);
-        Compra.add(txtcapacidadcompra, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 410, 121, -1));
+        txtcapacidadcompraCOM.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtcapacidadcompraCOM.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtcapacidadcompraCOM.setEnabled(false);
+        Compra.add(txtcapacidadcompraCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 410, 121, -1));
 
         jLabel38.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel38.setText("Lote :");
         Compra.add(jLabel38, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 60, -1, -1));
-
-        txtfechaentrada.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtfechaentrada.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtfechaentrada.setEnabled(false);
-        Compra.add(txtfechaentrada, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 30, 160, -1));
 
         jLabel39.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel39.setText("Fecha  Entrada:");
@@ -542,19 +533,28 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel40.setText("No Factura :");
         Compra.add(jLabel40, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 90, -1, -1));
 
-        txtfactno.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtfactno.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtfactno.setEnabled(false);
-        Compra.add(txtfactno, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 90, 160, -1));
+        txtfactnoCOM.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtfactnoCOM.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtfactnoCOM.setEnabled(false);
+        Compra.add(txtfactnoCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 90, 160, -1));
 
         jLabel45.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel45.setText("Caducidad :");
         Compra.add(jLabel45, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 120, -1, -1));
 
-        txtcaducidad.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtcaducidad.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtcaducidad.setEnabled(false);
-        Compra.add(txtcaducidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 120, 160, -1));
+        jdfecha_caducidadcompra.setEnabled(false);
+        Compra.add(jdfecha_caducidadcompra, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 120, 160, -1));
+
+        jdfecha_entradacompra.setEnabled(false);
+        Compra.add(jdfecha_entradacompra, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 30, 160, -1));
+
+        btncancelarCOM.setText("Cancelar Orden");
+        btncancelarCOM.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncancelarCOMActionPerformed(evt);
+            }
+        });
+        Compra.add(btncancelarCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 70, 150, -1));
 
         jTabbedPane1.addTab("Registro de Compra", Compra);
 
@@ -583,23 +583,23 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel49.setText("ID Cliente :");
         OPC.add(jLabel49, new org.netbeans.lib.awtextra.AbsoluteConstraints(56, 75, -1, -1));
 
-        txtnombrecliente.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtnombrecliente.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtnombrecliente.setEnabled(false);
-        OPC.add(txtnombrecliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(134, 103, 460, -1));
+        txtnombreclienteOPC.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtnombreclienteOPC.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtnombreclienteOPC.setEnabled(false);
+        OPC.add(txtnombreclienteOPC, new org.netbeans.lib.awtextra.AbsoluteConstraints(134, 103, 460, -1));
 
         jLabel53.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel53.setText("Nombre :");
         OPC.add(jLabel53, new org.netbeans.lib.awtextra.AbsoluteConstraints(65, 106, -1, -1));
 
-        btnElegir1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnElegir1.setText("Elegir");
-        btnElegir1.addActionListener(new java.awt.event.ActionListener() {
+        btnElegirClienteOPC.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnElegirClienteOPC.setText("Elegir");
+        btnElegirClienteOPC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnElegir1ActionPerformed(evt);
+                btnElegirClienteOPCActionPerformed(evt);
             }
         });
-        OPC.add(btnElegir1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 70, 140, -1));
+        OPC.add(btnElegirClienteOPC, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 70, 140, -1));
 
         tbopc.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -635,56 +635,52 @@ public class Movimientos extends javax.swing.JFrame {
 
         OPC.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 1230, 250));
 
-        btnAgregarpro1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnAgregarpro1.setText("Agregar Producto");
-        btnAgregarpro1.setEnabled(false);
-        btnAgregarpro1.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregarproOPC.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnAgregarproOPC.setText("Agregar Producto");
+        btnAgregarproOPC.setEnabled(false);
+        btnAgregarproOPC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarpro1ActionPerformed(evt);
+                btnAgregarproOPCActionPerformed(evt);
             }
         });
-        OPC.add(btnAgregarpro1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 430, -1, -1));
+        OPC.add(btnAgregarproOPC, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 430, -1, -1));
 
-        btnquitarpro1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnquitarpro1.setText("Quitar Producto");
-        btnquitarpro1.setEnabled(false);
-        btnquitarpro1.addActionListener(new java.awt.event.ActionListener() {
+        btnquitarproOPC.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnquitarproOPC.setText("Quitar Producto");
+        btnquitarproOPC.setEnabled(false);
+        btnquitarproOPC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnquitarpro1ActionPerformed(evt);
+                btnquitarproOPCActionPerformed(evt);
             }
         });
-        OPC.add(btnquitarpro1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 430, 160, -1));
-
-        txtfechaopc.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtfechaopc.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtfechaopc.setEnabled(false);
-        OPC.add(txtfechaopc, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 40, 170, -1));
+        OPC.add(btnquitarproOPC, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 430, 160, -1));
 
         jLabel42.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel42.setText("Fecha:");
         OPC.add(jLabel42, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 40, -1, -1));
 
-        btnaceptaropp1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        btnaceptaropp1.setText("Aceptar");
-        btnaceptaropp1.setEnabled(false);
-        btnaceptaropp1.addActionListener(new java.awt.event.ActionListener() {
+        btnaceptarOPC.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnaceptarOPC.setText("Aceptar");
+        btnaceptarOPC.setEnabled(false);
+        btnaceptarOPC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnaceptaropp1ActionPerformed(evt);
+                btnaceptarOPCActionPerformed(evt);
             }
         });
-        OPC.add(btnaceptaropp1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 430, 107, -1));
+        OPC.add(btnaceptarOPC, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 430, 107, -1));
+        OPC.add(jDfechaopc, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 40, 170, -1));
 
         jTabbedPane1.addTab("Orden de Pedido a Clientes", OPC);
 
         LOP.setBackground(new java.awt.Color(255, 255, 255));
         LOP.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        cbodp.addActionListener(new java.awt.event.ActionListener() {
+        cbodpLIB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbodpActionPerformed(evt);
+                cbodpLIBActionPerformed(evt);
             }
         });
-        LOP.add(cbodp, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 36, 190, -1));
+        LOP.add(cbodpLIB, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 36, 190, -1));
 
         jLabel44.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel44.setText("No. Orden Produccion :");
@@ -770,28 +766,24 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel46.setText("Fecha :");
         LOP.add(jLabel46, new org.netbeans.lib.awtextra.AbsoluteConstraints(114, 69, -1, -1));
 
-        txtfechaliberacion.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtfechaliberacion.setEnabled(false);
-        LOP.add(txtfechaliberacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 67, 190, -1));
-
         jLabel22.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel22.setText("Microbiologicas");
         LOP.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 290, -1, -1));
 
-        txtcomentarios.setColumns(20);
-        txtcomentarios.setRows(5);
-        jScrollPane8.setViewportView(txtcomentarios);
+        txtcomentariosLIB.setColumns(20);
+        txtcomentariosLIB.setRows(5);
+        jScrollPane8.setViewportView(txtcomentariosLIB);
 
         LOP.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 320, 600, 120));
 
-        btnaceptar.setText("Aceptar");
-        btnaceptar.setEnabled(false);
-        btnaceptar.addActionListener(new java.awt.event.ActionListener() {
+        btnaceptarLIB.setText("Aceptar");
+        btnaceptarLIB.setEnabled(false);
+        btnaceptarLIB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnaceptarActionPerformed(evt);
+                btnaceptarLIBActionPerformed(evt);
             }
         });
-        LOP.add(btnaceptar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 450, 130, -1));
+        LOP.add(btnaceptarLIB, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 450, 130, -1));
 
         jLabel50.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel50.setText("Producto :");
@@ -808,6 +800,9 @@ public class Movimientos extends javax.swing.JFrame {
         txtproductoidliberacion.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtproductoidliberacion.setEnabled(false);
         LOP.add(txtproductoidliberacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 40, 92, -1));
+
+        jdfechaLIB.setEnabled(false);
+        LOP.add(jdfechaLIB, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, 180, -1));
 
         jTabbedPane1.addTab("Liberacion O. Produccion", LOP);
 
@@ -860,165 +855,36 @@ public class Movimientos extends javax.swing.JFrame {
         }
         return fi;
     }
-    
-    //Orden de perdido a proveedores
-    
-    public void colocarproveedor()
-    {
-        
-        this.txtidproveedor.setText(this.idproveedor + "");
-        this.txtnombreproveedor.setText(this.nombreproveedor);
-        
-        LocalDateTime ahora = LocalDateTime.now(); 
-       
-        this.txtfecha.setText(ahora.getDayOfMonth()+"/"+ ahora.getMonthValue() +"/" + ahora.getYear() );
-        
-        
-        
-        String query="Select MAX(id) from opproveedores";
-        int maxid;
-        if(this.dbc.seleccionarid(query)==null)
-        maxid=1;
-        else
-        maxid=Integer.parseInt(this.dbc.seleccionarid(query))+1;
-        
-        this.txtidordenproveedores.setText(maxid + "");
-        
-        this.btnAgregarpro.setEnabled(true);
-        this.btnquitarpro.setEnabled(true);
-        
-    }
-    
-    public void colocarcliente()
-    {
-        
-        this.txtidclienteopc.setText(this.idcliente + "");
-        this.txtnombrecliente.setText(this.nombrecliente);
-        
-        LocalDateTime ahora = LocalDateTime.now(); 
-       
-        this.txtfechaopc.setText(ahora.getDayOfMonth()+"/"+ ahora.getMonthValue() +"/" + ahora.getYear() );
-        this.txtfechaopc.setEnabled(true);
-        
-        
-        String query="Select MAX(id) from opclientes";
-        int maxid;
-        if(this.dbc.seleccionarid(query)==null)
-        maxid=1;
-        else
-        maxid=Integer.parseInt(this.dbc.seleccionarid(query)+1);
-        
-        this.txtidopc.setText(maxid + "");
-        
-       
-        
-        this.btnAgregarpro1.setEnabled(true);
-        this.btnquitarpro1.setEnabled(true);
-        
-    }
-    
-    public void colocarproducto()
-    {
-        
-        String[] s = new String[10]; 
-        s[1]=this.pro.getClave();
-        s[0]=this.pro.getId()+"";
-        s[2]=this.pro.getNombre();
-        s[3]=this.pro.getMedida();
-        s[4]=this.pro.getStockmin()+"";
-        s[5]=this.moneda;
-        s[6]=this.pro.getPventa()+"";      
-        s[7]=(Math.round( (this.pro.getPventa()*this.pro.getStockmin())* 100.0 ) / 100.0)+"";
-        if (this.pro.getIva()==1) {
-            s[8]=(Math.round( (this.pro.getPventa()*this.pro.getStockmin()*0.16)* 100.0 ) / 100.0)+"";
-        }
-        else
-        {
-            s[8]="0";
-        }
-        s[9]=(Math.round( (Double.parseDouble(s[7])+Double.parseDouble(s[8]))* 100.0 ) / 100.0)+"";
-        
-        boolean x=true;
-        for (int i = 0; i < this.tabla.getRowCount(); i++) {
-            int id = Integer.parseInt(this.tabla.getValueAt(i, 0).toString());
-            if (id == Integer.parseInt(s[0])) {
-                x=false;
-            }            
-        }
-        if (x) {
-            this.tabla.addRow(s);
-            
-            this.btnquitarpro.setEnabled(true);
-            this.btnaceptaropp.setEnabled(true);
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(null, "El producto ya esta seleccionado");
-        }
-        
 
-    }
     
-     public void colocarproductoopc()
+    public void combo() throws SQLException
     {
+        OrdenPedido_Provedores_DB oppdb = new OrdenPedido_Provedores_DB(this.con);
         
-        String[] s = new String[5]; 
-        s[1]=this.pro.getClave();
-        s[0]=this.pro.getId()+"";
-        s[2]=this.pro.getNombre();
-        s[3]=this.pro.getMedida();
-        s[4]=this.pro.getStockmin()+"";
-        
-        boolean x=true;
-        for (int i = 0; i < this.tabla4.getRowCount(); i++) {
-            int id = Integer.parseInt(this.tabla4.getValueAt(i, 0).toString());
-            if (id == Integer.parseInt(s[0])) {
-                x=false;
-            }            
-        }
-         
-        if (x) {
-            this.tabla4.addRow(s);
-            this.btnquitarpro1.setEnabled(true);
-            this.btnaceptaropp1.setEnabled(true);
-
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(null, "El producto ya esta seleccionado");
-        }
-        
-    }
-    
-    public void combo()
-    {
-        this.cbopp.removeAllItems();
-        String query="select opproveedores.id ,  proveedores.nombre from opproveedores\n" +
-                    "join proveedores on proveedores.id = opproveedores.idpro where idestatus = 1";
-        ArrayList <String[]> op = new ArrayList<>();
-        
-        op=this.dbc.seleccionar(query);
+        this.cboppCOM.removeAllItems();
+        List <String[]> op = oppdb.select_opp();
         for (int i = 0; i < op.size(); i++) {
-            this.cbopp.addItem(op.get(i)[0]+ " " + op.get(i)[1]);
+            this.cboppCOM.addItem(op.get(i)[0]+ " " + op.get(i)[1]);
         }
         
-        this.cbodp.removeAllItems();
-        query="SELECT id FROM ordenes_prod where estatus = 1";
+        this.cbodpLIB.removeAllItems();
+        String query="SELECT id FROM ordenes_prod where estatus = 1";
         op.clear();
         
         op=this.dbc.seleccionar(query);
         for (int i = 0; i < op.size(); i++) {
-            this.cbodp.addItem(op.get(i)[0]);
+            this.cbodpLIB.addItem(op.get(i)[0]);
         }
         
-        op.clear();
-        query="SELECT nombre FROM condicion_pago ";
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbcondicion_pago.addItem(op.get(i)[0]);
+        //CONDICION PAGO
+        this.cbcondicion_pagoOPP.removeAllItems();
+        List <String> pago = oppdb.select_pago();
+        for (int i = 0; i < pago.size(); i++) {
+            this.cbcondicion_pagoOPP.addItem(pago.get(i));
         }
     }
     
+
     //cierra
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
        this.setVisible(false);
@@ -1027,14 +893,12 @@ public class Movimientos extends javax.swing.JFrame {
        this.dispose();
     }//GEN-LAST:event_formWindowClosing
 
-    
-    
-    private void cbodpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbodpActionPerformed
-        
+    //LIB
+    private void cbodpLIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbodpLIBActionPerformed
         comboliberacion();
- 
-    }//GEN-LAST:event_cbodpActionPerformed
+    }//GEN-LAST:event_cbodpLIBActionPerformed
 
+    //LIB
     public void comboliberacion()
     {
         try{
@@ -1042,12 +906,15 @@ public class Movimientos extends javax.swing.JFrame {
             this.micro.setRowCount(0);
             this.fisico.setRowCount(0);
 
-            String idodp= this.cbodp.getSelectedItem().toString();
+            String idodp= this.cbodpLIB.getSelectedItem().toString();
             String query = "select ordenes_prod.id, ordenes_prod.idproduc, productos.nombre, ordenes_prod.fecha from ordenes_prod \n" +
                            "join productos on ordenes_prod.idproduc = productos.id  where  ordenes_prod.id = "+ idodp;
             ArrayList <String[]> op = new ArrayList<>();
             op= this.dbc.seleccionar(query);
-            this.txtfechaliberacion.setText(fechadividir(op.get(0)[3],0));
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            this.jdfechaLIB.setDateFormatString("dd/MM/yyyy");
+            Date date = formatter.parse(fechadividir(op.get(0)[3],0));
+            this.jdfechaLIB.setDate(date);
             this.txtproductoidliberacion.setText(op.get(0)[1]);
             this.txtproductoliberacion.setText(op.get(0)[2]);
 
@@ -1092,8 +959,8 @@ public class Movimientos extends javax.swing.JFrame {
                 }
             }
             
-            this.txtfechaliberacion.setEnabled(true);
-            this.btnaceptar.setEnabled(true);
+            this.jdfechaLIB.setEnabled(true);
+            this.btnaceptarLIB.setEnabled(true);
         }
         catch(Exception ex )
         {
@@ -1103,9 +970,69 @@ public class Movimientos extends javax.swing.JFrame {
         
     }
     
-    private void btnaceptaropp1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptaropp1ActionPerformed
+    //<editor-fold defaultstate="collapsed" desc="ODP">
+    public void colocarcliente(Clientes cl)
+    {
+        
+        this.txtidclienteopc.setText(cl.getId() + "");
+        this.txtnombreclienteOPC.setText(cl.getNombre());
+        
+        Date date = new Date();
+        this.jDfechaopc.setDateFormatString("dd/MM/yyyy");
+        this.jDfechaopc.setDate(date);
+        
+        this.jDfechaopc.setEnabled(true);
+        
+        
+        String query="Select MAX(id) from opclientes";
+        int maxid;
+        if(this.dbc.seleccionarid(query)==null)
+        maxid=1;
+        else
+        maxid=Integer.parseInt(this.dbc.seleccionarid(query)+1);
+        
+        this.txtidopc.setText(maxid + "");
+        
+        this.btnAgregarproOPC.setEnabled(true);
+        this.btnquitarproOPC.setEnabled(true);
+        
+    }
+    
+     public void colocarproductoopc()
+    {
+        
+        String[] s = new String[5]; 
+        s[1]=this.pro.getClave();
+        s[0]=this.pro.getId()+"";
+        s[2]=this.pro.getNombre();
+        s[3]=this.pro.getMedida();
+        s[4]=this.pro.getStockmin()+"";
+        
+        boolean x=true;
+        for (int i = 0; i < this.tabla_OPC.getRowCount(); i++) {
+            int id = Integer.parseInt(this.tabla_OPC.getValueAt(i, 0).toString());
+            if (id == Integer.parseInt(s[0])) {
+                x=false;
+            }            
+        }
+         
+        if (x) {
+            this.tabla_OPC.addRow(s);
+            this.btnquitarproOPC.setEnabled(true);
+            this.btnaceptarOPC.setEnabled(true);
+
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "El producto ya esta seleccionado");
+        }
+        
+    }
+    
+
+    private void btnaceptarOPCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarOPCActionPerformed
         try{
-            if (this.txtfechaopc.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$") && this.tbopc.getRowCount() > 0) {
+            if (this.tbopc.getRowCount() > 0) {
                 String query;
                 String ingrefaltante="";
                 ArrayList <String[]> op = new ArrayList<>();
@@ -1118,13 +1045,13 @@ public class Movimientos extends javax.swing.JFrame {
                 //validacion
                 
                 //hacer lista con todos los ingredientes
-                for (int i = 0; i < this.tabla4.getRowCount(); i++) {
+                for (int i = 0; i < this.tabla_OPC.getRowCount(); i++) {
                     //Ingredientes de un producto
-                    query="select idproducto, cantidad from ingredientes where idproductofinal= " + this.tabla4.getValueAt(i, 0).toString();
+                    query="select idproducto, cantidad from ingredientes where idproductofinal= " + this.tabla_OPC.getValueAt(i, 0).toString();
                     op= this.dbc.seleccionar(query);
                     for (int j = 0; j < op.size(); j++) {
                         //multiplicar por la cantidad
-                        op.get(j)[1]= Double.parseDouble(op.get(j)[1]) *  Double.parseDouble(this.tabla4.getValueAt(i, 4).toString())+"";
+                        op.get(j)[1]= Double.parseDouble(op.get(j)[1]) *  Double.parseDouble(this.tabla_OPC.getValueAt(i, 4).toString())+"";
                         //Para saber si ya esta seleccionado (dentro de op2)
                         existe=true;
                         for (int k = 0; k < op2.size(); k++) {
@@ -1139,10 +1066,10 @@ public class Movimientos extends javax.swing.JFrame {
                     }
                     op.clear();
                 }
-                
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                 //Comparar con el inventario
                 for (int i = 0; i < op2.size(); i++) {
-                    query="select sum(inventario.cantidadactual), productos.nombre from inventario join productos on productos.id = inventario.idproducto where fechacaducidad >= '"+this.fechadividir(txtfechaopc, 2) +"' and idproducto = "+ op2.get(i)[0];
+                    query="select sum(inventario.cantidadactual), productos.nombre from inventario join productos on productos.id = inventario.idproducto where fechacaducidad >= '"+this.fechadividir(formatter.format(this.jDfechaopc.getDate()), 2) +"' and idproducto = "+ op2.get(i)[0];
                     op=this.dbc.seleccionar(query);
                     
                     if (op.get(0)[0]== null) {
@@ -1163,8 +1090,8 @@ public class Movimientos extends javax.swing.JFrame {
                 
                 
                 boolean ordencliente=true;
-                for (int i = 0; i < this.tabla4.getRowCount(); i++) {
-                    if (this.tabla4.getValueAt(i, 5) == null) {
+                for (int i = 0; i < this.tabla_OPC.getRowCount(); i++) {
+                    if (this.tabla_OPC.getValueAt(i, 5) == null) {
                         ordencliente=false;
                     }
                 }
@@ -1172,13 +1099,16 @@ public class Movimientos extends javax.swing.JFrame {
                 if (sipasa) {
                     if (ordencliente) {
                         
-                        if (JOptionPane.showConfirmDialog(null, "¿Desea hacer la orden?", "Ingredientes correctos", JOptionPane.YES_NO_OPTION)==0) {
+                        String[] opciones_orden = {"Hacer Orden de Produccion", "Imprimir Pre-Orden", "Cancelar"};
+                        int seleccion = JOptionPane.showOptionDialog(null, "Ingredientes Correctos \n ¿Qué desea hacer?", "Orden de Fabricacion", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,null,opciones_orden,opciones_orden[0]);
+                        
+                        if (seleccion==0){
                             double preciototal=0;
-                            for (int i = 0; i < this.tabla4.getRowCount(); i++) {
+                            for (int i = 0; i < this.tabla_OPC.getRowCount(); i++) {
                                 System.out.println(i);
-                                query="Select pventa from productos where id = "+ this.tabla4.getValueAt(i, 0).toString();
+                                query="Select pventa from productos where id = "+ this.tabla_OPC.getValueAt(i, 0).toString();
                                 op=this.dbc.seleccionar(query);
-                                preciototal+=Double.parseDouble(op.get(0)[0])* Double.parseDouble(this.tabla4.getValueAt(i, 4).toString());
+                                preciototal+=Double.parseDouble(op.get(0)[0])* Double.parseDouble(this.tabla_OPC.getValueAt(i, 4).toString());
                                 op.clear();
                             }
 
@@ -1189,7 +1119,7 @@ public class Movimientos extends javax.swing.JFrame {
 
                             ps.setDouble(2, preciototal );
 
-                            ps.setString(3, this.fechadividir(txtfechaopc, 2));
+                            ps.setString(3, this.fechadividir(formatter.format(this.jDfechaopc.getDate()), 2));
 
                             ps.executeUpdate();
                             ps.close();
@@ -1200,25 +1130,25 @@ public class Movimientos extends javax.swing.JFrame {
 
                             query ="Insert into pedidos_opc(idopc,idproducto,cantidad,noordencliente) values (?,?,?,?)";
 
-                            for (int i = 0; i < this.tabla4.getRowCount(); i++) {
+                            for (int i = 0; i < this.tabla_OPC.getRowCount(); i++) {
 
                                 ps= this.dbc.getCnx().prepareStatement(query);
                                 ps.setDouble(1, index);
-                                ps.setInt(2, Integer.parseInt(this.tabla4.getValueAt(i, 0).toString()));
-                                ps.setDouble(3, Double.parseDouble(this.tabla4.getValueAt(i, 4).toString()));
-                                ps.setString(4, this.tabla4.getValueAt(i, 5).toString());
+                                ps.setInt(2, Integer.parseInt(this.tabla_OPC.getValueAt(i, 0).toString()));
+                                ps.setDouble(3, Double.parseDouble(this.tabla_OPC.getValueAt(i, 4).toString()));
+                                ps.setString(4, this.tabla_OPC.getValueAt(i, 5).toString());
                                 ps.executeUpdate();
                                 ps.close();
                             }
 
                             //crearodernproduccion
-                            for (int i = 0; i < this.tabla4.getRowCount(); i++) {
+                            for (int i = 0; i < this.tabla_OPC.getRowCount(); i++) {
                                 query ="Insert into ordenes_prod(idopc,idproduc,fecha,cantidad) values (?,?,?,?)";
                                 ps = this.dbc.getCnx().prepareStatement(query);
                                 ps.setDouble(1, index);
-                                ps.setInt(2, Integer.parseInt(this.tabla4.getValueAt(i, 0).toString()));
-                                ps.setString(3, this.fechadividir(txtfechaopc, 2));
-                                ps.setDouble(4, Double.parseDouble(this.tabla4.getValueAt(i, 4).toString()));
+                                ps.setInt(2, Integer.parseInt(this.tabla_OPC.getValueAt(i, 0).toString()));
+                                ps.setString(3, this.fechadividir(formatter.format(this.jDfechaopc.getDate()), 2));
+                                ps.setDouble(4, Double.parseDouble(this.tabla_OPC.getValueAt(i, 4).toString()));
                                 ps.executeUpdate();
                                 ps.close();
                                 query = "select MAX(id) from ordenes_prod";
@@ -1227,13 +1157,13 @@ public class Movimientos extends javax.swing.JFrame {
 
                                 //inventario e ingredientes
 
-                                double cantidad=Double.parseDouble(this.tabla4.getValueAt(i, 4).toString());
+                                double cantidad=Double.parseDouble(this.tabla_OPC.getValueAt(i, 4).toString());
                                 ArrayList <String[]> op1 = new ArrayList<>();
-                                query="select * from ingredientes where idproductofinal = "+ this.tabla4.getValueAt(i, 0).toString();
+                                query="select * from ingredientes where idproductofinal = "+ this.tabla_OPC.getValueAt(i, 0).toString();
                                 op=this.dbc.seleccionar(query);
                                 for (int j = 0; j < op.size(); j++) {
 
-                                    query="select * from inventario where idproducto = "+op.get(j)[2] +" and cantidadactual > 0 and fechacaducidad >= '"+this.fechadividir(txtfechaopc, 2)+"'";
+                                    query="select * from inventario where idproducto = "+op.get(j)[2] +" and cantidadactual > 0 and fechacaducidad >= '"+this.fechadividir(formatter.format(this.jDfechaopc.getDate()), 2)+"'";
                                     op1=this.dbc.seleccionar(query);
                                     double cantidad2=cantidad * Double.parseDouble(op.get(j)[3]);
                                     for (int k = 0; k < op1.size(); k++) {
@@ -1310,17 +1240,112 @@ public class Movimientos extends javax.swing.JFrame {
                            }
 
                             }
-                            this.btnAgregarpro1.setEnabled(false);
-                            this.btnquitarpro1.setEnabled(false);
-                            this.btnaceptaropp1.setEnabled(false);
+                            this.btnAgregarproOPC.setEnabled(false);
+                            this.btnquitarproOPC.setEnabled(false);
+                            this.btnaceptarOPC.setEnabled(false);
 
                             this.txtidclienteopc.setText("");
-                            this.txtfechaopc.setText("");
-                            this.txtnombrecliente.setText("");
+                            
+                            this.txtnombreclienteOPC.setText("");
                             this.txtidopc.setText("");
 
-                            this.tabla4.setRowCount(0);
+                            this.tabla_OPC.setRowCount(0);
                             combo();
+                        }
+                        else{
+                            //Pre Orden para que Ale sepa que materias utilizar
+                            if (seleccion==1) {
+                                List <Inventario> ingre = new ArrayList<>();
+                                
+                                for (int i = 0; i < this.tabla_OPC.getRowCount(); i++) {                          
+                                //inventario e ingredientes
+                                double cantidad=Double.parseDouble(this.tabla_OPC.getValueAt(i, 4).toString());
+                                ArrayList <String[]> op1 = new ArrayList<>();
+                                query="select * from ingredientes where idproductofinal = "+ this.tabla_OPC.getValueAt(i, 0).toString();
+                                op=this.dbc.seleccionar(query);
+                                for (int j = 0; j < op.size(); j++) {
+                                    query="select inventario.id,productos.nombre,lote,umedida.nombre,productos.clave,inventario.cantidadactual from inventario \n" +
+                                    " join productos on productos.id=inventario.idproducto join umedida on umedida.id=productos.idmedida where idproducto = "+op.get(j)[2] +" and cantidadactual > 0";
+                                    op1=this.dbc.seleccionar(query);
+                                    double cantidad2=cantidad * Double.parseDouble(op.get(j)[3]);
+                                    
+                                    for (int k = 0; k < op1.size(); k++) {
+                                        if (cantidad2 != 0) {
+                                            double aux =Double.parseDouble(op1.get(k)[5]) - cantidad2;
+                                            
+                                            if (aux >= 0) {
+                                                //USO de INVENTARIO como auxilri
+                                                Inventario ingrediente = new Inventario();
+                                                ingrediente.setId(Integer.parseInt(op1.get(k)[0]));
+                                                //nombre
+                                                ingrediente.setFecha_entrada(op1.get(k)[1]);
+                                                ingrediente.setLote(op1.get(k)[2]);
+                                                ingrediente.setCantidad(cantidad2);
+                                                //umedida
+                                                ingrediente.setFactura(op1.get(k)[3]);
+                                                //clave
+                                                ingrediente.setFecha_caducidad(op1.get(k)[4]);
+                                                
+                                                ingre.add(ingrediente);
+                                                
+                                                cantidad2=0;
+                                            }
+                                            else
+                                            {  
+                                                //USO de INVENTARIO como auxilri
+                                                Inventario ingrediente = new Inventario();
+                                                ingrediente.setId(Integer.parseInt(op1.get(k)[0]));
+                                                //nombre
+                                                ingrediente.setFecha_entrada(op1.get(k)[1]);
+                                                ingrediente.setLote(op1.get(k)[2]);
+                                                ingrediente.setCantidad(Double.parseDouble(op1.get(k)[5]));
+                                                //umedida
+                                                ingrediente.setFactura(op1.get(k)[3]);
+                                                //clave
+                                                ingrediente.setFecha_caducidad(op1.get(k)[4]);
+                                                
+                                                ingre.add(ingrediente);
+
+                                                cantidad2=cantidad2-Double.parseDouble(op1.get(k)[5]);
+                                                
+                                            }
+
+                                        }
+
+                                    }
+
+                                    op1.clear();
+
+                                }
+                                
+                                //Reporte Pre Orden   
+                                JRBeanCollectionDataSource ingres = new JRBeanCollectionDataSource(ingre);
+                                
+                                Map<String, Object> parametros = new HashMap<>();
+                                
+                                parametros.put("Clave", this.tabla_OPC.getValueAt(i, 1).toString());
+                                parametros.put("Nombre", this.tabla_OPC.getValueAt(i, 2).toString());
+                                parametros.put("Cantidad", this.tabla_OPC.getValueAt(i, 4).toString());
+                                parametros.put("Data", ingres);
+                                //reporte 
+                                    JasperReport reporte; //Creo el objeto reporte
+                                    // Ubicacion del Reporte
+                                    String path = s+"\\Reportes\\PREODP.jasper";
+                                try {
+
+                                    reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
+                                    JasperPrint jprint = JasperFillManager.fillReport(path, parametros, new JREmptyDataSource()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+                                    JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
+                                    viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
+                                    viewer.setVisible(true); //Inicializamos la vista del Reporte
+
+                                } catch (Exception ex) {
+                                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            
+                            
+                          }
                         }
 
                     }
@@ -1348,16 +1373,16 @@ public class Movimientos extends javax.swing.JFrame {
             } catch (SQLException ex1) {
                 Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-           this.cnx=this.dbc.getCnx();
+           this.con=this.dbc.getCnx();
            
         }
-    }//GEN-LAST:event_btnaceptaropp1ActionPerformed
+    }//GEN-LAST:event_btnaceptarOPCActionPerformed
 
-    private void btnquitarpro1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitarpro1ActionPerformed
+    private void btnquitarproOPCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitarproOPCActionPerformed
         try
         {
-            if (this.tabla4.getRowCount() >0 ) {
-                this.tabla4.removeRow(this.columnaopp);
+            if (this.tabla_OPC.getRowCount() >0 ) {
+                this.tabla_OPC.removeRow(this.columnaopp);
             }
 
         }
@@ -1365,12 +1390,12 @@ public class Movimientos extends javax.swing.JFrame {
         {
             System.out.println(ex.toString());
         }
-    }//GEN-LAST:event_btnquitarpro1ActionPerformed
+    }//GEN-LAST:event_btnquitarproOPCActionPerformed
 
-    private void btnAgregarpro1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarpro1ActionPerformed
+    private void btnAgregarproOPCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarproOPCActionPerformed
         try
         {
-            Elegir_ProductoOPP productos = new Elegir_ProductoOPP (this,2);
+            Elegir_ProductoOPP productos = new Elegir_ProductoOPP (this,2,this.con);
             this.setEnabled(false);
             productos.setVisible(true);
 
@@ -1379,7 +1404,7 @@ public class Movimientos extends javax.swing.JFrame {
         {
             System.out.println(ex.toString());
         }
-    }//GEN-LAST:event_btnAgregarpro1ActionPerformed
+    }//GEN-LAST:event_btnAgregarproOPCActionPerformed
 
     private void tbopcMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbopcMouseClicked
         try
@@ -1392,116 +1417,168 @@ public class Movimientos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tbopcMouseClicked
 
-    private void btnElegir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegir1ActionPerformed
+    private void btnElegirClienteOPCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegirClienteOPCActionPerformed
         try {
-            Elegir_Proveedor pro = new Elegir_Proveedor(this,2);
+            Elegir_ProveedorOPP pro = new Elegir_ProveedorOPP(this,2,this.con);
             pro.setVisible(true);
             this.setEnabled(false);
 
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnElegir1ActionPerformed
+    }//GEN-LAST:event_btnElegirClienteOPCActionPerformed
+    
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="OCompra">
 
-    private void cboppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboppActionPerformed
+    private boolean valida_vacio_compra()
+    {
+        boolean valida=true;
+        if (this.txtlotecompra.getText().isEmpty()) {
+            valida = false;
+            this.txtlotecompra.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (this.txtfactnoCOM.getText().isEmpty()) {
+            valida = false;
+            this.txtfactnoCOM.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (this.txtcantidadcompraCOM.getText().isEmpty()) {
+            valida = false;
+            this.txtcantidadcompraCOM.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (this.txtcapacidadcompraCOM.getText().isEmpty()) {
+            valida = false;
+            this.txtcapacidadcompraCOM.setBackground(Color.decode("#FFCCCC"));
+        }
+     
+        return valida;
+    }
+    
+    private boolean valida_formato_compra()
+    {
+        boolean valida=true;
+        if (!this.txtcantidadcompraCOM.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+            valida = false;
+            this.txtcantidadcompraCOM.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (!this.txtcapacidadcompraCOM.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+            valida = false;
+            this.txtcapacidadcompraCOM.setBackground(Color.decode("#FFCCCC"));
+        }
+        return valida;
+    }
+    
+    //compra
+    private void cboppCOMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboppCOMActionPerformed
         try{
-            this.cbproductosc.removeAllItems();
-            String[] id = this.cbopp.getSelectedItem().toString().split(" ");
-            String query ="select pedidos_opp.idpro, productos.nombre, productos.clave, pedidos_opp.cantidad, pedidos_opp.punitario from pedidos_opp\n" +
-            " join productos on productos.id = pedidos_opp.idpro where pedidos_opp.idopp = "+ id[0];
-            ArrayList <String[]> op = new ArrayList<>();
-            op=this.dbc.seleccionar(query);
-            this.tabla2.setRowCount(0);
-
+            this.cbproductosCOM.removeAllItems();
+            String[] id = this.cboppCOM.getSelectedItem().toString().split(" ");
+            OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB(this.con);
+            List <Producto> op = db.select_detopp(id[0]);
+            this.tabla_Compra1.setRowCount(0);
             for (int i = 0; i < op.size(); i++) {
-                this.tabla2.addRow(op.get(i));
-                this.cbproductosc.addItem(op.get(i)[1]);
+                Object[] obj = new Object[5];
+                obj[0]=op.get(i).getId();
+                obj[1]=op.get(i).getNombre();
+                obj[2]=op.get(i).getClave();
+                obj[3]=op.get(i).getPeso();
+                obj[4]=op.get(i).getPventa();
+                
+                this.tabla_Compra1.addRow(obj);
+                this.cbproductosCOM.addItem(op.get(i).getNombre());
 
             }
-            this.idmoneda2=Integer.parseInt(this.dbc.seleccionarid("select idmoneda from opproveedores where id = "+id[0]));
-            op.clear();
-            query="select proveedores.id  ,  proveedores.nombre , opproveedores.fecha from opproveedores\n" +
-            " join proveedores on proveedores.id = opproveedores.idpro where opproveedores.id =" + id[0];
-            op=this.dbc.seleccionar(query);
-            this.txtidproveedor1.setText(op.get(0)[0]);
-            this.txtnombreproveedor1.setText(op.get(0)[1]);
-
-            this.txtfecha1.setText(op.get(0)[2]);
-            this.txtfecha1.setText(this.fechadividir(txtfecha1, 0));
-
-            LocalDateTime ahora = LocalDateTime.now();
-            this.txtfechaentrada.setText(ahora.getDayOfMonth()+"/"+ ahora.getMonthValue() +"/" + ahora.getYear());
             
-            this.txtfecha1.setEnabled(true);
-            this.txtfechaentrada.setEnabled(true);
+            this.idmoneda2=db.select_idmoneda_opp(id[0]);
+
+            Proveedores  pro = db.select_provedor(id[0]);
+            
+            this.txtidproveedorCOM.setText(pro.getId()+"");
+            this.txtnombreproveedorCOM.setText(pro.getNombre());
+            this.txtfechapedidocompra.setText(pro.getCalle());
+            this.txtfechapedidocompra.setText(this.fechadividir(txtfechapedidocompra, 0));
+            
+            
+            Date date = new Date();
+            this.jdfecha_entradacompra.setDateFormatString("dd/MM/yyyy");
+            this.jdfecha_entradacompra.setDate(date);
+
+            this.txtfechapedidocompra.setEnabled(true);
+            this.jdfecha_entradacompra.setEnabled(true);
 
             this.txtlotecompra.setEnabled(true);
-            this.txtfactno.setEnabled(true);
-            
-            this.txtfechaentrada.setEnabled(true);
+            this.txtfactnoCOM.setEnabled(true);
 
-            this.cbproductosc.setEnabled(true);
-            this.txtcantidadcompra.setEnabled(true);
-            this.txtcapacidadcompra.setEnabled(true);
+            this.cbproductosCOM.setEnabled(true);
+            this.txtcantidadcompraCOM.setEnabled(true);
+            this.txtcapacidadcompraCOM.setEnabled(true);
             
-            this.txtcaducidad.setEnabled(true);
+            this.jdfecha_caducidadcompra.setEnabled(true);
 
-            this.btnAgregarproc.setEnabled(true);
+            this.btnAgregarproCOM.setEnabled(true);
 
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
-
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        } 
 
-    }//GEN-LAST:event_cboppActionPerformed
-
-    private void tbproductosopp2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbproductosopp2MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tbproductosopp2MouseClicked
-
-    private void btnaceptarcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarcActionPerformed
+    }//GEN-LAST:event_cboppCOMActionPerformed
+    
+    //compra
+    private void btnaceptarCOMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarCOMActionPerformed
         try{
             boolean escero=true; 
             
             String noentrada="";
             
-            for (int i = 0; i < this.tabla2.getRowCount(); i++) {
-                double total=Double.parseDouble(this.tabla2.getValueAt(i, 3).toString());
+            for (int i = 0; i < this.tabla_Compra1.getRowCount(); i++) {
+                double total=Double.parseDouble(this.tabla_Compra1.getValueAt(i, 3).toString());
                 if (total != 0 ) {
                     escero=false;
                 }
             }
 
-            if (escero && this.txtfecha1.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$") && this.txtfechaentrada.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$")) {
+            if (escero && this.txtfechapedidocompra.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$")) {
                 String  query ="Insert into inventario(idproducto,fechaentrada,cantidadactual,lote,idopp,facturano,cantidad,costo,fechacaducidad,idmoneda) values (?,?,?,?,?,?,?,?,?,?)";
-                for (int i = 0; i < this.tabla3.getRowCount(); i++) {
+                for (int i = 0; i < this.tabla_Compra2.getRowCount(); i++) {
                     PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
-                    ps.setInt(1, Integer.parseInt(this.tabla3.getValueAt(i, 0).toString()));
+                    ps.setInt(1, Integer.parseInt(this.tabla_Compra2.getValueAt(i, 0).toString()));
 
-                    ps.setString(2, fechadividir(this.txtfechaentrada,2));
-                    ps.setDouble(3, Double.parseDouble(this.tabla3.getValueAt(i, 2).toString()));
-                    ps.setString(4, this.tabla3.getValueAt(i, 3).toString());
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    
+                    ps.setString(2, fechadividir(formatter.format(this.jdfecha_entradacompra.getDate()),2));
+                    ps.setDouble(3, Double.parseDouble(this.tabla_Compra2.getValueAt(i, 2).toString()));
+                    ps.setString(4, this.tabla_Compra2.getValueAt(i, 3).toString());
 
-                    String[] id = this.cbopp.getSelectedItem().toString().split(" ");
+                    String[] id = this.cboppCOM.getSelectedItem().toString().split(" ");
                     ps.setInt(5, Integer.parseInt(id[0]));
-                    ps.setString(6, this.txtfactno.getText());
-                    ps.setDouble(7, Double.parseDouble(this.tabla3.getValueAt(i, 2).toString()));
-                    ps.setDouble(8, Double.parseDouble(this.tabla3.getValueAt(i, 4).toString()));
-                    ps.setString(9, fechadividir(this.tabla3.getValueAt(i, 5).toString(),2));
+                    ps.setString(6, this.txtfactnoCOM.getText());
+                    ps.setDouble(7, Double.parseDouble(this.tabla_Compra2.getValueAt(i, 2).toString()));
+                    ps.setDouble(8, Double.parseDouble(this.tabla_Compra2.getValueAt(i, 4).toString()));
+                    ps.setString(9, fechadividir(this.tabla_Compra2.getValueAt(i, 5).toString(),2));
                     //dinero
                     ps.setInt(10,this.idmoneda2);
                     ps.executeUpdate();
                     ps.close();
                     
-                    noentrada+="El producto "+this.tabla3.getValueAt(i, 1).toString()+ " tiene el numero de entrada "+this.dbc.seleccionarid("select max(id) from inventario")+"\n";
+                    noentrada+="El producto "+this.tabla_Compra2.getValueAt(i, 1).toString()+ " tiene el numero de entrada "+this.dbc.seleccionarid("select max(id) from inventario")+"\n";
                     
 
                     //quitar datos habilitar y deshabilitar
                 }
                 
                 JOptionPane.showMessageDialog(null, "No entrada: \n\n"+noentrada);
-                String[] id = this.cbopp.getSelectedItem().toString().split(" ");
+                String[] id = this.cboppCOM.getSelectedItem().toString().split(" ");
                 query="update opproveedores set idestatus = 2 where id = "+id[0];
                 PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
                 ps.executeUpdate();
@@ -1509,30 +1586,30 @@ public class Movimientos extends javax.swing.JFrame {
 
                 //limpiar
                 this.txtlotecompra.setText("");
-                this.txtfactno.setText("");
-                this.txtcantidadcompra.setText("");
-                this.txtcapacidadcompra.setText("");
-                this.txtfechaentrada.setText("");
-                this.txtfecha1.setText("");
-                this.txtidproveedor1.setText("");
-                this.txtnombreproveedor1.setText("");
-                this.cbproductosc.removeAllItems();
-                this.tabla2.setRowCount(0);
-                this.tabla3.setRowCount(0);
+                this.txtfactnoCOM.setText("");
+                this.txtcantidadcompraCOM.setText("");
+                this.txtcapacidadcompraCOM.setText("");
+                
+                this.txtfechapedidocompra.setText("");
+                this.txtidproveedorCOM.setText("");
+                this.txtnombreproveedorCOM.setText("");
+                this.cbproductosCOM.removeAllItems();
+                this.tabla_Compra1.setRowCount(0);
+                this.tabla_Compra2.setRowCount(0);
                 
                 //deshabilitar
-                this.txtfecha1.setEnabled(false);
+                this.txtfechapedidocompra.setEnabled(false);
                 this.txtlotecompra.setEnabled(false);
-                this.txtfactno.setEnabled(false);
-                this.txtcantidadcompra.setEnabled(false);
-                this.txtcapacidadcompra.setEnabled(false);
-                this.txtfechaentrada.setEnabled(false);
-                this.txtcaducidad.setEnabled(false);
-                this.btnAgregarproc.setEnabled(false);
-                this.btnquitarproc.setEnabled(false);
-                this.btnaceptarc.setEnabled(false);
-                this.tabla2.setRowCount(0);
-                this.tabla3.setRowCount(0);
+                this.txtfactnoCOM.setEnabled(false);
+                this.txtcantidadcompraCOM.setEnabled(false);
+                this.txtcapacidadcompraCOM.setEnabled(false);
+                this.jdfecha_entradacompra.setEnabled(false);
+                this.jdfecha_caducidadcompra.setEnabled(false);
+                this.btnAgregarproCOM.setEnabled(false);
+                this.btnquitarproCOM.setEnabled(false);
+                this.btnaceptarCOM.setEnabled(false);
+                this.tabla_Compra1.setRowCount(0);
+                this.tabla_Compra2.setRowCount(0);
                 
                         
                         
@@ -1552,57 +1629,56 @@ public class Movimientos extends javax.swing.JFrame {
             } catch (SQLException ex1) {
                 Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-           this.cnx=this.dbc.getCnx();
+           this.con=this.dbc.getCnx();
            
         }
-    }//GEN-LAST:event_btnaceptarcActionPerformed
-
-    private void btnquitarprocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitarprocActionPerformed
-        int fila = this.tbproductosopp2.getSelectedRow();
+    }//GEN-LAST:event_btnaceptarCOMActionPerformed
+   
+    //compra
+    private void btnquitarproCOMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitarproCOMActionPerformed
+        int fila = this.tbproductosCOM2.getSelectedRow();
         if (fila >= 0) {
-            String nombre = this.tabla3.getValueAt(fila, 1).toString();
-            double cantidad =Double.parseDouble(this.tabla3.getValueAt(fila, 2).toString());
+            String nombre = this.tabla_Compra2.getValueAt(fila, 1).toString();
+            double cantidad =Double.parseDouble(this.tabla_Compra2.getValueAt(fila, 2).toString());
 
-            for (int i = 0; i < this.tabla2.getRowCount(); i++) {
-                if(this.tabla2.getValueAt(i, 1).toString().compareTo(nombre)== 0)
+            for (int i = 0; i < this.tabla_Compra1.getRowCount(); i++) {
+                if(this.tabla_Compra1.getValueAt(i, 1).toString().compareTo(nombre)== 0)
                 {
-                    double c= Double.parseDouble(this.tabla2.getValueAt(i, 3).toString())+cantidad;
-                    this.tabla2.setValueAt(c, i, 3);
+                    double c= Double.parseDouble(this.tabla_Compra1.getValueAt(i, 3).toString())+cantidad;
+                    this.tabla_Compra1.setValueAt(c, i, 3);
                 }
             }
 
-            this.tabla3.removeRow(fila);
+            this.tabla_Compra2.removeRow(fila);
         }
 
-    }//GEN-LAST:event_btnquitarprocActionPerformed
+    }//GEN-LAST:event_btnquitarproCOMActionPerformed
 
-    private void btnAgregarprocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarprocActionPerformed
+    //compra
+    private void btnAgregarproCOMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarproCOMActionPerformed
 
-        if (this.txtlotecompra.getText().isEmpty() || this.txtfactno.getText().isEmpty() || this.txtcantidadcompra.getText().isEmpty()
-            || this.txtcapacidadcompra.getText().isEmpty() || this.txtcaducidad.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-        }
-        else
-        {
-            if (this.txtcantidadcompra.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtcapacidadcompra.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtcaducidad.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$"))  {
+        if (valida_vacio_compra()) {
+            
+            if (valida_formato_compra())  {
                 double cantidadtotal=0;
                 double punitario=0;
                 int idproducto=0;
                 int index=0;
-                int cantidad = Integer.parseInt(this.txtcantidadcompra.getText());
-                double capacidad = Double.parseDouble(this.txtcapacidadcompra.getText());
-                String producto = this.cbproductosc.getSelectedItem().toString();
-                for (int i = 0; i < this.tabla2.getRowCount(); i++) {
-                    if(this.tabla2.getValueAt(i, 1).toString().compareTo(producto)== 0)
+                int cantidad = Integer.parseInt(this.txtcantidadcompraCOM.getText());
+                double capacidad = Double.parseDouble(this.txtcapacidadcompraCOM.getText());
+                String producto = this.cbproductosCOM.getSelectedItem().toString();
+                for (int i = 0; i < this.tabla_Compra1.getRowCount(); i++) {
+                    if(this.tabla_Compra1.getValueAt(i, 1).toString().compareTo(producto)== 0)
                     {
-                        idproducto=Integer.parseInt(this.tabla2.getValueAt(i, 0).toString());
-                        cantidadtotal=Double.parseDouble(this.tabla2.getValueAt(i, 3).toString());
-                        punitario=Double.parseDouble(this.tabla2.getValueAt(i, 4).toString());
+                        idproducto=Integer.parseInt(this.tabla_Compra1.getValueAt(i, 0).toString());
+                        cantidadtotal=Double.parseDouble(this.tabla_Compra1.getValueAt(i, 3).toString());
+                        punitario=Double.parseDouble(this.tabla_Compra1.getValueAt(i, 4).toString());
                         index=i;
 
                     }
                 }
 
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                 if (cantidadtotal >=  cantidad*capacidad ) {
                     for (int i = 0; i < cantidad; i++) {
                         String[] c = new    String[6];
@@ -1611,72 +1687,145 @@ public class Movimientos extends javax.swing.JFrame {
                         c[2]=capacidad+"";
                         c[3]=this.txtlotecompra.getText();
                         c[4]= (punitario * capacidad) +"";
-                        c[5]= this.txtcaducidad.getText();
-                        this.tabla3.addRow(c);
+                        c[5]= formatter.format(this.jdfecha_caducidadcompra.getDate());
+                        this.tabla_Compra2.addRow(c);
                     }
-                    this.tabla2.setValueAt(cantidadtotal -  cantidad*capacidad, index, 3);
+                    this.tabla_Compra1.setValueAt(cantidadtotal -  cantidad*capacidad, index, 3);
                 }
 
-                this.btnaceptarc.setEnabled(true);
-                this.btnquitarproc.setEnabled(true);
+                this.btnaceptarCOM.setEnabled(true);
+                this.btnquitarproCOM.setEnabled(true);
             }
             else
             {
                 JOptionPane.showMessageDialog(null, "Formato Incorrecto");
             }
         }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+        }
 
-    }//GEN-LAST:event_btnAgregarprocActionPerformed
+    }//GEN-LAST:event_btnAgregarproCOMActionPerformed
 
+
+//</editor-fold>
     
-    //ODP
+    //<editor-fold defaultstate="collapsed" desc="OPProveedores">
+    
+    public void colocarproveedor(Proveedores pr) 
+    {   
+        try{
+            this.txtidproveedorOPP.setText(pr.getId() + "");
+            this.txtnombreproveedorOPP.setText(pr.getNombre());
+            this.jdfechaopp.setDateFormatString("dd/MM/yyyy");
+            Date date =new Date();
+            this.jdfechaopp.setDate(date);
+            this.jdfechaopp.setEnabled(true);
+
+            OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB(this.con);
+            int maxid= db.select_max();
+            if(maxid == 0){
+               maxid=1;
+            }
+            this.txtidOPP.setText(maxid + "");
+
+            this.btnAgregarproOPP.setEnabled(true);
+            this.btnquitarproOPP.setEnabled(true);
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        }   
+    }
+    
+    public void colocarproducto(Producto pro)
+    {
+        
+        String[] s = new String[10]; 
+        s[1]=pro.getClave();
+        s[0]=pro.getId()+"";
+        s[2]=pro.getNombre();
+        s[3]=pro.getMedida();
+        s[4]=pro.getStockmin()+"";
+        s[5]=pro.getMoneda();
+        s[6]=pro.getPventa()+"";      
+        s[7]=(Math.round( (pro.getPventa()*pro.getStockmin())* 100.0 ) / 100.0)+"";
+        if (pro.getIva()==1) {
+            s[8]=(Math.round( (pro.getPventa()*pro.getStockmin()*0.16)* 100.0 ) / 100.0)+"";
+        }
+        else
+        {
+            s[8]="0";
+        }
+        s[9]=(Math.round( (Double.parseDouble(s[7])+Double.parseDouble(s[8]))* 100.0 ) / 100.0)+"";
+        
+        boolean x=true;
+        for (int i = 0; i < this.tabla_OPP.getRowCount(); i++) {
+            int id = Integer.parseInt(this.tabla_OPP.getValueAt(i, 0).toString());
+            if (id == Integer.parseInt(s[0])) {
+                x=false;
+            }            
+        }
+        if (x) {
+            this.tabla_OPP.addRow(s);   
+            this.btnquitarproOPP.setEnabled(true);
+            this.btnaceptaropp.setEnabled(true);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "El producto ya esta seleccionado");
+        }
+
+    }
+    
     private void btnaceptaroppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptaroppActionPerformed
         try{
             
-            if (this.txtfecha.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$") && this.tbproductosopp.getRowCount() > 0) {
-                
+            if (this.tbproductosopp.getRowCount() > 0) {
+                OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB(this.con);
+                OrdenPedido_Provedores opp = new OrdenPedido_Provedores();
                 String respuesta = JOptionPane.showInputDialog(this, "Observaciones");
-                String query="Insert into opproveedores(idpro,idmoneda,subtotal,iva,ptotal,idestatus,fecha,idcpago,observaciones) values (?,?,?,?,?,?,?,?,?)";
-                PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                
                 double subtotal=0;
                 double iva=0;
                 double total=0;
-                for (int i = 0; i < this.tabla.getRowCount(); i++) {
-                    subtotal+=Double.parseDouble(this.tabla.getValueAt(i, 7).toString());
-                    iva+=Double.parseDouble(this.tabla.getValueAt(i, 8).toString());
-                    total+=Double.parseDouble(this.tabla.getValueAt(i, 9).toString());
+                for (int i = 0; i < this.tabla_OPP.getRowCount(); i++) {
+                    Producto pro = new Producto();
+                    pro.setId(Integer.parseInt(this.tabla_OPP.getValueAt(i, 0).toString()));
+                    pro.setPventa(Double.parseDouble(this.tabla_OPP.getValueAt(i, 6).toString()));
+                    //PESO -> TOTAL
+                    pro.setPeso(Double.parseDouble(this.tabla_OPP.getValueAt(i, 7).toString()));
+                    //STOCK -> CANTIDAD
+                    pro.setStockmin(Double.parseDouble(this.tabla_OPP.getValueAt(i, 4).toString()));
+                    opp.getProductos().add(pro);
+                    
+                    subtotal+=Double.parseDouble(this.tabla_OPP.getValueAt(i, 7).toString());
+                    iva+=Double.parseDouble(this.tabla_OPP.getValueAt(i, 8).toString());
+                    total+=Double.parseDouble(this.tabla_OPP.getValueAt(i, 9).toString());
                 }
-                ps.setInt(1, Integer.parseInt(this.txtidproveedor.getText()) );
-                ps.setInt(2, this.idmoneda);
-                ps.setDouble(3, Math.round( subtotal * 100.0 ) / 100.0);
-                ps.setDouble(4, Math.round( (iva) * 100.0 ) / 100.0);
-                ps.setDouble(5, Math.round( (total) * 100.0 ) / 100.0);
-                ps.setInt(6, 1);
+ 
+                opp.setIdproveedor(Integer.parseInt(this.txtidproveedorOPP.getText()));
+                opp.setIdmoneda(idmoneda);
+                opp.setSubtotal(Math.round( subtotal * 100.0 ) / 100.0);
+                opp.setIva(Math.round( iva * 100.0 ) / 100.0);
+                opp.setPtotal(Math.round( total * 100.0 ) / 100.0);
+                opp.setIdestatus(1);
+                opp.setFecha(fechadividir(formatter.format(this.jdfechaopp.getDate()),1));
+                opp.setIdcpago(this.cbcondicion_pagoOPP.getSelectedIndex()+1);
+                opp.setObservaciones(respuesta);
+                
+                db.insert_opp(opp);
 
-                ps.setString(7, fechadividir(this.txtfecha,1));
-                ps.setInt(8, this.cbcondicion_pago.getSelectedIndex()+1);
-                ps.setString(9, respuesta);
-                ps.executeUpdate();
-                ps.close();
-
-                query = "select MAX(id) from opproveedores";
-
-                int index = Integer.parseInt(this.dbc.seleccionarid(query) );
-
-                query ="Insert into pedidos_opp(idopp,idpro,punitario,ptotal,cantidad) values (?,?,?,?,?)";
-
-                for (int i = 0; i < this.tabla.getRowCount(); i++) {
-
-                    ps= this.dbc.getCnx().prepareStatement(query);
-                    ps.setDouble(1, index);
-                    ps.setInt(2, Integer.parseInt(this.tabla.getValueAt(i, 0).toString()));
-                    ps.setDouble(3, Double.parseDouble(this.tabla.getValueAt(i, 6).toString()));
-                    ps.setDouble(4, Double.parseDouble(this.tabla.getValueAt(i, 7).toString()));
-                    ps.setDouble(5, Double.parseDouble(this.tabla.getValueAt(i, 4).toString()));
-
-                    ps.executeUpdate();
-                    ps.close();
-                }
                 //cantidad en letra
                 String cantidad= (Math.round( (total) * 100.0 ) / 100.0)+"";
                 System.out.println(cantidad);
@@ -1693,6 +1842,7 @@ public class Movimientos extends javax.swing.JFrame {
                 }
                 num_text+=" "+divi[1]+"/100 "+moneda;
                 
+                int id=db.select_max();
                 
                 JasperReport reporte; //Creo el objeto reporte
                 // Ubicacion del Reporte
@@ -1700,11 +1850,11 @@ public class Movimientos extends javax.swing.JFrame {
                 try {
 
                    reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
-                   Map opp = new HashMap();
-                   opp.put("id", index);
-                   opp.put("letra", num_text);
-                   JasperPrint jprint = JasperFillManager.fillReport(path, opp, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
-                   JasperExportManager.exportReportToPdfFile(jprint, s+"\\ODC\\ODC-"+index+".pdf");
+                   Map para = new HashMap();
+                   para.put("id", id);
+                   para.put("letra", num_text.toUpperCase());
+                   JasperPrint jprint = JasperFillManager.fillReport(path, para, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+                   JasperExportManager.exportReportToPdfFile(jprint, s+"\\ODC\\ODC-"+id+".pdf");
                    JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
                    viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
                    viewer.setVisible(true); //Inicializamos la vista del Reporte
@@ -1724,7 +1874,7 @@ public class Movimientos extends javax.swing.JFrame {
                     BodyPart texto = new MimeBodyPart();
                     texto.setText("Mando orden de compra,favor de confirmar fecha indicada de entrega ");
                     BodyPart adjunto = new MimeBodyPart();
-                    adjunto.setDataHandler(new DataHandler(new FileDataSource(s+"\\ODC\\ODC-"+index+".pdf")));
+                    adjunto.setDataHandler(new DataHandler(new FileDataSource(s+"\\ODC\\ODC-"+id+".pdf")));
                     adjunto.setFileName("ODC.pdf");
 
                     MimeMultipart multiParte = new MimeMultipart();
@@ -1746,15 +1896,14 @@ public class Movimientos extends javax.swing.JFrame {
                     t.close();
                 }
                 
-                this.tabla.setRowCount(0);
-                this.btnAgregarpro.setEnabled(false);
-                this.btnquitarpro.setEnabled(false);
+                this.tabla_OPP.setRowCount(0);
+                this.btnAgregarproOPP.setEnabled(false);
+                this.btnquitarproOPP.setEnabled(false);
                 this.btnaceptaropp.setEnabled(false);
 
-                this.txtidordenproveedores.setText("");
-                this.txtfecha.setText("");
-                this.txtnombreproveedor.setText("");
-                this.txtidproveedor.setText("");
+                this.txtidOPP.setText("");
+                this.txtnombreproveedorOPP.setText("");
+                this.txtidproveedorOPP.setText("");
 
                 this.preciosopp.clear();
                 this.combo();
@@ -1765,29 +1914,31 @@ public class Movimientos extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Error en la fecha");
             }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
-            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez"+ex);
-            try {
-                this.dbc = new DBcontrolador ();
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
             } catch (SQLException ex1) {
-                Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-           this.cnx=this.dbc.getCnx();
-           
         }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        } 
     }//GEN-LAST:event_btnaceptaroppActionPerformed
 
-    private void btnquitarproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitarproActionPerformed
+    private void btnquitarproOPPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitarproOPPActionPerformed
         try
         {
+            int col=this.tbproductosopp.getSelectedRow();
             if (this.tbproductosopp.getRowCount() != 0) {
-                this.tabla.removeRow(this.columnaopp);
+                this.tabla_OPP.removeRow(col);
             }
             else
             {
                 this.btnaceptaropp.setEnabled(false);
-                this.btnquitarpro.setEnabled(false);
+                this.btnquitarproOPP.setEnabled(false);
             }
 
         }
@@ -1796,13 +1947,12 @@ public class Movimientos extends javax.swing.JFrame {
             
         }
 
-    }//GEN-LAST:event_btnquitarproActionPerformed
+    }//GEN-LAST:event_btnquitarproOPPActionPerformed
 
-    private void btnAgregarproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarproActionPerformed
+    private void btnAgregarproOPPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarproOPPActionPerformed
         try
         {
-
-            Elegir_ProductoOPP productos = new Elegir_ProductoOPP (this,1);
+            Elegir_ProductoOPP productos = new Elegir_ProductoOPP (this,1,this.con);
             this.setEnabled(false);
             productos.setVisible(true);
         }
@@ -1810,33 +1960,23 @@ public class Movimientos extends javax.swing.JFrame {
         {
             JOptionPane.showMessageDialog(null, "Error :"+ ex);
         }
-    }//GEN-LAST:event_btnAgregarproActionPerformed
+    }//GEN-LAST:event_btnAgregarproOPPActionPerformed
 
-    private void tbproductosoppMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbproductosoppMouseClicked
-        try
-        {
-            this.columnaopp=this.tbproductosopp.getSelectedRow();
-        }
-        catch(Exception ex)
-        {
-
-        }
-    }//GEN-LAST:event_tbproductosoppMouseClicked
-
-    private void btnElegirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegirActionPerformed
+    private void btnElegir_proveedorOPPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegir_proveedorOPPActionPerformed
         try {
-            Elegir_Proveedor pro = new Elegir_Proveedor(this,1);
+            Elegir_ProveedorOPP pro = new Elegir_ProveedorOPP(this,1,this.con);
             pro.setVisible(true);
             this.setEnabled(false);
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error :"+ ex);
         }
-    }//GEN-LAST:event_btnElegirActionPerformed
+    }//GEN-LAST:event_btnElegir_proveedorOPPActionPerformed
 
-    
-    //
-    private void btnaceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarActionPerformed
+    //</editor-fold>    
+
+    //LIB
+    private void btnaceptarLIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarLIBActionPerformed
         try{
             boolean se=true;
             boolean fi=true;
@@ -1929,15 +2069,15 @@ public class Movimientos extends javax.swing.JFrame {
 
             if (se) {
                 if (mi) {
-                    if (fi && this.txtfechaliberacion.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$")) {
-                        String query="update ordenes_prod set estatus = 2, observaciones = '"+this.txtcomentarios.getText()+"' where id = "+ this.cbodp.getSelectedItem().toString();
+                    if (fi) {
+                        String query="update ordenes_prod set estatus = 2, observaciones = '"+this.txtcomentariosLIB.getText()+"' where id = "+ this.cbodpLIB.getSelectedItem().toString();
                         this.dbc.operacion(query);
                         
                         query="insert into resultadosp_odp (idodp, idprueba, resultado) values (?,?,?)";
                         for (int i = 0; i < this.se.size(); i++) {
                             PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
 
-                            ps.setString(1, this.cbodp.getSelectedItem().toString());
+                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
                             ps.setString(2, this.se.get(i)[0]);
                             ps.setString(3, this.sensoriales.getValueAt(i, 1).toString());
 
@@ -1948,7 +2088,7 @@ public class Movimientos extends javax.swing.JFrame {
                         for (int i = 0; i < this.mi.size(); i++) {
                             PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
 
-                            ps.setString(1, this.cbodp.getSelectedItem().toString());
+                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
                             ps.setString(2, this.mi.get(i)[0]);
                             ps.setString(3, this.micro.getValueAt(i, 1).toString());
 
@@ -1959,29 +2099,29 @@ public class Movimientos extends javax.swing.JFrame {
                         for (int i = 0; i < this.fi.size(); i++) {
                             PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
 
-                            ps.setString(1, this.cbodp.getSelectedItem().toString());
+                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
                             ps.setString(2, this.fi.get(i)[0]);
                             ps.setString(3, this.fisico.getValueAt(i, 1).toString());
 
                             ps.executeUpdate();
                             ps.close();
                         }
-                        
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                         //insertar pt en inventario
                         query="insert into inventario(idproducto, fechaentrada, cantidadactual,lote, idopp,facturano, cantidad,costo,fechacaducidad) values (?,?,?,?,?,?,?,?,?)";
                         PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
                         ps.setString(1, this.txtproductoidliberacion.getText());
-                        ps.setString(2, this.fechadividir(this.txtfechaliberacion.getText(), 1) );
-                        String q2 =this.dbc.seleccionarid("select cantidad from ordenes_prod where id = "+this.cbodp.getSelectedItem().toString());
+                        ps.setString(2, this.fechadividir(formatter.format(this.jdfechaLIB.getDate()), 1) );
+                        String q2 =this.dbc.seleccionarid("select cantidad from ordenes_prod where id = "+this.cbodpLIB.getSelectedItem().toString());
                         ps.setString(3, q2);
-                        ps.setString(4, this.cbodp.getSelectedItem().toString());
-                        ps.setString(5, this.cbodp.getSelectedItem().toString());
-                        ps.setString(6, this.cbodp.getSelectedItem().toString());
+                        ps.setString(4, this.cbodpLIB.getSelectedItem().toString());
+                        ps.setString(5, this.cbodpLIB.getSelectedItem().toString());
+                        ps.setString(6, this.cbodpLIB.getSelectedItem().toString());
                         ps.setString(7, q2);
-                        String q3 =this.dbc.seleccionarid("select sum(costo) from mp_odp where idodp = "+this.cbodp.getSelectedItem().toString());
+                        String q3 =this.dbc.seleccionarid("select sum(costo) from mp_odp where idodp = "+this.cbodpLIB.getSelectedItem().toString());
                         ps.setString(8, q3);
                         String q4 =this.dbc.seleccionarid("select mesescaducidad from productos where id = "+this.txtproductoidliberacion.getText());
-                        LocalDate dt =  LocalDate.parse(this.fechadividir(this.txtfechaliberacion.getText(), 1)).plusMonths(Integer.parseInt(q4));
+                        LocalDate dt =  LocalDate.parse(this.fechadividir(formatter.format(this.jdfechaLIB.getDate()), 1)).plusMonths(Integer.parseInt(q4));
                         ps.setString(9, dt.getYear()+"-"+dt.getMonthValue()+"-"+dt.getDayOfMonth());
                         ps.executeUpdate();
                         ps.close();
@@ -1990,11 +2130,11 @@ public class Movimientos extends javax.swing.JFrame {
                         this.micro.setRowCount(0);
                         this.fisico.setRowCount(0);
         
-                        this.txtcomentarios.setText("");
+                        this.txtcomentariosLIB.setText("");
                         this.txtproductoidliberacion.setText("");
                         this.txtproductoliberacion.setText("");
-                        this.txtfechaliberacion.setText("");
-                        this.btnaceptar.setEnabled(false);
+                        
+                        this.btnaceptarLIB.setEnabled(false);
                          
                         
                         
@@ -2008,7 +2148,7 @@ public class Movimientos extends javax.swing.JFrame {
                            id.put("ID_Inven", this.dbc.seleccionarid("select max(id) from inventario"));
                            JasperPrint jprint = JasperFillManager.fillReport(path, id, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
                            File d = new File(s+"\\Liberacion");
-                           File pdf = File.createTempFile("Liberacion-"+this.cbodp.getSelectedItem().toString()+"--", ".pdf",d);
+                           File pdf = File.createTempFile("Liberacion-"+this.cbodpLIB.getSelectedItem().toString()+"--", ".pdf",d);
                            JasperExportManager.exportReportToPdfStream(jprint, new FileOutputStream(pdf));
                            JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
                            viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
@@ -2048,12 +2188,37 @@ public class Movimientos extends javax.swing.JFrame {
             } catch (SQLException ex1) {
                 Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-           this.cnx=this.dbc.getCnx();
+           this.con=this.dbc.getCnx();
            
         }
         
         
-    }//GEN-LAST:event_btnaceptarActionPerformed
+    }//GEN-LAST:event_btnaceptarLIBActionPerformed
+
+    private void btncancelarCOMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelarCOMActionPerformed
+        try {
+            OrdenPedido_Provedores_DB opp = new OrdenPedido_Provedores_DB(this.con);
+            String[] id = this.cboppCOM.getSelectedItem().toString().split(" ");
+            if (JOptionPane.showConfirmDialog(null, "¿Desea Cancelar la Orden?", "Cancelacion", JOptionPane.YES_NO_OPTION)==0) {
+                opp.delete_opp(id[0]);
+                combo();
+            }
+            
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        } 
+        
+    }//GEN-LAST:event_btncancelarCOMActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2096,22 +2261,24 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JPanel LOP;
     private javax.swing.JPanel OPC;
     private javax.swing.JPanel OPP;
-    private javax.swing.JButton btnAgregarpro;
-    private javax.swing.JButton btnAgregarpro1;
-    private javax.swing.JButton btnAgregarproc;
-    private javax.swing.JButton btnElegir;
-    private javax.swing.JButton btnElegir1;
-    private javax.swing.JButton btnaceptar;
-    private javax.swing.JButton btnaceptarc;
+    private javax.swing.JButton btnAgregarproCOM;
+    private javax.swing.JButton btnAgregarproOPC;
+    private javax.swing.JButton btnAgregarproOPP;
+    private javax.swing.JButton btnElegirClienteOPC;
+    private javax.swing.JButton btnElegir_proveedorOPP;
+    private javax.swing.JButton btnaceptarCOM;
+    private javax.swing.JButton btnaceptarLIB;
+    private javax.swing.JButton btnaceptarOPC;
     private javax.swing.JButton btnaceptaropp;
-    private javax.swing.JButton btnaceptaropp1;
-    private javax.swing.JButton btnquitarpro;
-    private javax.swing.JButton btnquitarpro1;
-    private javax.swing.JButton btnquitarproc;
-    private javax.swing.JComboBox<String> cbcondicion_pago;
-    private javax.swing.JComboBox<String> cbodp;
-    private javax.swing.JComboBox<String> cbopp;
-    private javax.swing.JComboBox<String> cbproductosc;
+    private javax.swing.JButton btncancelarCOM;
+    private javax.swing.JButton btnquitarproCOM;
+    private javax.swing.JButton btnquitarproOPC;
+    private javax.swing.JButton btnquitarproOPP;
+    private javax.swing.JComboBox<String> cbcondicion_pagoOPP;
+    private javax.swing.JComboBox<String> cbodpLIB;
+    private javax.swing.JComboBox<String> cboppCOM;
+    private javax.swing.JComboBox<String> cbproductosCOM;
+    private com.toedter.calendar.JDateChooser jDfechaopc;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -2156,32 +2323,31 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private com.toedter.calendar.JDateChooser jdfechaLIB;
+    private com.toedter.calendar.JDateChooser jdfecha_caducidadcompra;
+    private com.toedter.calendar.JDateChooser jdfecha_entradacompra;
+    private com.toedter.calendar.JDateChooser jdfechaopp;
     private javax.swing.JTable tbliberacionsensoriales;
     private javax.swing.JTable tblieracionfisicoquimicas;
     private javax.swing.JTable tblieracionmicrobiologicas;
     private javax.swing.JTable tbopc;
+    private javax.swing.JTable tbproductosCOM;
+    private javax.swing.JTable tbproductosCOM2;
     private javax.swing.JTable tbproductosopp;
-    private javax.swing.JTable tbproductosopp1;
-    private javax.swing.JTable tbproductosopp2;
-    private javax.swing.JTextField txtcaducidad;
-    private javax.swing.JTextField txtcantidadcompra;
-    private javax.swing.JTextField txtcapacidadcompra;
-    private javax.swing.JTextArea txtcomentarios;
-    private javax.swing.JTextField txtfactno;
-    private javax.swing.JTextField txtfecha;
-    private javax.swing.JTextField txtfecha1;
-    private javax.swing.JTextField txtfechaentrada;
-    private javax.swing.JTextField txtfechaliberacion;
-    private javax.swing.JTextField txtfechaopc;
+    private javax.swing.JTextField txtcantidadcompraCOM;
+    private javax.swing.JTextField txtcapacidadcompraCOM;
+    private javax.swing.JTextArea txtcomentariosLIB;
+    private javax.swing.JTextField txtfactnoCOM;
+    private javax.swing.JTextField txtfechapedidocompra;
+    private javax.swing.JTextField txtidOPP;
     private javax.swing.JTextField txtidclienteopc;
     private javax.swing.JTextField txtidopc;
-    private javax.swing.JTextField txtidordenproveedores;
-    private javax.swing.JTextField txtidproveedor;
-    private javax.swing.JTextField txtidproveedor1;
+    private javax.swing.JTextField txtidproveedorCOM;
+    private javax.swing.JTextField txtidproveedorOPP;
     private javax.swing.JTextField txtlotecompra;
-    private javax.swing.JTextField txtnombrecliente;
-    private javax.swing.JTextField txtnombreproveedor;
-    private javax.swing.JTextField txtnombreproveedor1;
+    private javax.swing.JTextField txtnombreclienteOPC;
+    private javax.swing.JTextField txtnombreproveedorCOM;
+    private javax.swing.JTextField txtnombreproveedorOPP;
     private javax.swing.JTextField txtproductoidliberacion;
     private javax.swing.JTextField txtproductoliberacion;
     // End of variables declaration//GEN-END:variables

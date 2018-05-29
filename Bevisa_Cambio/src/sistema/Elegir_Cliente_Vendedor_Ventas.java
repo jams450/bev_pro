@@ -1,80 +1,84 @@
 
 package sistema;
 
-import datos.DBcontrolador;
+import datos.Ventas_DB;
 import java.awt.Dimension;
 import static java.awt.Frame.NORMAL;
 import java.awt.Toolkit;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import negocio.Clientes;
+import negocio.Vendedor;
 
 /**
  *
  * @author JAMS
  */
-public class Elegir_CV extends javax.swing.JFrame {
-    
+public class Elegir_Cliente_Vendedor_Ventas extends javax.swing.JFrame {
 
-    
     private DefaultTableModel tabla;
-    private  DBcontrolador dbc;
     private int columna;
-    
-    
+
     private Ventas mov;
     private int opc;
+    
+    private Connection con;
     /**
      * Creates new form Elegir_Producto
      */
-    public Elegir_CV(Ventas mov,int opc,DBcontrolador dbc) throws SQLException {
-        this.dbc = dbc;
+    public Elegir_Cliente_Vendedor_Ventas(Ventas mov,int opc,Connection con) throws SQLException {
+        
+        this.con=con;  
         initComponents();
+        
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         this.mov=mov;
         this.opc=opc;
+        
         creaciontabla(this.opc);
     }
     
-     public void creaciontabla(int opc)
+     public void creaciontabla(int opc) throws SQLException
     {
+        Ventas_DB db = new Ventas_DB(this.con);
         if(opc==1){
             this.tabla=(DefaultTableModel) this.tbdatos.getModel();
-
             this.tabla.setRowCount(0);
-
-            ArrayList <String[]> op = new ArrayList<>();
-
-            String query="select vendedores.id, vendedores.nombre, vendedores.telefono, vendedores.correo  from vendedores";
-            op=this.dbc.seleccionar(query);
-
-            for (int i = 0; i < op.size(); i++) {    
-
-                this.tabla.addRow(op.get(i));
-            } 
+            List<Vendedor>vendedores=db.select_vendedor();
+            for (int i = 0; i < vendedores.size(); i++) {
+                Object[] obj = new Object[4];
+                obj[0]=vendedores.get(i).getId();
+                obj[1]=vendedores.get(i).getNombre();
+                obj[2]=vendedores.get(i).getTelefono();
+                obj[3]=vendedores.get(i).getCorreo();
+                this.tabla.addRow(obj);
+            }
 
         }
         else
         {
             this.tabla=(DefaultTableModel) this.tbdatos.getModel();
-
             this.tabla.setRowCount(0);
+            
+            List<Clientes>clientes=db.select_cliente();
+            for (int i = 0; i < clientes.size(); i++) {
+                Object[] obj = new Object[6];
+                obj[0]=clientes.get(i).getId();
+                obj[1]=clientes.get(i).getNombre();
+                obj[2]=clientes.get(i).getTelefono();
+                obj[3]=clientes.get(i).getCorreo();
+                obj[4]=clientes.get(i).getNombref();
+                obj[5]=clientes.get(i).getVendedor();
 
-            ArrayList <String[]> op = new ArrayList<>();
-
-            String query="select clientes.id, clientes.nombre, clientes.telefono, clientes.correo,vendedores.id,vendedores.nombre from clientes join vendedores"
-                    + " on vendedores.id=clientes.idvendedor";
-            op=this.dbc.seleccionar(query);
-
-            for (int i = 0; i < op.size(); i++) {    
-
-                this.tabla.addRow(op.get(i));
-            } 
+                this.tabla.addRow(obj);
+            }
         }
         
     }
@@ -142,6 +146,7 @@ public class Elegir_CV extends javax.swing.JFrame {
             }
         });
         tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tbdatos.setColumnSelectionAllowed(true);
         tbdatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tbdatos.setShowHorizontalLines(false);
         tbdatos.setShowVerticalLines(false);
@@ -264,17 +269,17 @@ public class Elegir_CV extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         try{
             if(this.opc==1){
-            String[] c = new String[2];
-            c[0]=this.txtid.getText();
-            c[1]=this.txtnombre.getText();
-            this.mov.colocarvendedor(c);
+            Vendedor vende = new Vendedor();
+            vende.setId(Integer.parseInt(this.txtid.getText()));
+            vende.setNombre(this.txtnombre.getText());
+            this.mov.colocarvendedor(vende);
             }
             else
             {
-                String[] c = new String[2];
-                c[0]=this.txtid.getText();
-                c[1]=this.txtnombre.getText();
-                this.mov.colocarcliente(c);
+                Clientes clien = new Clientes();
+                clien.setId(Integer.parseInt(this.txtid.getText()));
+                clien.setNombre(this.txtnombre.getText());
+                this.mov.colocarcliente(clien);
               
             }
             this.mov.setEnabled(true);
@@ -283,7 +288,7 @@ public class Elegir_CV extends javax.swing.JFrame {
         
         } 
         catch (Exception ex) {
-                Logger.getLogger(Elegir_CV.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Elegir_Cliente_Vendedor_Ventas.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -309,14 +314,18 @@ public class Elegir_CV extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Elegir_CV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_Cliente_Vendedor_Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Elegir_CV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_Cliente_Vendedor_Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Elegir_CV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_Cliente_Vendedor_Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Elegir_CV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_Cliente_Vendedor_Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>

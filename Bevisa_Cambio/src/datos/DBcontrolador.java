@@ -45,7 +45,7 @@ public class DBcontrolador {
           }
     }
     //192.168.1.71
-    private  final  String svr="192.168.1.71";
+    private  final  String svr="localhost";
     private  final  String usr="root";
     private  final  String bd="insetelc_Bevisa";
     private  final  String pass="1234";//Clave
@@ -53,7 +53,7 @@ public class DBcontrolador {
     public DBcontrolador () throws SQLException{
         //java.sql.Connection cnx = null;
         String cnxStr="com.mysql.jdbc.Driver";
-        String url="jdbc:mysql://"+this.svr+"/"+this.bd;
+        String url="jdbc:mysql://"+this.svr+"/"+this.bd+"?useSSL=false";
         try{
             Class.forName(cnxStr);
             System.out.println("Controlador cargando...");

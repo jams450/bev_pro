@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package negocio;
 
 /**
@@ -27,7 +23,17 @@ public class Producto {
     private String moneda;
 
     public Producto() {
-       
+        this.nombre = "";
+        this.clave = "";
+        this.categoria = "1";
+        this.medida = "1";
+        this.pventa = 0.0;
+        this.stockmin = 0;
+        this.iva = 0;
+        this.proceso = "1";
+        this.meses_caducidad = 1;
+        this.peso=0.0;
+        this.moneda="1";
     }
     
     public Producto(int id, String clave,String nombre, String categoria, String medida, double pventa, double stockmin, int iva, String proceso, int meses_caducidad, double peso, String moneda) {
