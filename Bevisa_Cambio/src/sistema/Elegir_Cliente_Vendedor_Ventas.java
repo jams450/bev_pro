@@ -20,7 +20,7 @@ import negocio.Vendedor;
  *
  * @author JAMS
  */
-public class Elegir_CV extends javax.swing.JFrame {
+public class Elegir_Cliente_Vendedor_Ventas extends javax.swing.JFrame {
 
     private DefaultTableModel tabla;
     private int columna;
@@ -32,7 +32,7 @@ public class Elegir_CV extends javax.swing.JFrame {
     /**
      * Creates new form Elegir_Producto
      */
-    public Elegir_CV(Ventas mov,int opc,Connection con) throws SQLException {
+    public Elegir_Cliente_Vendedor_Ventas(Ventas mov,int opc,Connection con) throws SQLException {
         
         this.con=con;  
         initComponents();
@@ -288,7 +288,7 @@ public class Elegir_CV extends javax.swing.JFrame {
         
         } 
         catch (Exception ex) {
-                Logger.getLogger(Elegir_CV.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Elegir_Cliente_Vendedor_Ventas.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -314,14 +314,18 @@ public class Elegir_CV extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Elegir_CV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_Cliente_Vendedor_Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Elegir_CV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_Cliente_Vendedor_Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Elegir_CV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_Cliente_Vendedor_Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Elegir_CV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_Cliente_Vendedor_Ventas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>

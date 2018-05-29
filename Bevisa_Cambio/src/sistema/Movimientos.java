@@ -1,7 +1,9 @@
 
 package sistema;
 
+import datos.Conexion;
 import datos.DBcontrolador;
+import datos.OrdenPedido_Provedores_DB;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -13,7 +15,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,7 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.table.DefaultTableModel;
 import negocio.Producto;
 import funciones.n2t;
+import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -36,8 +38,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import negocio.Ingrediente;
+import negocio.Clientes;
 import negocio.Inventario;
+import negocio.OrdenPedido_Provedores;
+import negocio.Proveedores;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -48,11 +52,8 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 
-/**
- *
- * @author JAMS
- */
 public class Movimientos extends javax.swing.JFrame {
+
 
     public int idproveedor;
     public String nombreproveedor;
@@ -69,7 +70,7 @@ public class Movimientos extends javax.swing.JFrame {
     public int columnaopc;
     
     private  DBcontrolador dbc;
-    private Connection cnx;
+    private Connection con;
     
     
     ArrayList <Double> preciosopp = new ArrayList<>();
@@ -103,11 +104,12 @@ public class Movimientos extends javax.swing.JFrame {
     /**
      * Creates new form Movimientos
      */
-    public Movimientos(Menu_Principal mp, DBcontrolador dbc) throws SQLException {
+    public Movimientos(Menu_Principal mp, Connection con) throws SQLException {
         initComponents();
+        ((JTextField) this.jdfechaopp.getDateEditor()).setEditable(false); 
         this.mp=mp;
+        this.con=con;
         
-        this.pro= new Producto();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         this.tabla_OPP=(DefaultTableModel) this.tbproductosopp.getModel();
@@ -117,11 +119,8 @@ public class Movimientos extends javax.swing.JFrame {
         this.sensoriales=(DefaultTableModel) this.tbliberacionsensoriales.getModel();
         this.micro=(DefaultTableModel) this.tblieracionmicrobiologicas.getModel();
         this.fisico=(DefaultTableModel) this.tblieracionfisicoquimicas.getModel();
-        this.dbc = dbc;
-        if (this.dbc.getCnx()==null) {
-                this.dbc.conex();
-            }
         combo();
+        
         Path c = Paths.get("");
         s = c.toAbsolutePath().toString();
     }
@@ -301,11 +300,6 @@ public class Movimientos extends javax.swing.JFrame {
             }
         });
         tbproductosopp.getTableHeader().setReorderingAllowed(false);
-        tbproductosopp.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbproductosoppMouseClicked(evt);
-            }
-        });
         jScrollPane2.setViewportView(tbproductosopp);
         if (tbproductosopp.getColumnModel().getColumnCount() > 0) {
             tbproductosopp.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -359,6 +353,7 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel55.setText("Fecha:");
         OPP.add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 40, -1, -1));
 
+        jdfechaopp.setDateFormatString("dd/MM/yyyy");
         jdfechaopp.setEnabled(false);
         OPP.add(jdfechaopp, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 40, 190, -1));
 
@@ -862,20 +857,18 @@ public class Movimientos extends javax.swing.JFrame {
     }
 
     
-    public void combo()
+    public void combo() throws SQLException
     {
-        this.cboppCOM.removeAllItems();
-        String query="select opproveedores.id ,  proveedores.nombre from opproveedores\n" +
-                    "join proveedores on proveedores.id = opproveedores.idpro where idestatus = 1";
-        ArrayList <String[]> op = new ArrayList<>();
+        OrdenPedido_Provedores_DB oppdb = new OrdenPedido_Provedores_DB(this.con);
         
-        op=this.dbc.seleccionar(query);
+        this.cboppCOM.removeAllItems();
+        List <String[]> op = oppdb.select_opp();
         for (int i = 0; i < op.size(); i++) {
             this.cboppCOM.addItem(op.get(i)[0]+ " " + op.get(i)[1]);
         }
         
         this.cbodpLIB.removeAllItems();
-        query="SELECT id FROM ordenes_prod where estatus = 1";
+        String query="SELECT id FROM ordenes_prod where estatus = 1";
         op.clear();
         
         op=this.dbc.seleccionar(query);
@@ -883,16 +876,15 @@ public class Movimientos extends javax.swing.JFrame {
             this.cbodpLIB.addItem(op.get(i)[0]);
         }
         
-        op.clear();
-        query="SELECT nombre FROM condicion_pago ";
-        op=this.dbc.seleccionar(query);
-        for (int i = 0; i < op.size(); i++) {
-            this.cbcondicion_pagoOPP.addItem(op.get(i)[0]);
+        //CONDICION PAGO
+        this.cbcondicion_pagoOPP.removeAllItems();
+        List <String> pago = oppdb.select_pago();
+        for (int i = 0; i < pago.size(); i++) {
+            this.cbcondicion_pagoOPP.addItem(pago.get(i));
         }
     }
     
-    
-    
+
     //cierra
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
        this.setVisible(false);
@@ -901,12 +893,9 @@ public class Movimientos extends javax.swing.JFrame {
        this.dispose();
     }//GEN-LAST:event_formWindowClosing
 
-    
     //LIB
     private void cbodpLIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbodpLIBActionPerformed
-        
         comboliberacion();
- 
     }//GEN-LAST:event_cbodpLIBActionPerformed
 
     //LIB
@@ -982,11 +971,11 @@ public class Movimientos extends javax.swing.JFrame {
     }
     
     //<editor-fold defaultstate="collapsed" desc="ODP">
-    public void colocarcliente()
+    public void colocarcliente(Clientes cl)
     {
         
-        this.txtidclienteopc.setText(this.idcliente + "");
-        this.txtnombreclienteOPC.setText(this.nombrecliente);
+        this.txtidclienteopc.setText(cl.getId() + "");
+        this.txtnombreclienteOPC.setText(cl.getNombre());
         
         Date date = new Date();
         this.jDfechaopc.setDateFormatString("dd/MM/yyyy");
@@ -1003,8 +992,6 @@ public class Movimientos extends javax.swing.JFrame {
         maxid=Integer.parseInt(this.dbc.seleccionarid(query)+1);
         
         this.txtidopc.setText(maxid + "");
-        
-       
         
         this.btnAgregarproOPC.setEnabled(true);
         this.btnquitarproOPC.setEnabled(true);
@@ -1386,7 +1373,7 @@ public class Movimientos extends javax.swing.JFrame {
             } catch (SQLException ex1) {
                 Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-           this.cnx=this.dbc.getCnx();
+           this.con=this.dbc.getCnx();
            
         }
     }//GEN-LAST:event_btnaceptarOPCActionPerformed
@@ -1408,7 +1395,7 @@ public class Movimientos extends javax.swing.JFrame {
     private void btnAgregarproOPCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarproOPCActionPerformed
         try
         {
-            Elegir_ProductoOPP productos = new Elegir_ProductoOPP (this,2);
+            Elegir_ProductoOPP productos = new Elegir_ProductoOPP (this,2,this.con);
             this.setEnabled(false);
             productos.setVisible(true);
 
@@ -1432,11 +1419,11 @@ public class Movimientos extends javax.swing.JFrame {
 
     private void btnElegirClienteOPCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegirClienteOPCActionPerformed
         try {
-            Elegir_Proveedor pro = new Elegir_Proveedor(this,2);
+            Elegir_ProveedorOPP pro = new Elegir_ProveedorOPP(this,2,this.con);
             pro.setVisible(true);
             this.setEnabled(false);
 
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnElegirClienteOPCActionPerformed
@@ -1445,32 +1432,73 @@ public class Movimientos extends javax.swing.JFrame {
     
     //<editor-fold defaultstate="collapsed" desc="OCompra">
 
+    private boolean valida_vacio_compra()
+    {
+        boolean valida=true;
+        if (this.txtlotecompra.getText().isEmpty()) {
+            valida = false;
+            this.txtlotecompra.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (this.txtfactnoCOM.getText().isEmpty()) {
+            valida = false;
+            this.txtfactnoCOM.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (this.txtcantidadcompraCOM.getText().isEmpty()) {
+            valida = false;
+            this.txtcantidadcompraCOM.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (this.txtcapacidadcompraCOM.getText().isEmpty()) {
+            valida = false;
+            this.txtcapacidadcompraCOM.setBackground(Color.decode("#FFCCCC"));
+        }
+     
+        return valida;
+    }
+    
+    private boolean valida_formato_compra()
+    {
+        boolean valida=true;
+        if (!this.txtcantidadcompraCOM.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+            valida = false;
+            this.txtcantidadcompraCOM.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (!this.txtcapacidadcompraCOM.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+            valida = false;
+            this.txtcapacidadcompraCOM.setBackground(Color.decode("#FFCCCC"));
+        }
+        return valida;
+    }
+    
     //compra
     private void cboppCOMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboppCOMActionPerformed
         try{
             this.cbproductosCOM.removeAllItems();
             String[] id = this.cboppCOM.getSelectedItem().toString().split(" ");
-            String query ="select pedidos_opp.idpro, productos.nombre, productos.clave, pedidos_opp.cantidad, pedidos_opp.punitario from pedidos_opp\n" +
-            " join productos on productos.id = pedidos_opp.idpro where pedidos_opp.idopp = "+ id[0];
-            ArrayList <String[]> op = new ArrayList<>();
-            op=this.dbc.seleccionar(query);
+            OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB(this.con);
+            List <Producto> op = db.select_detopp(id[0]);
             this.tabla_Compra1.setRowCount(0);
-
             for (int i = 0; i < op.size(); i++) {
-                this.tabla_Compra1.addRow(op.get(i));
-                this.cbproductosCOM.addItem(op.get(i)[1]);
+                Object[] obj = new Object[5];
+                obj[0]=op.get(i).getId();
+                obj[1]=op.get(i).getNombre();
+                obj[2]=op.get(i).getClave();
+                obj[3]=op.get(i).getPeso();
+                obj[4]=op.get(i).getPventa();
+                
+                this.tabla_Compra1.addRow(obj);
+                this.cbproductosCOM.addItem(op.get(i).getNombre());
 
             }
-            this.idmoneda2=Integer.parseInt(this.dbc.seleccionarid("select idmoneda from opproveedores where id = "+id[0]));
-            op.clear();
-            query="select proveedores.id  ,  proveedores.nombre , opproveedores.fecha from opproveedores\n" +
-            " join proveedores on proveedores.id = opproveedores.idpro where opproveedores.id =" + id[0];
-            op=this.dbc.seleccionar(query);
-            this.txtidproveedorCOM.setText(op.get(0)[0]);
-            this.txtnombreproveedorCOM.setText(op.get(0)[1]);
+            
+            this.idmoneda2=db.select_idmoneda_opp(id[0]);
 
-            this.txtfechapedidocompra.setText(op.get(0)[2]);
+            Proveedores  pro = db.select_provedor(id[0]);
+            
+            this.txtidproveedorCOM.setText(pro.getId()+"");
+            this.txtnombreproveedorCOM.setText(pro.getNombre());
+            this.txtfechapedidocompra.setText(pro.getCalle());
             this.txtfechapedidocompra.setText(this.fechadividir(txtfechapedidocompra, 0));
+            
             
             Date date = new Date();
             this.jdfecha_entradacompra.setDateFormatString("dd/MM/yyyy");
@@ -1491,10 +1519,18 @@ public class Movimientos extends javax.swing.JFrame {
             this.btnAgregarproCOM.setEnabled(true);
 
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
-
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        } 
 
     }//GEN-LAST:event_cboppCOMActionPerformed
     
@@ -1593,7 +1629,7 @@ public class Movimientos extends javax.swing.JFrame {
             } catch (SQLException ex1) {
                 Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-           this.cnx=this.dbc.getCnx();
+           this.con=this.dbc.getCnx();
            
         }
     }//GEN-LAST:event_btnaceptarCOMActionPerformed
@@ -1621,13 +1657,9 @@ public class Movimientos extends javax.swing.JFrame {
     //compra
     private void btnAgregarproCOMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarproCOMActionPerformed
 
-        if (this.txtlotecompra.getText().isEmpty() || this.txtfactnoCOM.getText().isEmpty() || this.txtcantidadcompraCOM.getText().isEmpty()
-            || this.txtcapacidadcompraCOM.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-        }
-        else
-        {
-            if (this.txtcantidadcompraCOM.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtcapacidadcompraCOM.getText().matches("^([0-9]+)(\\.[0-9]+)?$"))  {
+        if (valida_vacio_compra()) {
+            
+            if (valida_formato_compra())  {
                 double cantidadtotal=0;
                 double punitario=0;
                 int idproducto=0;
@@ -1669,53 +1701,66 @@ public class Movimientos extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Formato Incorrecto");
             }
         }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+        }
 
     }//GEN-LAST:event_btnAgregarproCOMActionPerformed
 
 
 //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc="OPP">
-    public void colocarproveedor()
+    //<editor-fold defaultstate="collapsed" desc="OPProveedores">
+    
+    public void colocarproveedor(Proveedores pr) 
     {   
-        this.txtidproveedorOPP.setText(this.idproveedor + "");
-        this.txtnombreproveedorOPP.setText(this.nombreproveedor);
-        
-        
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        this.jdfechaopp.setDateFormatString("dd/MM/yyyy");
-        Date date =new Date();
-        this.jdfechaopp.setDate(date);
-        this.jdfechaopp.setEnabled(true);
-        
-        String query="Select MAX(id) from opproveedores";
-        int maxid;
-        if(this.dbc.seleccionarid(query)==null)
-        maxid=1;
-        else
-        maxid=Integer.parseInt(this.dbc.seleccionarid(query))+1;
-        
-        this.txtidOPP.setText(maxid + "");
-        
-        this.btnAgregarproOPP.setEnabled(true);
-        this.btnquitarproOPP.setEnabled(true);
-        
+        try{
+            this.txtidproveedorOPP.setText(pr.getId() + "");
+            this.txtnombreproveedorOPP.setText(pr.getNombre());
+            this.jdfechaopp.setDateFormatString("dd/MM/yyyy");
+            Date date =new Date();
+            this.jdfechaopp.setDate(date);
+            this.jdfechaopp.setEnabled(true);
+
+            OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB(this.con);
+            int maxid= db.select_max();
+            if(maxid == 0){
+               maxid=1;
+            }
+            this.txtidOPP.setText(maxid + "");
+
+            this.btnAgregarproOPP.setEnabled(true);
+            this.btnquitarproOPP.setEnabled(true);
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        }   
     }
     
-    public void colocarproducto()
+    public void colocarproducto(Producto pro)
     {
         
         String[] s = new String[10]; 
-        s[1]=this.pro.getClave();
-        s[0]=this.pro.getId()+"";
-        s[2]=this.pro.getNombre();
-        s[3]=this.pro.getMedida();
-        s[4]=this.pro.getStockmin()+"";
-        s[5]=this.moneda;
-        s[6]=this.pro.getPventa()+"";      
-        s[7]=(Math.round( (this.pro.getPventa()*this.pro.getStockmin())* 100.0 ) / 100.0)+"";
-        if (this.pro.getIva()==1) {
-            s[8]=(Math.round( (this.pro.getPventa()*this.pro.getStockmin()*0.16)* 100.0 ) / 100.0)+"";
+        s[1]=pro.getClave();
+        s[0]=pro.getId()+"";
+        s[2]=pro.getNombre();
+        s[3]=pro.getMedida();
+        s[4]=pro.getStockmin()+"";
+        s[5]=pro.getMoneda();
+        s[6]=pro.getPventa()+"";      
+        s[7]=(Math.round( (pro.getPventa()*pro.getStockmin())* 100.0 ) / 100.0)+"";
+        if (pro.getIva()==1) {
+            s[8]=(Math.round( (pro.getPventa()*pro.getStockmin()*0.16)* 100.0 ) / 100.0)+"";
         }
         else
         {
@@ -1731,8 +1776,7 @@ public class Movimientos extends javax.swing.JFrame {
             }            
         }
         if (x) {
-            this.tabla_OPP.addRow(s);
-            
+            this.tabla_OPP.addRow(s);   
             this.btnquitarproOPP.setEnabled(true);
             this.btnaceptaropp.setEnabled(true);
         }
@@ -1740,7 +1784,6 @@ public class Movimientos extends javax.swing.JFrame {
         {
             JOptionPane.showMessageDialog(null, "El producto ya esta seleccionado");
         }
-        
 
     }
     
@@ -1748,51 +1791,41 @@ public class Movimientos extends javax.swing.JFrame {
         try{
             
             if (this.tbproductosopp.getRowCount() > 0) {
-                
+                OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB(this.con);
+                OrdenPedido_Provedores opp = new OrdenPedido_Provedores();
                 String respuesta = JOptionPane.showInputDialog(this, "Observaciones");
-                String query="Insert into opproveedores(idpro,idmoneda,subtotal,iva,ptotal,idestatus,fecha,idcpago,observaciones) values (?,?,?,?,?,?,?,?,?)";
-                PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                
                 double subtotal=0;
                 double iva=0;
                 double total=0;
                 for (int i = 0; i < this.tabla_OPP.getRowCount(); i++) {
+                    Producto pro = new Producto();
+                    pro.setId(Integer.parseInt(this.tabla_OPP.getValueAt(i, 0).toString()));
+                    pro.setPventa(Double.parseDouble(this.tabla_OPP.getValueAt(i, 6).toString()));
+                    //PESO -> TOTAL
+                    pro.setPeso(Double.parseDouble(this.tabla_OPP.getValueAt(i, 7).toString()));
+                    //STOCK -> CANTIDAD
+                    pro.setStockmin(Double.parseDouble(this.tabla_OPP.getValueAt(i, 4).toString()));
+                    opp.getProductos().add(pro);
+                    
                     subtotal+=Double.parseDouble(this.tabla_OPP.getValueAt(i, 7).toString());
                     iva+=Double.parseDouble(this.tabla_OPP.getValueAt(i, 8).toString());
                     total+=Double.parseDouble(this.tabla_OPP.getValueAt(i, 9).toString());
                 }
-                ps.setInt(1, Integer.parseInt(this.txtidproveedorOPP.getText()) );
-                ps.setInt(2, this.idmoneda);
-                ps.setDouble(3, Math.round( subtotal * 100.0 ) / 100.0);
-                ps.setDouble(4, Math.round( (iva) * 100.0 ) / 100.0);
-                ps.setDouble(5, Math.round( (total) * 100.0 ) / 100.0);
-                ps.setInt(6, 1);
-
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+ 
+                opp.setIdproveedor(Integer.parseInt(this.txtidproveedorOPP.getText()));
+                opp.setIdmoneda(idmoneda);
+                opp.setSubtotal(Math.round( subtotal * 100.0 ) / 100.0);
+                opp.setIva(Math.round( iva * 100.0 ) / 100.0);
+                opp.setPtotal(Math.round( total * 100.0 ) / 100.0);
+                opp.setIdestatus(1);
+                opp.setFecha(fechadividir(formatter.format(this.jdfechaopp.getDate()),1));
+                opp.setIdcpago(this.cbcondicion_pagoOPP.getSelectedIndex()+1);
+                opp.setObservaciones(respuesta);
                 
-                ps.setString(7, fechadividir(formatter.format(this.jdfechaopp.getDate()),1));
-                ps.setInt(8, this.cbcondicion_pagoOPP.getSelectedIndex()+1);
-                ps.setString(9, respuesta);
-                ps.executeUpdate();
-                ps.close();
+                db.insert_opp(opp);
 
-                query = "select MAX(id) from opproveedores";
-
-                int index = Integer.parseInt(this.dbc.seleccionarid(query) );
-
-                query ="Insert into pedidos_opp(idopp,idpro,punitario,ptotal,cantidad) values (?,?,?,?,?)";
-
-                for (int i = 0; i < this.tabla_OPP.getRowCount(); i++) {
-
-                    ps= this.dbc.getCnx().prepareStatement(query);
-                    ps.setDouble(1, index);
-                    ps.setInt(2, Integer.parseInt(this.tabla_OPP.getValueAt(i, 0).toString()));
-                    ps.setDouble(3, Double.parseDouble(this.tabla_OPP.getValueAt(i, 6).toString()));
-                    ps.setDouble(4, Double.parseDouble(this.tabla_OPP.getValueAt(i, 7).toString()));
-                    ps.setDouble(5, Double.parseDouble(this.tabla_OPP.getValueAt(i, 4).toString()));
-
-                    ps.executeUpdate();
-                    ps.close();
-                }
                 //cantidad en letra
                 String cantidad= (Math.round( (total) * 100.0 ) / 100.0)+"";
                 System.out.println(cantidad);
@@ -1809,6 +1842,7 @@ public class Movimientos extends javax.swing.JFrame {
                 }
                 num_text+=" "+divi[1]+"/100 "+moneda;
                 
+                int id=db.select_max();
                 
                 JasperReport reporte; //Creo el objeto reporte
                 // Ubicacion del Reporte
@@ -1816,11 +1850,11 @@ public class Movimientos extends javax.swing.JFrame {
                 try {
 
                    reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
-                   Map opp = new HashMap();
-                   opp.put("id", index);
-                   opp.put("letra", num_text);
-                   JasperPrint jprint = JasperFillManager.fillReport(path, opp, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
-                   JasperExportManager.exportReportToPdfFile(jprint, s+"\\ODC\\ODC-"+index+".pdf");
+                   Map para = new HashMap();
+                   para.put("id", id);
+                   para.put("letra", num_text.toUpperCase());
+                   JasperPrint jprint = JasperFillManager.fillReport(path, para, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+                   JasperExportManager.exportReportToPdfFile(jprint, s+"\\ODC\\ODC-"+id+".pdf");
                    JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
                    viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
                    viewer.setVisible(true); //Inicializamos la vista del Reporte
@@ -1840,7 +1874,7 @@ public class Movimientos extends javax.swing.JFrame {
                     BodyPart texto = new MimeBodyPart();
                     texto.setText("Mando orden de compra,favor de confirmar fecha indicada de entrega ");
                     BodyPart adjunto = new MimeBodyPart();
-                    adjunto.setDataHandler(new DataHandler(new FileDataSource(s+"\\ODC\\ODC-"+index+".pdf")));
+                    adjunto.setDataHandler(new DataHandler(new FileDataSource(s+"\\ODC\\ODC-"+id+".pdf")));
                     adjunto.setFileName("ODC.pdf");
 
                     MimeMultipart multiParte = new MimeMultipart();
@@ -1880,24 +1914,26 @@ public class Movimientos extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Error en la fecha");
             }
         }
-        catch(Exception ex)
+        catch(SQLException ex)
         {
-            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez"+ex);
-            try {
-                this.dbc = new DBcontrolador ();
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
             } catch (SQLException ex1) {
-                Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-           this.cnx=this.dbc.getCnx();
-           
         }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        } 
     }//GEN-LAST:event_btnaceptaroppActionPerformed
 
     private void btnquitarproOPPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitarproOPPActionPerformed
         try
         {
+            int col=this.tbproductosopp.getSelectedRow();
             if (this.tbproductosopp.getRowCount() != 0) {
-                this.tabla_OPP.removeRow(this.columnaopp);
+                this.tabla_OPP.removeRow(col);
             }
             else
             {
@@ -1916,8 +1952,7 @@ public class Movimientos extends javax.swing.JFrame {
     private void btnAgregarproOPPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarproOPPActionPerformed
         try
         {
-
-            Elegir_ProductoOPP productos = new Elegir_ProductoOPP (this,1);
+            Elegir_ProductoOPP productos = new Elegir_ProductoOPP (this,1,this.con);
             this.setEnabled(false);
             productos.setVisible(true);
         }
@@ -1927,20 +1962,9 @@ public class Movimientos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAgregarproOPPActionPerformed
 
-    private void tbproductosoppMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbproductosoppMouseClicked
-        try
-        {
-            this.columnaopp=this.tbproductosopp.getSelectedRow();
-        }
-        catch(Exception ex)
-        {
-
-        }
-    }//GEN-LAST:event_tbproductosoppMouseClicked
-
     private void btnElegir_proveedorOPPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegir_proveedorOPPActionPerformed
         try {
-            Elegir_Proveedor pro = new Elegir_Proveedor(this,1);
+            Elegir_ProveedorOPP pro = new Elegir_ProveedorOPP(this,1,this.con);
             pro.setVisible(true);
             this.setEnabled(false);
 
@@ -2164,7 +2188,7 @@ public class Movimientos extends javax.swing.JFrame {
             } catch (SQLException ex1) {
                 Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
             }
-           this.cnx=this.dbc.getCnx();
+           this.con=this.dbc.getCnx();
            
         }
         
@@ -2173,20 +2197,27 @@ public class Movimientos extends javax.swing.JFrame {
 
     private void btncancelarCOMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelarCOMActionPerformed
         try {
+            OrdenPedido_Provedores_DB opp = new OrdenPedido_Provedores_DB(this.con);
             String[] id = this.cboppCOM.getSelectedItem().toString().split(" ");
-            String query = "update opproveedores set idestatus = 3 where id = "+id[0];
             if (JOptionPane.showConfirmDialog(null, "¿Desea Cancelar la Orden?", "Cancelacion", JOptionPane.YES_NO_OPTION)==0) {
-                PreparedStatement ps;      
-                ps = this.dbc.getCnx().prepareStatement(query);          
-                ps.executeUpdate();
-                ps.close();
+                opp.delete_opp(id[0]);
                 combo();
             }
             
-        } catch (SQLException ex) {
-            
-            
         }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        } 
+        
     }//GEN-LAST:event_btncancelarCOMActionPerformed
 
     /**

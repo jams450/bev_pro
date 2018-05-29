@@ -6,6 +6,7 @@
 package sistema;
 
 import datos.Ventas_DB;
+import java.awt.Color;
 import java.awt.Dimension;
 import static java.awt.Frame.NORMAL;
 import java.awt.Toolkit;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -24,7 +26,7 @@ import negocio.Producto;
  *
  * @author JAMS
  */
-public class Elegir_ProductoV extends javax.swing.JFrame {
+public class Elegir_ProductoVentas extends javax.swing.JFrame {
     
 
     
@@ -38,7 +40,7 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
     /**
      * Creates new form Elegir_Producto
      */
-    public Elegir_ProductoV(Ventas p,Connection con) throws SQLException {
+    public Elegir_ProductoVentas(Ventas p,Connection con) throws SQLException {
         initComponents();
         
         this.con=con;
@@ -219,6 +221,11 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
         jPanel2.add(lbcantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 170, -1, -1));
 
         txtcantidad.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtcantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcantidadKeyReleased(evt);
+            }
+        });
         jPanel2.add(txtcantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 170, 200, -1));
 
         btnAceptar.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -237,6 +244,11 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
         jPanel2.add(lbcantidad1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 200, -1, -1));
 
         txtcomision.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtcomision.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcomisionKeyReleased(evt);
+            }
+        });
         jPanel2.add(txtcomision, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 200, 200, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 56, 880, 290));
@@ -265,11 +277,24 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         try{
           
+            boolean valida=true;
+            
             if (this.txtdescuento.getText().isEmpty()) {
                 this.txtdescuento.setText("0");
             }
             
-            if (this.txtcantidad.getText().matches("^[0-9]+$")  && this.txtcomision.getText().matches("^[0-9]*(.[0-9]+)?$")) {
+            if (!this.txtcantidad.getText().matches("^[0-9]+$")) {
+                valida=false;
+                this.txtcantidad.setBackground(Color.decode("#FFCCCC"));
+            }
+            
+            if (!this.txtcomision.getText().matches("^[0-9]*(.[0-9]+)?$")) {
+                valida=false;
+                this.txtcomision.setBackground(Color.decode("#FFCCCC"));
+            }
+           
+            
+            if (valida) {
 
                 String[] c = new String[8];
                 
@@ -294,7 +319,7 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
         
         } 
         catch (Exception ex) {
-                Logger.getLogger(Elegir_ProductoV.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Elegir_ProductoVentas.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -321,6 +346,19 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tbdatosMouseClicked
 
+    public void regresar_color(JTextField jx)
+    {
+        jx.setBackground(Color.WHITE);
+    }
+    
+    private void txtcantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcantidadKeyReleased
+        regresar_color(txtcantidad);
+    }//GEN-LAST:event_txtcantidadKeyReleased
+
+    private void txtcomisionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcomisionKeyReleased
+        regresar_color(txtcomision);
+    }//GEN-LAST:event_txtcomisionKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -338,14 +376,16 @@ public class Elegir_ProductoV extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Elegir_ProductoV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProductoVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Elegir_ProductoV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProductoVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Elegir_ProductoV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProductoVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Elegir_ProductoV.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Elegir_ProductoVentas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

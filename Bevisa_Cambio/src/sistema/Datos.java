@@ -25,14 +25,9 @@ import funciones.NumberRenderer;
 import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-/**
- *
- * @author JAMS
- * 
- * 
- */
 public class Datos extends javax.swing.JFrame {
     
     
@@ -52,14 +47,7 @@ public class Datos extends javax.swing.JFrame {
     private DefaultTableModel tabla_proveedor;
     //inventario
     private DefaultTableModel tabla_inventario;
-    
-    private int columnaingrediente;
-    private int columnavendedor;
-    private int columnacliente;
-    private int columnaproveedor;
-    private int columnainventario;
-    private int columnaprueba;
-    
+ 
     //para ver si es agregar o modificar
     private int seleccionproducto;
     //para ver si es agregar o modificar
@@ -94,6 +82,7 @@ public class Datos extends javax.swing.JFrame {
             
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+            
             this.tablaproductos();        
             creaciontablavendedores();
             creaciontablaclientes();
@@ -474,6 +463,11 @@ public class Datos extends javax.swing.JFrame {
         txtclaveproducto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtclaveproducto.setEnabled(false);
         txtclaveproducto.setNextFocusableComponent(txtnombreproducto);
+        txtclaveproducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtclaveproductoKeyReleased(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel4.setText("Nombre Producto :");
@@ -482,6 +476,11 @@ public class Datos extends javax.swing.JFrame {
         txtnombreproducto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtnombreproducto.setEnabled(false);
         txtnombreproducto.setNextFocusableComponent(cbcategoriaproducto);
+        txtnombreproducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtnombreproductoKeyReleased(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel5.setText("Categoria :");
@@ -506,6 +505,11 @@ public class Datos extends javax.swing.JFrame {
         txtsminproducto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtsminproducto.setEnabled(false);
         txtsminproducto.setNextFocusableComponent(txtpventaproducto);
+        txtsminproducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtsminproductoKeyReleased(evt);
+            }
+        });
 
         lblsmin.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblsmin.setText("Stock Min :");
@@ -517,11 +521,21 @@ public class Datos extends javax.swing.JFrame {
         txtpventaproducto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtpventaproducto.setEnabled(false);
         txtpventaproducto.setNextFocusableComponent(cbprocesoproducto);
+        txtpventaproducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtpventaproductoKeyReleased(evt);
+            }
+        });
 
         txtcaducidadproducto.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcaducidadproducto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcaducidadproducto.setEnabled(false);
         txtcaducidadproducto.setNextFocusableComponent(chivaproducto);
+        txtcaducidadproducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcaducidadproductoKeyReleased(evt);
+            }
+        });
 
         lblcaducidad.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblcaducidad.setText("Caducidad :");
@@ -542,6 +556,11 @@ public class Datos extends javax.swing.JFrame {
         txtpeso_producto.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtpeso_producto.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtpeso_producto.setEnabled(false);
+        txtpeso_producto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtpeso_productoKeyReleased(evt);
+            }
+        });
 
         lblpeso.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblpeso.setText("Peso:");
@@ -733,11 +752,6 @@ public class Datos extends javax.swing.JFrame {
         });
         tbingredientes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbingredientes.getTableHeader().setReorderingAllowed(false);
-        tbingredientes.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbingredientesMouseClicked(evt);
-            }
-        });
         jScrollPane2.setViewportView(tbingredientes);
         if (tbingredientes.getColumnModel().getColumnCount() > 0) {
             tbingredientes.getColumnModel().getColumn(0).setPreferredWidth(35);
@@ -836,11 +850,6 @@ public class Datos extends javax.swing.JFrame {
         });
         tbpruebas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbpruebas.getTableHeader().setReorderingAllowed(false);
-        tbpruebas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbpruebasMouseClicked(evt);
-            }
-        });
         jScrollPane6.setViewportView(tbpruebas);
 
         Pruebas.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 150, 720, 280));
@@ -886,8 +895,26 @@ public class Datos extends javax.swing.JFrame {
         jLabel68.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel68.setText("Metodo :");
         Pruebas.add(jLabel68, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 260, -1, -1));
+
+        txtdeterminacion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtdeterminacionKeyReleased(evt);
+            }
+        });
         Pruebas.add(txtdeterminacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, 190, -1));
+
+        txtparametro.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtparametroKeyReleased(evt);
+            }
+        });
         Pruebas.add(txtparametro, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 230, 190, -1));
+
+        txtmetodo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtmetodoKeyReleased(evt);
+            }
+        });
         Pruebas.add(txtmetodo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, 190, -1));
 
         jTabbedPane2.addTab("Pruebas", Pruebas);
@@ -1022,6 +1049,11 @@ public class Datos extends javax.swing.JFrame {
         txtcantidad_actualinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcantidad_actualinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcantidad_actualinventario.setEnabled(false);
+        txtcantidad_actualinventario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcantidad_actualinventarioKeyReleased(evt);
+            }
+        });
         Inventario.add(txtcantidad_actualinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 210, 139, -1));
 
         jLabel86.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1031,6 +1063,11 @@ public class Datos extends javax.swing.JFrame {
         txtloteinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtloteinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtloteinventario.setEnabled(false);
+        txtloteinventario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtloteinventarioKeyReleased(evt);
+            }
+        });
         Inventario.add(txtloteinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 270, 139, -1));
 
         jLabel87.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1049,6 +1086,11 @@ public class Datos extends javax.swing.JFrame {
         txtfactinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtfactinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtfactinventario.setEnabled(false);
+        txtfactinventario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtfactinventarioKeyReleased(evt);
+            }
+        });
         Inventario.add(txtfactinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 330, 139, -1));
 
         jLabel89.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1179,6 +1221,11 @@ public class Datos extends javax.swing.JFrame {
         txtnombrevendedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtnombrevendedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtnombrevendedor.setEnabled(false);
+        txtnombrevendedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtnombrevendedorKeyReleased(evt);
+            }
+        });
         Vendedores.add(txtnombrevendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 120, 290, -1));
 
         jLabel24.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1197,6 +1244,11 @@ public class Datos extends javax.swing.JFrame {
         txtcorreovendedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcorreovendedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcorreovendedor.setEnabled(false);
+        txtcorreovendedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcorreovendedorKeyReleased(evt);
+            }
+        });
         Vendedores.add(txtcorreovendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 180, 220, -1));
 
         jLabel26.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1370,6 +1422,11 @@ public class Datos extends javax.swing.JFrame {
         txtnombreproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtnombreproveedor.setEnabled(false);
         txtnombreproveedor.setNextFocusableComponent(txttelefonoproveedor);
+        txtnombreproveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtnombreproveedorKeyReleased(evt);
+            }
+        });
         Proovedores.add(txtnombreproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 80, 298, -1));
 
         jLabel51.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1389,6 +1446,11 @@ public class Datos extends javax.swing.JFrame {
         txtcorreoproveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcorreoproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcorreoproveedor.setEnabled(false);
+        txtcorreoproveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcorreoproveedorKeyReleased(evt);
+            }
+        });
         Proovedores.add(txtcorreoproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 140, 240, -1));
 
         jLabel53.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1464,6 +1526,11 @@ public class Datos extends javax.swing.JFrame {
         txtrfcproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtrfcproveedor.setEnabled(false);
         txtrfcproveedor.setNextFocusableComponent(cbmodopagoproveedor);
+        txtrfcproveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtrfcproveedorKeyReleased(evt);
+            }
+        });
         Proovedores.add(txtrfcproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 320, 240, -1));
 
         jLabel56.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1483,6 +1550,11 @@ public class Datos extends javax.swing.JFrame {
         txtcuentaproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcuentaproveedor.setEnabled(false);
         txtcuentaproveedor.setNextFocusableComponent(txtcontactoproveedor);
+        txtcuentaproveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcuentaproveedorKeyReleased(evt);
+            }
+        });
         Proovedores.add(txtcuentaproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 380, 190, -1));
 
         jLabel58.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1511,6 +1583,11 @@ public class Datos extends javax.swing.JFrame {
         txtcpproveedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcpproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcpproveedor.setEnabled(false);
+        txtcpproveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcpproveedorKeyReleased(evt);
+            }
+        });
         Proovedores.add(txtcpproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 170, 240, -1));
 
         jTabbedPane2.addTab("Proveedores", Proovedores);
@@ -1619,6 +1696,11 @@ public class Datos extends javax.swing.JFrame {
         txtnombreclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtnombreclientes.setEnabled(false);
         txtnombreclientes.setNextFocusableComponent(txttelefonoclientes);
+        txtnombreclientes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtnombreclientesKeyReleased(evt);
+            }
+        });
         Clientes.add(txtnombreclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 80, 282, -1));
 
         jLabel35.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1639,6 +1721,11 @@ public class Datos extends javax.swing.JFrame {
         txtcorreoclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcorreoclientes.setEnabled(false);
         txtcorreoclientes.setNextFocusableComponent(cbdelegacioncliente);
+        txtcorreoclientes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcorreoclientesKeyReleased(evt);
+            }
+        });
         Clientes.add(txtcorreoclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 170, 200, -1));
 
         jLabel37.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1723,6 +1810,11 @@ public class Datos extends javax.swing.JFrame {
         txtcuentaclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcuentaclientes.setEnabled(false);
         txtcuentaclientes.setNextFocusableComponent(txtcontactoclientes);
+        txtcuentaclientes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcuentaclientesKeyReleased(evt);
+            }
+        });
         Clientes.add(txtcuentaclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 410, 200, -1));
 
         jLabel42.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1765,6 +1857,11 @@ public class Datos extends javax.swing.JFrame {
         txtrfcclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtrfcclientes.setEnabled(false);
         txtrfcclientes.setNextFocusableComponent(txtcoloniaclientes1);
+        txtrfcclientes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtrfcclientesKeyReleased(evt);
+            }
+        });
         Clientes.add(txtrfcclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 170, 190, 20));
 
         jLabel71.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1867,13 +1964,12 @@ public class Datos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 
-
-    //cuando se cierra   
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+    //CIERRA VENTANA  
+    private void formWindowClosing(java.awt.event.WindowEvent evt) { 
         this.mp.setVisible(true);
         this.mp.notificaciones();
         this.dispose();
-    }//GEN-LAST:event_formWindowClosing
+    } 
 
     //metodo para pasar de dd/mm/yyyy a yyyy-mm-dd
     public String fechadividir(String  jt, int i ){
@@ -1891,10 +1987,188 @@ public class Datos extends javax.swing.JFrame {
         }
         return fi;
     }
+    
+    //METODO PARA QUITAR COLOR ROJO 
+    public void regresar_color(JTextField jx)
+    {
+        jx.setBackground(Color.WHITE);
+    }
 
+    
     //<editor-fold defaultstate="collapsed" desc="Productos">
 
-     public void tablaproductos()
+    private void txtclaveproductoKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtclaveproducto);
+    }
+
+    private void txtnombreproductoKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtnombreproducto);
+    }
+
+    private void txtsminproductoKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtsminproducto);
+    }
+
+    private void txtpventaproductoKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtpventaproducto);
+    }
+
+    private void txtcaducidadproductoKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtcaducidadproducto);
+    }
+
+    private void txtpeso_productoKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtpeso_producto);
+    }
+    
+    public boolean validacion_vacio_productos(int opcion){
+        //Color.decode("#FFCCCC") el color de error
+        boolean valida = true;
+        
+        switch(opcion)
+        {
+            //PARA MATERIA PRIMA
+            case 1:
+                if (this.txtclaveproducto.getText().isEmpty()) {
+                    valida = false;
+                    this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtnombreproducto.getText().isEmpty()) {
+                    valida = false;
+                    this.txtnombreproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtsminproducto.getText().isEmpty()) {
+                    valida = false;
+                    this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtpventaproducto.getText().isEmpty()) {
+                    valida = false;
+                    this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
+                }            
+            break;
+             
+            //PRODUCTO TERMINADO
+            case 2:
+                if (this.txtclaveproducto.getText().isEmpty() ) {
+                    valida=false;
+                    this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtnombreproducto.getText().isEmpty()) {
+                    valida=false;
+                    this.txtnombreproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtpventaproducto.getText().isEmpty()  ) {
+                    valida=false;
+                    this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtcaducidadproducto.getText().isEmpty()) {
+                    valida=false;
+                    this.txtcaducidadproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                
+                break;
+            
+            //EMPAQUE
+            case 3:
+                if (this.txtclaveproducto.getText().isEmpty() ) {
+                    valida=false;
+                    this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtnombreproducto.getText().isEmpty()) {
+                    valida=false;
+                    this.txtnombreproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtsminproducto.getText().isEmpty()) {
+                    valida = false;
+                    this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                break;
+            
+            case 4:
+                if (this.txtclaveproducto.getText().isEmpty() ) {
+                    valida=false;
+                    this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtnombreproducto.getText().isEmpty()) {
+                    valida=false;
+                    this.txtnombreproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtpventaproducto.getText().isEmpty()  ) {
+                    valida=false;
+                    this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtsminproducto.getText().isEmpty()) {
+                    valida=false;
+                    this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (this.txtcaducidadproducto.getText().isEmpty()) {
+                    valida=false;
+                    this.txtcaducidadproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+
+                break;
+        }
+        
+        return valida;
+    }
+
+    public boolean validacion_formato_productos(int opcion){
+        //Color.decode("#FFCCCC") el color de error
+        boolean valida = true;
+        
+        switch(opcion)
+        {
+            //PARA MATERIA PRIMA
+            case 1:
+                if (!this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+                    valida = false;
+                    this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (!this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+                    valida = false;
+                    this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
+                }          
+            break;
+            
+            //PRODUCTO TERMINADO
+            case 2:
+                if (!this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+                    valida = false;
+                    this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (!this.txtcaducidadproducto.getText().matches("^[0-9]+$")) {
+                    valida = false;
+                    this.txtcaducidadproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+            break;
+            //EMPAQUE
+            case 3:
+                if (!this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") ) {
+                    valida = false;
+                    this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                break;
+            //GALERIA    
+            case 4:
+                if (!this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+                    valida = false;
+                    this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (!this.txtcaducidadproducto.getText().matches("^[0-9]+$")) {
+                    valida = false;
+                    this.txtcaducidadproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+                if (!this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+                    valida = false;
+                    this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
+                }
+            break;
+        }
+        
+        return valida;
+    }
+
+    public void tablaproductos()
     {
         try{
             
@@ -1956,10 +2230,15 @@ public class Datos extends javax.swing.JFrame {
         catch(SQLException ex)
         {
             JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
         catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error :"+ex);
-        }
+        } 
            
     }
      
@@ -2031,28 +2310,23 @@ public class Datos extends javax.swing.JFrame {
        }
     }
     
-
-    private void btnCancelar_productoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelar_productoActionPerformed
+    private void btnCancelar_productoActionPerformed(java.awt.event.ActionEvent evt) { 
         deshabilitar();
         this.seleccionproducto=0;
-    }//GEN-LAST:event_btnCancelar_productoActionPerformed
+    } 
 
-    private void btnGuardar_productoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar_productoActionPerformed
+    private void btnGuardar_productoActionPerformed(java.awt.event.ActionEvent evt) { 
         try
         {
             //index para ver que insertamos
             int index = this.cbcategoriaproducto.getSelectedIndex() +1;
-           
             switch(index)
             {
                 //materia prima
                 case 1 :
-                    if (this.txtclaveproducto.getText().isEmpty() || this.txtnombreproducto.getText().isEmpty() || this.txtsminproducto.getText().isEmpty()||this.txtpventaproducto.getText().isEmpty() ) {
-                        JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-                    }
-                    else
-                    {
-                        if (this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
+                    if (this.validacion_vacio_productos(1)) {
+                        
+                        if (this.validacion_formato_productos(1)) {
                             
                             if(this.seleccionproducto==1)
                             {
@@ -2104,16 +2378,17 @@ public class Datos extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(null, "Formato de stock incorrecto");
                         }
                     }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+                    }
                     break;
 
                 //Producto Terminado
                 case 2:
-                if (this.txtclaveproducto.getText().isEmpty() || this.txtnombreproducto.getText().isEmpty() || this.txtpventaproducto.getText().isEmpty()  || this.txtcaducidadproducto.getText().isEmpty() ) {
-                    JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-                }
-                else
-                {
-                    if (this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtcaducidadproducto.getText().matches("^[0-9]+$")) {
+                if (this.validacion_vacio_productos(2) ) {
+                    
+                    if (this.validacion_formato_productos(2)) {
                         Productos_DB pro = new Productos_DB(this.con);
                         if(this.seleccionproducto==1)
                         {
@@ -2158,15 +2433,16 @@ public class Datos extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Formato de Precio de venta incorrecto");
                     }
                 }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+                }
                 break;
                 //Empaque
                 case 3:
-                if (this.txtclaveproducto.getText().isEmpty() || this.txtnombreproducto.getText().isEmpty() || this.txtsminproducto.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-                }
-                else
-                {
-                    if (this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") ) {
+                if (this.validacion_vacio_productos(3) ) {
+                    
+                    if (this.validacion_formato_productos(3)) {
                         Productos_DB pro = new Productos_DB(this.con);
                         if(this.seleccionproducto==1)
                         {
@@ -2213,16 +2489,17 @@ public class Datos extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Formato incorrecto");
                     }
                 }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+                }
                 break;
                 
                 //Galeria
                 case 4:
-                if (this.txtclaveproducto.getText().isEmpty() || this.txtnombreproducto.getText().isEmpty() || this.txtpventaproducto.getText().isEmpty() || this.txtsminproducto.getText().isEmpty() || this.txtcaducidadproducto.getText().isEmpty() ) {
-                    JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-                }
-                else
-                {
-                    if (this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") && this.txtcaducidadproducto.getText().matches("^[0-9]+$")) {
+                if (this.validacion_vacio_productos(4)  ) {
+
+                    if (this.validacion_formato_productos(3)) {
                         Productos_DB pro = new Productos_DB(this.con);
                         if(this.seleccionproducto==1)
                         {
@@ -2270,6 +2547,10 @@ public class Datos extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Formato de Precio de venta incorrecto");
                     }
                 }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+                }
                 break;
             }
             //this.con.commit();
@@ -2288,9 +2569,9 @@ public class Datos extends javax.swing.JFrame {
         catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error :"+ex);
         } 
-    }//GEN-LAST:event_btnGuardar_productoActionPerformed
+    } 
 
-    private void btnCambiar_productoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiar_productoActionPerformed
+    private void btnCambiar_productoActionPerformed(java.awt.event.ActionEvent evt) { 
         try
         {
             habilitar();
@@ -2301,9 +2582,9 @@ public class Datos extends javax.swing.JFrame {
         {
             JOptionPane.showMessageDialog(null, "Error :"+ ex);
         }
-    }//GEN-LAST:event_btnCambiar_productoActionPerformed
+    } 
 
-    private void btnAgregar_productoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAgregar_productoMouseClicked
+    private void btnAgregar_productoMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
             limpiar();
@@ -2314,9 +2595,9 @@ public class Datos extends javax.swing.JFrame {
         {
             JOptionPane.showMessageDialog(null, "Error :"+ ex);
         }
-    }//GEN-LAST:event_btnAgregar_productoMouseClicked
+    } 
 
-    private void cbcategoriaproductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbcategoriaproductoActionPerformed
+    private void cbcategoriaproductoActionPerformed(java.awt.event.ActionEvent evt) { 
         int index = this.cbcategoriaproducto.getSelectedIndex()+1;
         //materia prima
         if (index==1) {
@@ -2406,17 +2687,17 @@ public class Datos extends javax.swing.JFrame {
             this.txtcaducidadproducto.setVisible(true);
             this.lblcaducidad.setVisible(true);
         }
-    }//GEN-LAST:event_cbcategoriaproductoActionPerformed
+    } 
 
-    private void txtbuscar_productoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscar_productoKeyReleased
+    private void txtbuscar_productoKeyReleased(java.awt.event.KeyEvent evt) { 
 
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_productos);
         this.tbproductos.setRowSorter(tr);
 
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscar_producto.getText().toUpperCase(),2));
-    }//GEN-LAST:event_txtbuscar_productoKeyReleased
+    } 
 
-    private void tbproductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbproductosMouseClicked
+    private void tbproductosMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
             if (this.seleccionproducto == 0) {
@@ -2450,14 +2731,43 @@ public class Datos extends javax.swing.JFrame {
             
         }
 
-    }//GEN-LAST:event_tbproductosMouseClicked
+    } 
  
-
-
 //</editor-fold>
      
     //<editor-fold defaultstate="collapsed" desc="Inventario">
-     public void creaciontablainventario()
+    
+    private void txtcantidad_actualinventarioKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtcantidad_actualinventario);
+    }
+
+    private void txtloteinventarioKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtloteinventario);
+    }
+
+    private void txtfactinventarioKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtfactinventario);
+    }
+    
+    public boolean validacion_vacio_inventario()
+    {
+        boolean valida=true;
+        if (this.txtcantidad_actualinventario.getText().isEmpty()) {
+            valida = false;
+            this.txtcantidad_actualinventario.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (this.txtloteinventario.getText().isEmpty()) {
+            valida = false;
+            this.txtloteinventario .setBackground(Color.decode("#FFCCCC"));
+        }
+        if (this.txtfactinventario.getText().isEmpty()) {
+            valida = false;
+            this.txtfactinventario.setBackground(Color.decode("#FFCCCC"));
+        }
+        return valida;
+    }
+    
+    public void creaciontablainventario()
     {  
         try{
             this.tabla_inventario=(DefaultTableModel) this.tbinventario.getModel();
@@ -2548,7 +2858,7 @@ public class Datos extends javax.swing.JFrame {
     }
     
     
-    private void txtbuscarinventarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarinventarioKeyReleased
+    private void txtbuscarinventarioKeyReleased(java.awt.event.KeyEvent evt) { 
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_inventario);
         this.tbinventario.setRowSorter(tr);
 
@@ -2559,22 +2869,18 @@ public class Datos extends javax.swing.JFrame {
 
             tr.setSortKeys(sortKeys);
             tr.sort();
-    }//GEN-LAST:event_txtbuscarinventarioKeyReleased
+    } 
 
-    private void btnCancelarinventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarinventarioActionPerformed
+    private void btnCancelarinventarioActionPerformed(java.awt.event.ActionEvent evt) { 
         deshabilitarinventario();
         limpiarinventario();
-    }//GEN-LAST:event_btnCancelarinventarioActionPerformed
+    } 
 
-    private void btnGuardarinventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarinventarioActionPerformed
+    private void btnGuardarinventarioActionPerformed(java.awt.event.ActionEvent evt) { 
         try{
-            //hacer todo :V
-            if (this.txtcantidad_actualinventario.getText().isEmpty() || this.txtloteinventario.getText().isEmpty() || this.txtfactinventario.getText().isEmpty() ||
-                this.jdfecha.getDate().toString().isEmpty()|| this.jdfecha_caducidad.getDate().toString().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-            }
-            else
-            {
+            
+            if (validacion_vacio_inventario()) {
+                
                 if (this.txtcantidad_actualinventario.getText().matches("^([0-9]+)(\\.[0-9]+)?$") ){
                     
                     Inventario_DB in = new Inventario_DB(this.con);
@@ -2600,7 +2906,12 @@ public class Datos extends javax.swing.JFrame {
                 else
                 {
                     JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
+                    this.txtcantidad_actualinventario.setBackground(Color.decode("#FFCCCC"));
                 }
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
             }
         }
         catch(Exception ex)
@@ -2616,35 +2927,35 @@ public class Datos extends javax.swing.JFrame {
             }
         }
 
-    }//GEN-LAST:event_btnGuardarinventarioActionPerformed
+    } 
 
-    private void btnCambiarinventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarinventarioActionPerformed
+    private void btnCambiarinventarioActionPerformed(java.awt.event.ActionEvent evt) { 
         habilitarinventario();
 
-    }//GEN-LAST:event_btnCambiarinventarioActionPerformed
+    } 
 
-    private void tbinventarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbinventarioMouseClicked
+    private void tbinventarioMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             this.jdfecha_caducidad.setDateFormatString("dd/MM/yyyy");
             this.jdfecha.setDateFormatString("dd/MM/yyyy");
 
-            this.columnainventario=this.tbinventario.getSelectedRow();
+            int columna=this.tbinventario.getSelectedRow();
 
-            this.txtnoentradainventario.setText(this.tbinventario.getValueAt(this.columnainventario, 0).toString());
-            this.txtclaveinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 1).toString());
-            this.txtnombreinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 2).toString());
-            Date date = formatter.parse(fechadividir(this.tbinventario.getValueAt(this.columnainventario, 3).toString(),0));
+            this.txtnoentradainventario.setText(this.tbinventario.getValueAt(columna, 0).toString());
+            this.txtclaveinventario.setText(this.tbinventario.getValueAt(columna, 1).toString());
+            this.txtnombreinventario.setText(this.tbinventario.getValueAt(columna, 2).toString());
+            Date date = formatter.parse(fechadividir(this.tbinventario.getValueAt(columna, 3).toString(),0));
             this.jdfecha.setDate(date);
             
-            this.txtcantidad_actualinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 4).toString());
-            this.txtloteinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 5).toString());
-            this.txtidoppinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 6).toString());
-            this.txtfactinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 7).toString());
-            this.txtcantidadtinventario.setText(this.tbinventario.getValueAt(this.columnainventario, 8).toString());     
+            this.txtcantidad_actualinventario.setText(this.tbinventario.getValueAt(columna, 4).toString());
+            this.txtloteinventario.setText(this.tbinventario.getValueAt(columna, 5).toString());
+            this.txtidoppinventario.setText(this.tbinventario.getValueAt(columna, 6).toString());
+            this.txtfactinventario.setText(this.tbinventario.getValueAt(columna, 7).toString());
+            this.txtcantidadtinventario.setText(this.tbinventario.getValueAt(columna, 8).toString());     
             
-            date = formatter.parse(fechadividir(this.tbinventario.getValueAt(this.columnainventario, 9).toString(),0));
+            date = formatter.parse(fechadividir(this.tbinventario.getValueAt(columna, 9).toString(),0));
             this.jdfecha_caducidad.setDate(date);
             
             
@@ -2655,15 +2966,29 @@ public class Datos extends javax.swing.JFrame {
         {
             
         }
-    }//GEN-LAST:event_tbinventarioMouseClicked
+    } 
+    
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Clientes">
 
+    private void txtnombreclientesKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtnombreclientes);
+    }
+    private void txtcorreoclientesKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtcorreoclientes);
+    }
+
+    private void txtrfcclientesKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtrfcclientes);
+    }
+
+    private void txtcuentaclientesKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtcuentaclientes);
+    }
     
     public void creaciontablaclientes()
-    {
-        
+    {  
         try{
             this.tabla_clientes=(DefaultTableModel) this.tbclientes.getModel();
             this.tabla_clientes.setRowCount(0);
@@ -2842,29 +3167,32 @@ public class Datos extends javax.swing.JFrame {
          if (!this.txtcorreoclientes.getText().isEmpty()) {
             if (!this.txtcorreoclientes.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
                 valida=false;
+                this.txtcorreoclientes.setBackground(Color.decode("#FFCCCC"));
             }
         }
 
         if (!this.txtrfcclientes.getText().isEmpty()) {
             if (!this.txtrfcclientes.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")) {
                 valida=false;
+                this.txtrfcclientes.setBackground(Color.decode("#FFCCCC"));
             }
         }
         if (!this.txtcuentaclientes.getText().isEmpty()) {
             if (!this.txtcuentaclientes.getText().matches("^[0-9]{4}$")) {
                 valida=false;
+                this.txtcuentaclientes.setBackground(Color.decode("#FFCCCC"));
             }
         }
          return valida;
      }
      
      
-    private void btnCancelarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarclienteActionPerformed
+    private void btnCancelarclienteActionPerformed(java.awt.event.ActionEvent evt) { 
         deshabilitarcliente();
         limpiarcliente();
-    }//GEN-LAST:event_btnCancelarclienteActionPerformed
+    } 
 
-    private void btnGuardarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarclienteActionPerformed
+    private void btnGuardarclienteActionPerformed(java.awt.event.ActionEvent evt) { 
         try
         {
             if (this.validar_cliente()) {
@@ -2955,6 +3283,7 @@ public class Datos extends javax.swing.JFrame {
                 else
                 {
                     JOptionPane.showMessageDialog(null, "Campo nombre esta vacio");
+                    this.txtnombreclientes.setBackground(Color.decode("#FFCCCC"));
                 }
             }
             else{
@@ -2975,56 +3304,56 @@ public class Datos extends javax.swing.JFrame {
         catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Error :"+ex);
         } 
-    }//GEN-LAST:event_btnGuardarclienteActionPerformed
+    } 
 
-    private void btnCambiarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarclienteActionPerformed
+    private void btnCambiarclienteActionPerformed(java.awt.event.ActionEvent evt) { 
         habilitarcliente();
         this.seleccionclientes=2;
-    }//GEN-LAST:event_btnCambiarclienteActionPerformed
+    } 
 
-    private void btnAgregarclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarclienteActionPerformed
+    private void btnAgregarclienteActionPerformed(java.awt.event.ActionEvent evt) { 
         habilitarcliente();
         limpiarcliente();
         this.seleccionclientes=1;
-    }//GEN-LAST:event_btnAgregarclienteActionPerformed
+    } 
 
-    private void txtbuscarclientesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarclientesKeyReleased
+    private void txtbuscarclientesKeyReleased(java.awt.event.KeyEvent evt) { 
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_clientes);
         this.tbclientes.setRowSorter(tr);
 
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscarclientes.getText().toUpperCase(),1,15));
-    }//GEN-LAST:event_txtbuscarclientesKeyReleased
+    } 
 
-    private void tbclientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbclientesMouseClicked
+    private void tbclientesMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
-            this.columnacliente=this.tbclientes.getSelectedRow();
+            int columna=this.tbclientes.getSelectedRow();
 
-            this.txtidclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 0).toString());
-            this.txtnombreclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 1).toString());
-            this.txttelefonoclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 2).toString());
-            this.txtcelularclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 3).toString());
-            this.txtcorreoclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 4).toString());
-            this.cbdelegacioncliente.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 5).toString());
-            this.txtcoloniaclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 6).toString());
-            this.txtcalleclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 7).toString());
-            this.txtnointclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 8).toString());
-            this.txtnoextclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 9).toString());
-            this.txtrfcclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 10).toString());
-            this.cbmodopagocliente.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 11).toString());
-            this.txtcuentaclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 12).toString());
-            this.txtcontactoclientes.setText(this.tbclientes.getValueAt(this.columnacliente, 13).toString());
+            this.txtidclientes.setText(this.tbclientes.getValueAt(columna, 0).toString());
+            this.txtnombreclientes.setText(this.tbclientes.getValueAt(columna, 1).toString());
+            this.txttelefonoclientes.setText(this.tbclientes.getValueAt(columna, 2).toString());
+            this.txtcelularclientes.setText(this.tbclientes.getValueAt(columna, 3).toString());
+            this.txtcorreoclientes.setText(this.tbclientes.getValueAt(columna, 4).toString());
+            this.cbdelegacioncliente.setSelectedItem(this.tbclientes.getValueAt(columna, 5).toString());
+            this.txtcoloniaclientes.setText(this.tbclientes.getValueAt(columna, 6).toString());
+            this.txtcalleclientes.setText(this.tbclientes.getValueAt(columna, 7).toString());
+            this.txtnointclientes.setText(this.tbclientes.getValueAt(columna, 8).toString());
+            this.txtnoextclientes.setText(this.tbclientes.getValueAt(columna, 9).toString());
+            this.txtrfcclientes.setText(this.tbclientes.getValueAt(columna, 10).toString());
+            this.cbmodopagocliente.setSelectedItem(this.tbclientes.getValueAt(columna, 11).toString());
+            this.txtcuentaclientes.setText(this.tbclientes.getValueAt(columna, 12).toString());
+            this.txtcontactoclientes.setText(this.tbclientes.getValueAt(columna, 13).toString());
 
-            this.txtnombreclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 15).toString());
-            this.txtcoloniaclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 16).toString());
-            this.txtcalleclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 17).toString());
-            this.txtnointclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 18).toString());
-            this.txtnoextclientes1.setText(this.tbclientes.getValueAt(this.columnacliente, 19).toString());
-            this.cbdelegacionclientef.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 20).toString());
+            this.txtnombreclientes1.setText(this.tbclientes.getValueAt(columna, 15).toString());
+            this.txtcoloniaclientes1.setText(this.tbclientes.getValueAt(columna, 16).toString());
+            this.txtcalleclientes1.setText(this.tbclientes.getValueAt(columna, 17).toString());
+            this.txtnointclientes1.setText(this.tbclientes.getValueAt(columna, 18).toString());
+            this.txtnoextclientes1.setText(this.tbclientes.getValueAt(columna, 19).toString());
+            this.cbdelegacionclientef.setSelectedItem(this.tbclientes.getValueAt(columna, 20).toString());
             
-            this.cbvendedorcliente.setSelectedItem(this.tbclientes.getValueAt(this.columnacliente, 21).toString());
+            this.cbvendedorcliente.setSelectedItem(this.tbclientes.getValueAt(columna, 21).toString());
 
-            if ( Integer.parseInt(this.tbclientes.getValueAt(this.columnacliente, 14).toString() ) == 1 )
+            if ( Integer.parseInt(this.tbclientes.getValueAt(columna, 14).toString() ) == 1 )
             {
                 this.chestatusclientes.setSelected(false);
             }
@@ -3039,14 +3368,34 @@ public class Datos extends javax.swing.JFrame {
         {
             
         }
-    }//GEN-LAST:event_tbclientesMouseClicked
+    } 
     
 
 //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Proveedores">
 
-     public void creaciontablaproveedor()
+    private void txtnombreproveedorKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtnombreproveedor);
+    }
+
+    private void txtcorreoproveedorKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtcorreoproveedor);
+    }
+
+    private void txtcpproveedorKeyReleased(java.awt.event.KeyEvent evt) {
+       regresar_color(txtcpproveedor);
+    }
+
+    private void txtrfcproveedorKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtrfcproveedor);
+    }
+
+    private void txtcuentaproveedorKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtcuentaproveedor);
+    }
+    
+    public void creaciontablaproveedor()
     {
          try{
             this.tabla_proveedor=(DefaultTableModel) this.tbproveedor.getModel();
@@ -3185,33 +3534,37 @@ public class Datos extends javax.swing.JFrame {
         if (!this.txtcorreoproveedor.getText().isEmpty()) {
             if (!this.txtcorreoproveedor.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
                 validado=false;
+                this.txtcorreoproveedor.setBackground(Color.decode("#FFCCCC"));
             }
         }
         if (!this.txtcpproveedor.getText().isEmpty()) {
             if (!this.txtcpproveedor.getText().matches("^[0-9]{5}$")) {
                 validado=false;
+                this.txtcpproveedor.setBackground(Color.decode("#FFCCCC"));
             }
         }
         if (!this.txtrfcproveedor.getText().isEmpty()) {
             if (!this.txtrfcproveedor.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")) {
                 validado=false;
+                this.txtrfcproveedor.setBackground(Color.decode("#FFCCCC"));
             }
         }
         if (!this.txtcuentaproveedor.getText().isEmpty()) {
             if (!this.txtcuentaproveedor.getText().matches("^[0-9]{4}$")) {
                 validado=false;
+                this.txtcuentaproveedor.setBackground(Color.decode("#FFCCCC"));
             }
         }
         
         return validado;
     }
     
-    private void btnCancelarproveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarproveedorActionPerformed
+    private void btnCancelarproveedorActionPerformed(java.awt.event.ActionEvent evt) { 
         deshabilitarproveedor();
         limpiarproveedor();
-    }//GEN-LAST:event_btnCancelarproveedorActionPerformed
+    } 
 
-    private void btnGuardarproveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarproveedorActionPerformed
+    private void btnGuardarproveedorActionPerformed(java.awt.event.ActionEvent evt) { 
         try
         {
             
@@ -3272,6 +3625,7 @@ public class Datos extends javax.swing.JFrame {
                 else
                 {
                     JOptionPane.showMessageDialog(null, "El campo nombre esta vacio");
+                    this.txtnombreproveedor.setBackground(Color.decode("#FFCCCC"));
                 }
             }
             else
@@ -3300,20 +3654,20 @@ public class Datos extends javax.swing.JFrame {
             }
             
         }
-    }//GEN-LAST:event_btnGuardarproveedorActionPerformed
+    } 
 
-    private void btnCambiarproveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarproveedorActionPerformed
+    private void btnCambiarproveedorActionPerformed(java.awt.event.ActionEvent evt) { 
         habilitarproveedor();
         this.seleccionproveedor=2;
-    }//GEN-LAST:event_btnCambiarproveedorActionPerformed
+    } 
 
-    private void btnAgregarproveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarproveedorActionPerformed
+    private void btnAgregarproveedorActionPerformed(java.awt.event.ActionEvent evt) { 
         habilitarproveedor();
         limpiarproveedor();
         this.seleccionproveedor=1;
-    }//GEN-LAST:event_btnAgregarproveedorActionPerformed
+    } 
 
-    private void txtbuscarproveedorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarproveedorKeyReleased
+    private void txtbuscarproveedorKeyReleased(java.awt.event.KeyEvent evt) { 
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_proveedor);
         this.tbproveedor.setRowSorter(tr);
 
@@ -3325,27 +3679,27 @@ public class Datos extends javax.swing.JFrame {
 
         tr.setSortKeys(sortKeys);
         tr.sort();
-    }//GEN-LAST:event_txtbuscarproveedorKeyReleased
+    } 
 
-    private void tbproveedorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbproveedorMouseClicked
+    private void tbproveedorMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
-            this.columnaproveedor=this.tbproveedor.getSelectedRow();
+            int columna=this.tbproveedor.getSelectedRow();
 
-            this.txtidproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 0).toString());
-            this.txtnombreproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 1).toString());
-            this.txttelefonoproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 2).toString());
-            this.txtcorreoproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 3).toString());
-            this.txtcpproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 4).toString());
-            this.txtcoloniaproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 5).toString());
-            this.txtcalleproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 6).toString());
-            this.txtnointproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 7).toString());
-            this.txtnoextproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 8).toString());
-            this.txtrfcproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 9).toString());
-            this.cbmodopagoproveedor.setSelectedItem(this.tbproveedor.getValueAt(this.columnaproveedor, 10).toString());
-            this.txtcuentaproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 11).toString());
-            this.txtcontactoproveedor.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 12).toString());
-            this.txtsistemacalidad.setText(this.tbproveedor.getValueAt(this.columnaproveedor, 13).toString());
+            this.txtidproveedor.setText(this.tbproveedor.getValueAt(columna, 0).toString());
+            this.txtnombreproveedor.setText(this.tbproveedor.getValueAt(columna, 1).toString());
+            this.txttelefonoproveedor.setText(this.tbproveedor.getValueAt(columna, 2).toString());
+            this.txtcorreoproveedor.setText(this.tbproveedor.getValueAt(columna, 3).toString());
+            this.txtcpproveedor.setText(this.tbproveedor.getValueAt(columna, 4).toString());
+            this.txtcoloniaproveedor.setText(this.tbproveedor.getValueAt(columna, 5).toString());
+            this.txtcalleproveedor.setText(this.tbproveedor.getValueAt(columna, 6).toString());
+            this.txtnointproveedor.setText(this.tbproveedor.getValueAt(columna, 7).toString());
+            this.txtnoextproveedor.setText(this.tbproveedor.getValueAt(columna, 8).toString());
+            this.txtrfcproveedor.setText(this.tbproveedor.getValueAt(columna, 9).toString());
+            this.cbmodopagoproveedor.setSelectedItem(this.tbproveedor.getValueAt(columna, 10).toString());
+            this.txtcuentaproveedor.setText(this.tbproveedor.getValueAt(columna, 11).toString());
+            this.txtcontactoproveedor.setText(this.tbproveedor.getValueAt(columna, 12).toString());
+            this.txtsistemacalidad.setText(this.tbproveedor.getValueAt(columna, 13).toString());
 
             this.btnCambiarproveedor.setEnabled(true);
         }
@@ -3353,11 +3707,19 @@ public class Datos extends javax.swing.JFrame {
         {
             
         }
-    }//GEN-LAST:event_tbproveedorMouseClicked
+    } 
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Vendedores">
 
+    private void txtnombrevendedorKeyReleased(java.awt.event.KeyEvent evt) {
+       regresar_color(txtnombrevendedor);
+    }
+
+    private void txtcorreovendedorKeyReleased(java.awt.event.KeyEvent evt) {
+        regresar_color(txtcorreovendedor);
+    }
+    
     public void creaciontablavendedores()
     {
         try{
@@ -3473,18 +3835,20 @@ public class Datos extends javax.swing.JFrame {
     }
 
     
-    private void btnCancelarvendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarvendedorActionPerformed
+    private void btnCancelarvendedorActionPerformed(java.awt.event.ActionEvent evt) { 
         deshabilitarvendedor();
         limpiarvendedor();
-    }//GEN-LAST:event_btnCancelarvendedorActionPerformed
+    } 
 
-    private void btnGuardarvendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarvendedorActionPerformed
+    private void btnGuardarvendedorActionPerformed(java.awt.event.ActionEvent evt) { 
         try
         {
+            //SI HAY CORREO
             boolean validacion=true;
             if (!this.txtcorreovendedor.getText().isEmpty()) {
                 if (!this.txtcorreovendedor.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
                     validacion=false;
+                    this.txtcorreovendedor.setBackground(Color.decode("#FFCCCC"));
                 }
             }
             if (!this.txtnombrevendedor.getText().isEmpty()) {
@@ -3533,7 +3897,8 @@ public class Datos extends javax.swing.JFrame {
             }
             else
             {
-                 JOptionPane.showMessageDialog(null, "El nombre esta vacio");
+                JOptionPane.showMessageDialog(null, "El nombre esta vacio");
+                this.txtnombrevendedor.setBackground(Color.decode("#FFCCCC"));
             }
             
         }
@@ -3557,22 +3922,22 @@ public class Datos extends javax.swing.JFrame {
             }
             
         }
-    }//GEN-LAST:event_btnGuardarvendedorActionPerformed
+    } 
 
-    private void btnCambiarvendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarvendedorActionPerformed
+    private void btnCambiarvendedorActionPerformed(java.awt.event.ActionEvent evt) { 
         this.seleccionvendedor=2;
         habilitarvendedor();
-    }//GEN-LAST:event_btnCambiarvendedorActionPerformed
+    } 
 
-    private void btnAgregarvendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarvendedorActionPerformed
+    private void btnAgregarvendedorActionPerformed(java.awt.event.ActionEvent evt) { 
 
         limpiarvendedor();
         this.seleccionvendedor=1;
         habilitarvendedor();
 
-    }//GEN-LAST:event_btnAgregarvendedorActionPerformed
+    } 
 
-    private void txtbuscarvendedoresKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarvendedoresKeyReleased
+    private void txtbuscarvendedoresKeyReleased(java.awt.event.KeyEvent evt) { 
         TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(this.tabla_vendedores);
         this.tbvendedores.setRowSorter(tr);
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscarvendedores.getText().toUpperCase(),1,4));
@@ -3583,22 +3948,22 @@ public class Datos extends javax.swing.JFrame {
 
         tr.setSortKeys(sortKeys);
         tr.sort();
-    }//GEN-LAST:event_txtbuscarvendedoresKeyReleased
+    } 
 
-    private void tbvendedoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbvendedoresMouseClicked
+    private void tbvendedoresMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
-            this.columnavendedor=this.tbvendedores.getSelectedRow();
+            int columna=this.tbvendedores.getSelectedRow();
 
-            this.txtidvendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 0).toString());
-            this.txtnombrevendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 1).toString());
-            this.txttelefonovendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 2).toString());
-            this.txtcorreovendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 3).toString());
-            this.cbdelegacionvendedor.setSelectedItem(this.tbvendedores.getValueAt(this.columnavendedor, 4).toString());
-            this.txtcoloniavendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 5).toString());
-            this.txtcallevendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 6).toString());
-            this.txtnointvendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 7).toString());
-            this.txtnoextvendedor.setText(this.tbvendedores.getValueAt(this.columnavendedor, 8).toString());
+            this.txtidvendedor.setText(this.tbvendedores.getValueAt(columna, 0).toString());
+            this.txtnombrevendedor.setText(this.tbvendedores.getValueAt(columna, 1).toString());
+            this.txttelefonovendedor.setText(this.tbvendedores.getValueAt(columna, 2).toString());
+            this.txtcorreovendedor.setText(this.tbvendedores.getValueAt(columna, 3).toString());
+            this.cbdelegacionvendedor.setSelectedItem(this.tbvendedores.getValueAt(columna, 4).toString());
+            this.txtcoloniavendedor.setText(this.tbvendedores.getValueAt(columna, 5).toString());
+            this.txtcallevendedor.setText(this.tbvendedores.getValueAt(columna, 6).toString());
+            this.txtnointvendedor.setText(this.tbvendedores.getValueAt(columna, 7).toString());
+            this.txtnoextvendedor.setText(this.tbvendedores.getValueAt(columna, 8).toString());
 
             this.btnCambiarvendedor.setEnabled(true);
         }
@@ -3606,7 +3971,7 @@ public class Datos extends javax.swing.JFrame {
         {
             
         }
-    }//GEN-LAST:event_tbvendedoresMouseClicked
+    } 
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Ingredientes">
@@ -3711,12 +4076,12 @@ public class Datos extends javax.swing.JFrame {
         }
     }
 
-    
-    private void btnquitaringreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitaringreActionPerformed
+    private void btnquitaringreActionPerformed(java.awt.event.ActionEvent evt) { 
         try{
+            int columna=this.tbingredientes.getSelectedRow();
             Ingrediente ing = new Ingrediente();
             ing.setId_profinal(Integer.parseInt(this.txtidingrediente.getText()));
-            ing.setId(Integer.parseInt(this.tbingredientes.getValueAt(this.columnaingrediente, 0).toString()));         
+            ing.setId(Integer.parseInt(this.tbingredientes.getValueAt(columna, 0).toString()));         
             Ingredientes_DB ingre = new Ingredientes_DB(this.con);
             ingre.delete_ingrediente(ing);
             actualizaringrediente();
@@ -3742,34 +4107,33 @@ public class Datos extends javax.swing.JFrame {
             }
             
         }
-    }//GEN-LAST:event_btnquitaringreActionPerformed
+    } 
 
-    private void btnAgregaringreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregaringreActionPerformed
+    private void btnAgregaringreActionPerformed(java.awt.event.ActionEvent evt) { 
         try {
-            Elegir_Producto ep = new Elegir_Producto(this,2,this.con);
+            Elegir_Producto_Ingredientes ep = new Elegir_Producto_Ingredientes(this,2,this.con);
             ep.setVisible(true);
             this.setEnabled(false);
 
         } catch (SQLException ex) {
             Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnAgregaringreActionPerformed
+    } 
 
-    private void tbingredientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbingredientesMouseClicked
+    private void tbingredientesMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
-            this.columnaingrediente=this.tbingredientes.getSelectedRow();
             this.btnquitaringre.setEnabled(true);
         }
         catch(Exception ex)
         {
 
         }
-    }//GEN-LAST:event_tbingredientesMouseClicked
+    } 
 
-    private void btnElegir_ingredienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegir_ingredienteActionPerformed
+    private void btnElegir_ingredienteActionPerformed(java.awt.event.ActionEvent evt) { 
         try {
-            Elegir_Producto ep = new Elegir_Producto(this,1,this.con);
+            Elegir_Producto_Ingredientes ep = new Elegir_Producto_Ingredientes(this,1,this.con);
             ep.setVisible(true);
             this.setEnabled(false);
 
@@ -3777,14 +4141,54 @@ public class Datos extends javax.swing.JFrame {
             Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }//GEN-LAST:event_btnElegir_ingredienteActionPerformed
+    } 
 
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Pruebas">
     
     //Prueba
+    private void txtdeterminacionKeyReleased(java.awt.event.KeyEvent evt) { 
+        regresar_color(txtdeterminacion);
+    } 
 
+    private void txtparametroKeyReleased(java.awt.event.KeyEvent evt) { 
+        regresar_color(txtparametro);
+    } 
+
+    private void txtmetodoKeyReleased(java.awt.event.KeyEvent evt) {                                      
+        regresar_color(txtmetodo);
+    } 
+    
+    public boolean validar_vacio_prueba()
+    {
+        boolean valida=true;
+        if (this.txtdeterminacion.getText().isEmpty()) {
+            valida = false;
+            this.txtdeterminacion.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (this.txtparametro.getText().isEmpty()) {
+            valida = false;
+            this.txtparametro.setBackground(Color.decode("#FFCCCC"));
+        }
+        if (this.txtmetodo.getText().isEmpty()) {
+            valida = false;
+            this.txtmetodo.setBackground(Color.decode("#FFCCCC"));
+        }
+        return valida;
+    }
+    
+    public boolean validar_formato_prueba()
+    {
+        boolean valida=true;
+        if (this.txtparametro.getText().matches("^[A-Za-z\\s]+$") || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$") || this.txtparametro.getText().matches("^>=[0-9]+(.[0-9]+)?|<=[0-9]+(.[0-9]+)?$") 
+             || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?$") ) {
+            valida = false;
+            this.txtparametro.setBackground(Color.decode("#FFCCCC"));
+        }
+        return valida;
+    }
+    
     public void combo_prueba() throws SQLException{
         Pruebas_DB pr = new Pruebas_DB(this.con);
         List <String> combo = pr.combo_categoria();
@@ -3846,29 +4250,21 @@ public class Datos extends javax.swing.JFrame {
         }
     }
     
-    private void btnElegirpruebaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegirpruebaActionPerformed
+    private void btnElegirpruebaActionPerformed(java.awt.event.ActionEvent evt) { 
          try {
-            Elegir_Producto ep = new Elegir_Producto(this,3,this.con);
+            Elegir_Producto_Ingredientes ep = new Elegir_Producto_Ingredientes(this,3,this.con);
             ep.setVisible(true);
             this.setEnabled(false);
 
         } catch (SQLException ex) {
             Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnElegirpruebaActionPerformed
+    } 
 
-    private void tbpruebasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbpruebasMouseClicked
-        this.columnaprueba=this.tbpruebas.getSelectedRow();
-    }//GEN-LAST:event_tbpruebasMouseClicked
-
-    private void btnAgregarpruebaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarpruebaActionPerformed
+    private void btnAgregarpruebaActionPerformed(java.awt.event.ActionEvent evt) { 
         try{
-            if (this.txtdeterminacion.getText().isEmpty() || this.txtparametro.getText().isEmpty() || this.txtmetodo.getText().isEmpty() ) {
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
-            }
-            else{
-                 if (this.txtparametro.getText().matches("^[A-Za-z\\s]+$") || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$") || this.txtparametro.getText().matches("^>=[0-9]+(.[0-9]+)?|<=[0-9]+(.[0-9]+)?$") 
-                     || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?$")     ) {
+            if (validar_vacio_prueba()) {       
+                if (validar_formato_prueba() ) {
                      
                     Pruebas_DB pr = new Pruebas_DB(this.con);
                     
@@ -3885,9 +4281,11 @@ public class Datos extends javax.swing.JFrame {
                     //this.con.commit();
                  }
                  else{
-                     JOptionPane.showMessageDialog(null, "Algun campo incorrecto");
+                     JOptionPane.showMessageDialog(null, "Parametro Incorrecto :\n \t\tSolo letras\n\t\tRango #-#\n\t\tMayor o menor <=# >=#\n\t\tNumero Fijo ##.##");
                  }
-
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
             }
         }
         catch(SQLException ex)
@@ -3907,15 +4305,15 @@ public class Datos extends javax.swing.JFrame {
             
         }
         
-    }//GEN-LAST:event_btnAgregarpruebaActionPerformed
+    } 
 
-    private void btnquitarpruebaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitarpruebaActionPerformed
+    private void btnquitarpruebaActionPerformed(java.awt.event.ActionEvent evt) { 
         try{
             Pruebas_DB pr = new Pruebas_DB(this.con);
-            
+            int columna=this.tbpruebas.getSelectedRow();
             Prueba prueba = new Prueba();
             prueba.setId_producto(Integer.parseInt(this.txtidprueba.getText()));
-            prueba.setDeterminacion(this.tbpruebas.getValueAt(this.columnaprueba, 1).toString());
+            prueba.setDeterminacion(this.tbpruebas.getValueAt(columna, 1).toString());
 
             pr.delete(prueba);
             actualizarprueba();
@@ -3936,7 +4334,7 @@ public class Datos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error :"+ ex);
   
         }
-    }//GEN-LAST:event_btnquitarpruebaActionPerformed
+    }
     
 
 //</editor-fold>
@@ -3944,6 +4342,7 @@ public class Datos extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -3979,9 +4378,8 @@ public class Datos extends javax.swing.JFrame {
         });
  
     }
+    //<editor-fold defaultstate="collapsed" desc="Variables 2">
     
-    
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Clientes;
     private javax.swing.JPanel Ingredientes;
@@ -4206,5 +4604,6 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JTextField txttelefonoproveedor;
     private javax.swing.JTextField txttelefonovendedor;
     // End of variables declaration//GEN-END:variables
-}
+//</editor-fold>
 
+}

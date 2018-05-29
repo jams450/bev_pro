@@ -1,10 +1,7 @@
 
 package sistema;
 
-
-
 import datos.Conexion;
-import datos.DBcontrolador;
 import datos.Login_DB;
 import java.awt.Color;
 import negocio.Usuario;
@@ -12,22 +9,13 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 
-/**
- *
- * @author PC
- */
 public class Login extends javax.swing.JFrame {
-
-    /**
-     * Creates new form Login
-     */
 
     Connection con;
     List<Usuario> user ;
@@ -36,12 +24,6 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         try {
             con = Conexion.getConnection();
-            //Revisamos si la conexion esta en modo autocommit
-            //por default es autocommit == true
-            /*if (con.getAutoCommit()) {
-                con.setAutoCommit(false);
-            }*/
-
             Login_DB login = new Login_DB(con);
             user =login.select();
             //Ventana en medio 
@@ -58,6 +40,17 @@ public class Login extends javax.swing.JFrame {
         
     }
 
+    
+    public void camcolor(JButton jp)
+    {
+        jp.setBackground(new java.awt.Color(240,168,7));
+    }
+    
+    public void resetcolor(JButton jp)
+    {
+        jp.setBackground(new java.awt.Color(240,200,115));
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -92,10 +85,18 @@ public class Login extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        btncancelar.setBackground(new java.awt.Color(162, 127, 51));
+        btncancelar.setBackground(new java.awt.Color(240, 200, 115));
         btncancelar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btncancelar.setText("Cancelar");
         btncancelar.setBorderPainted(false);
+        btncancelar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btncancelarMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btncancelarMouseExited(evt);
+            }
+        });
         btncancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btncancelarActionPerformed(evt);
@@ -108,10 +109,18 @@ public class Login extends javax.swing.JFrame {
         jLabel15.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 14)); // NOI18N
         jLabel15.setText("Contraseña :");
 
-        btnAceptar.setBackground(new java.awt.Color(162, 127, 51));
+        btnAceptar.setBackground(new java.awt.Color(240, 200, 115));
         btnAceptar.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnAceptar.setText("Aceptar");
         btnAceptar.setBorderPainted(false);
+        btnAceptar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnAceptarMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnAceptarMouseExited(evt);
+            }
+        });
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAceptarActionPerformed(evt);
@@ -250,9 +259,7 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error :"+ex);
         } 
     }
- 
-    
-    
+
     public boolean validacion_vacio(){
         boolean pasa=true;
         if (this.txtuser.getText().isEmpty()) {
@@ -287,6 +294,22 @@ public class Login extends javax.swing.JFrame {
              this.txtpass.setBackground(Color.white);
          }
     }//GEN-LAST:event_txtpassKeyPressed
+
+    private void btnAceptarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMouseEntered
+       this.camcolor(btnAceptar);
+    }//GEN-LAST:event_btnAceptarMouseEntered
+
+    private void btnAceptarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMouseExited
+       this.resetcolor(btnAceptar);
+    }//GEN-LAST:event_btnAceptarMouseExited
+
+    private void btncancelarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btncancelarMouseEntered
+       this.camcolor(btncancelar);
+    }//GEN-LAST:event_btncancelarMouseEntered
+
+    private void btncancelarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btncancelarMouseExited
+        this.resetcolor(btnAceptar);
+    }//GEN-LAST:event_btncancelarMouseExited
 
     /**
      * @param args the command line arguments

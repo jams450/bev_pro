@@ -14,9 +14,7 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Principal;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -511,7 +509,7 @@ public class Ventas extends javax.swing.JFrame {
 
     private void btnvendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnvendedorActionPerformed
        try{        
-       Elegir_CV cv = new Elegir_CV(this,1,this.con);
+       Elegir_Cliente_Vendedor_Ventas cv = new Elegir_Cliente_Vendedor_Ventas(this,1,this.con);
        cv.setVisible(true);
        }
        catch(Exception ex)
@@ -523,7 +521,7 @@ public class Ventas extends javax.swing.JFrame {
     private void btnelegirclienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnelegirclienteActionPerformed
         try{
        this.setEnabled(false);
-       Elegir_CV cv = new Elegir_CV(this,2,this.con);
+       Elegir_Cliente_Vendedor_Ventas cv = new Elegir_Cliente_Vendedor_Ventas(this,2,this.con);
        cv.setVisible(true);
        }
        catch(Exception ex)
@@ -535,7 +533,7 @@ public class Ventas extends javax.swing.JFrame {
     private void btnagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnagregarActionPerformed
        try{
        this.mp.setVisible(false);
-       Elegir_ProductoV cv = new Elegir_ProductoV(this,this.con);
+       Elegir_ProductoVentas cv = new Elegir_ProductoVentas(this,this.con);
        cv.setVisible(true);
        }
        catch(Exception ex)
@@ -717,7 +715,7 @@ public class Ventas extends javax.swing.JFrame {
             try{
                 if (this.btnagregar.isEnabled()) {
                     this.mp.setVisible(false);
-                    Elegir_ProductoV cv = new Elegir_ProductoV(this,this.con);
+                    Elegir_ProductoVentas cv = new Elegir_ProductoVentas(this,this.con);
                     cv.setVisible(true);
                 }
                 
@@ -730,7 +728,7 @@ public class Ventas extends javax.swing.JFrame {
         if(evt.getKeyCode() == KeyEvent.VK_F9) {
             try{
             this.setEnabled(false);
-            Elegir_CV cv = new Elegir_CV(this,2,con);
+            Elegir_Cliente_Vendedor_Ventas cv = new Elegir_Cliente_Vendedor_Ventas(this,2,con);
             cv.setVisible(true);
             }
             catch(Exception ex)
@@ -741,7 +739,7 @@ public class Ventas extends javax.swing.JFrame {
         if(evt.getKeyCode() == KeyEvent.VK_F8) {
             try{        
         
-            Elegir_CV cv = new Elegir_CV(this,1,this.con);
+            Elegir_Cliente_Vendedor_Ventas cv = new Elegir_Cliente_Vendedor_Ventas(this,1,this.con);
             cv.setVisible(true);
             }
             catch(Exception ex)
