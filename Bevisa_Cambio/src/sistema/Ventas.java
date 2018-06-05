@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sistema;
 
 import datos.Conexion;
@@ -585,7 +581,7 @@ public class Ventas extends javax.swing.JFrame {
 
                             double aux = cantidad_inventario-cantidad;
                             if (cantidad != 0) {
-
+                                
                                 if (aux >= 0) {
                                     this.venta.getDetalle().get(i).setIdventa(id_venta);
                                     this.venta.getDetalle().get(i).setIdinven(Integer.parseInt(lotes.get(j)[0]));
@@ -613,6 +609,7 @@ public class Ventas extends javax.swing.JFrame {
                         }
                     }
                   
+                    this.venta.getDetalle().clear();
                     
                     //limpiar
                     this.ventas.setRowCount(0);
@@ -638,11 +635,12 @@ public class Ventas extends javax.swing.JFrame {
                     // Ubicacion del Reporte
                    String path = s+"\\Reportes\\Ventas_Ticket.jasper";
                    try {
+                       
                        Map categoria = new HashMap();
                        categoria.put("ID_Venta", id_venta);
                        categoria.put("op",respuesta);
                        reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
-                       JasperPrint jprint = JasperFillManager.fillReport(path, categoria,this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+                       JasperPrint jprint = JasperFillManager.fillReport(path, categoria,this.con); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
                        JasperExportManager.exportReportToPdfFile(jprint, s+"\\Tickets\\Venta-"+id_venta+".pdf");
 
                        
@@ -674,7 +672,7 @@ public class Ventas extends javax.swing.JFrame {
                    } 
                    catch(Exception ex)
                     {
-                        JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+                        JOptionPane.showMessageDialog(null, "Error reporte "+ ex);
                          try {
                             this.con=Conexion.getConnection();
                         } catch (SQLException ex1) {

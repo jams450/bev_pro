@@ -752,6 +752,11 @@ public class Datos extends javax.swing.JFrame {
         });
         tbingredientes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbingredientes.getTableHeader().setReorderingAllowed(false);
+        tbingredientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbingredientesMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbingredientes);
         if (tbingredientes.getColumnModel().getColumnCount() > 0) {
             tbingredientes.getColumnModel().getColumn(0).setPreferredWidth(35);
@@ -850,6 +855,11 @@ public class Datos extends javax.swing.JFrame {
         });
         tbpruebas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbpruebas.getTableHeader().setReorderingAllowed(false);
+        tbpruebas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbpruebasMouseClicked(evt);
+            }
+        });
         jScrollPane6.setViewportView(tbpruebas);
 
         Pruebas.add(jScrollPane6, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 150, 720, 280));
@@ -2115,7 +2125,7 @@ public class Datos extends javax.swing.JFrame {
     public boolean validacion_formato_productos(int opcion){
         //Color.decode("#FFCCCC") el color de error
         boolean valida = true;
-        
+        String error ="";
         switch(opcion)
         {
             //PARA MATERIA PRIMA
@@ -2123,10 +2133,12 @@ public class Datos extends javax.swing.JFrame {
                 if (!this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
                     valida = false;
                     this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
+                    error+="Ejemplo de Stock Minimo: 0.00 ó 0 \n";
                 }
                 if (!this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
                     valida = false;
                     this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
+                    error+="Ejemplo de Precio de Venta: 0.00 ó 0 \n";
                 }          
             break;
             
@@ -2135,10 +2147,12 @@ public class Datos extends javax.swing.JFrame {
                 if (!this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
                     valida = false;
                     this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
+                    error+="Ejemplo de Precio de Venta: 0.00 ó 0 \n";
                 }
                 if (!this.txtcaducidadproducto.getText().matches("^[0-9]+$")) {
                     valida = false;
                     this.txtcaducidadproducto.setBackground(Color.decode("#FFCCCC"));
+                    error+="Ejemplo de Caducidad: 0 \n";
                 }
             break;
             //EMPAQUE
@@ -2146,6 +2160,7 @@ public class Datos extends javax.swing.JFrame {
                 if (!this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") ) {
                     valida = false;
                     this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
+                    error+="Ejemplo de Stock Minimo: 0.00 ó 0 \n";
                 }
                 break;
             //GALERIA    
@@ -2153,16 +2168,24 @@ public class Datos extends javax.swing.JFrame {
                 if (!this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
                     valida = false;
                     this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
+                    error+="Ejemplo de Precio de Venta: 0.00 ó 0 \n";
                 }
                 if (!this.txtcaducidadproducto.getText().matches("^[0-9]+$")) {
                     valida = false;
                     this.txtcaducidadproducto.setBackground(Color.decode("#FFCCCC"));
+                    error+="Ejemplo de Caducidad: 0 \n";
                 }
                 if (!this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
                     valida = false;
                     this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
+                    error+="Ejemplo de Stock Minimo: 0.00 ó 0 \n";
                 }
-            break;
+            break;      
+        }
+        
+        if (!valida)
+        {
+            JOptionPane.showMessageDialog(null, "Formatos incorrectos: \n"+error);       
         }
         
         return valida;
@@ -2205,23 +2228,27 @@ public class Datos extends javax.swing.JFrame {
             
             //combo
             List <String> combo =pro.combo_categoria();
+            this.cbcategoriaproducto.removeAllItems();
             for (int i = 0; i < combo.size(); i++) {
             this.cbcategoriaproducto.addItem(combo.get(i));
             }
             combo.clear();
             
             combo =pro.combo_medida();
+            this.cbmedidaproducto.removeAllItems();
             for (int i = 0; i < combo.size(); i++) {
             this.cbmedidaproducto.addItem(combo.get(i));
             }
             combo.clear();
             combo =pro.combo_moneda();
+            this.cbmonedaproducto.removeAllItems();
             for (int i = 0; i < combo.size(); i++) {
             this.cbmonedaproducto.addItem(combo.get(i));
             }
             
             combo.clear();
             combo =pro.combo_proceso();
+            this.cbprocesoproducto.removeAllItems();
             for (int i = 0; i < combo.size(); i++) {
             this.cbprocesoproducto.addItem(combo.get(i));
             }
@@ -2313,6 +2340,12 @@ public class Datos extends javax.swing.JFrame {
     private void btnCancelar_productoActionPerformed(java.awt.event.ActionEvent evt) { 
         deshabilitar();
         this.seleccionproducto=0;
+        regresar_color(txtclaveproducto);
+        regresar_color(txtnombreproducto);
+        regresar_color(txtsminproducto);
+        regresar_color(txtpventaproducto);
+        regresar_color(txtcaducidadproducto);
+        regresar_color(txtpeso_producto);
     } 
 
     private void btnGuardar_productoActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -2373,14 +2406,10 @@ public class Datos extends javax.swing.JFrame {
                             this.seleccionproducto=0;
                             deshabilitar();
                         }
-                        else
-                        {
-                            JOptionPane.showMessageDialog(null, "Formato de stock incorrecto");
-                        }
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+                        JOptionPane.showMessageDialog(null, "Campos vacios");
                     }
                     break;
 
@@ -3983,7 +4012,6 @@ public class Datos extends javax.swing.JFrame {
         this.txtidingrediente.setText(pro.getId()+"");
         this.txtnombreingrediente.setText(pro.getNombre());
         this.btnAgregaringre.setEnabled(true);
-        this.btnquitaringre.setEnabled(true);
         actualizaringrediente();
     }
     
@@ -4078,14 +4106,17 @@ public class Datos extends javax.swing.JFrame {
 
     private void btnquitaringreActionPerformed(java.awt.event.ActionEvent evt) { 
         try{
-            int columna=this.tbingredientes.getSelectedRow();
-            Ingrediente ing = new Ingrediente();
-            ing.setId_profinal(Integer.parseInt(this.txtidingrediente.getText()));
-            ing.setId(Integer.parseInt(this.tbingredientes.getValueAt(columna, 0).toString()));         
-            Ingredientes_DB ingre = new Ingredientes_DB(this.con);
-            ingre.delete_ingrediente(ing);
-            actualizaringrediente();
-            //this.con.commit();
+            if (JOptionPane.showConfirmDialog(null, "¿Desea Eliminar el Ingrediente?", "Cancelacion", JOptionPane.YES_NO_OPTION)==0) {
+                int columna=this.tbingredientes.getSelectedRow();
+                Ingrediente ing = new Ingrediente();
+                ing.setId_profinal(Integer.parseInt(this.txtidingrediente.getText()));
+                ing.setId(Integer.parseInt(this.tbingredientes.getValueAt(columna, 0).toString()));         
+                Ingredientes_DB ingre = new Ingredientes_DB(this.con);
+                ingre.delete_ingrediente(ing);
+                actualizaringrediente();
+                //this.con.commit();
+            }
+            
         }
         catch(SQLException ex)
         {
@@ -4119,18 +4150,6 @@ public class Datos extends javax.swing.JFrame {
             Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
         }
     } 
-
-    private void tbingredientesMouseClicked(java.awt.event.MouseEvent evt) { 
-        try
-        {
-            this.btnquitaringre.setEnabled(true);
-        }
-        catch(Exception ex)
-        {
-
-        }
-    } 
-
     private void btnElegir_ingredienteActionPerformed(java.awt.event.ActionEvent evt) { 
         try {
             Elegir_Producto_Ingredientes ep = new Elegir_Producto_Ingredientes(this,1,this.con);
@@ -4142,6 +4161,17 @@ public class Datos extends javax.swing.JFrame {
         }
 
     } 
+    
+     private void tbingredientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbingredientesMouseClicked
+        try
+        {
+            this.btnquitaringre.setEnabled(true);
+        }
+        catch(Exception ex)
+        {
+
+        }
+    }//GEN-LAST:event_tbingredientesMouseClicked
 
     //</editor-fold>
     
@@ -4203,7 +4233,6 @@ public class Datos extends javax.swing.JFrame {
         this.txtclaveprueba.setText(pro.getClave());
         this.txtnombreprueba.setText(pro.getNombre());
         this.btnAgregarprueba.setEnabled(true);
-        this.btnquitarprueba.setEnabled(true);
         
         actualizarprueba();
     }
@@ -4335,6 +4364,11 @@ public class Datos extends javax.swing.JFrame {
   
         }
     }
+    
+    private void tbpruebasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbpruebasMouseClicked
+        this.btnquitarprueba.setEnabled(true);
+        
+    }//GEN-LAST:event_tbpruebasMouseClicked
     
 
 //</editor-fold>

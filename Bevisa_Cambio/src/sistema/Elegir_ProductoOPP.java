@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package sistema;
 
 import datos.Conexion;
@@ -54,6 +50,8 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
             this.txtpunitario.setVisible(false);
             this.lbcantidad1.setVisible(false);
             this.lbcantidad2.setVisible(false);
+            this.chivaproducto.setVisible(false);
+            this.lbliva.setVisible(false);
         }
        
     }
@@ -65,7 +63,7 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
         
         try
         {
-            if (this.opc==1) {
+            if (this.opc==1 || this.opc==3) {
                 this.tabla=(DefaultTableModel) this.tbdatos.getModel();
                 this.tabla.setRowCount(0);
                 List <Producto> pro = db.select_productos();
@@ -469,15 +467,34 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
         {
             if (valida_formato(2) )
             {
-                this.mov.pro.setNombre(this.txtnombre.getText());
-                this.mov.pro.setClave(this.txtclave.getText());
-                this.mov.pro.setId(Integer.parseInt(this.txtid.getText()));  
-                this.mov.pro.setMedida(this.txtmedida.getText());
-                this.mov.pro.setStockmin(Double.parseDouble(this.txtcantidad.getText()));
-                this.mov.colocarproductoopc();
-                this.mov.setEnabled(true);
-                this.mov.setState(NORMAL);
-                this.dispose();       
+                if (this.opc==2) {
+                    Producto pro =new Producto();
+                    pro.setNombre(this.txtnombre.getText());
+                    pro.setClave(this.txtclave.getText());
+                    pro.setId(Integer.parseInt(this.txtid.getText()));  
+                    pro.setMedida(this.txtmedida.getText());
+                    pro.setStockmin(Double.parseDouble(this.txtcantidad.getText()));
+                    this.mov.pro=pro;
+                    this.mov.colocarproductoopc();
+                    this.mov.setEnabled(true);
+                    this.mov.setState(NORMAL);
+                    this.dispose();  
+                }
+                else
+                {
+                    Producto pro = new Producto();
+                    pro.setNombre(this.txtnombre.getText());
+                    pro.setClave(this.txtclave.getText());
+                    pro.setId(Integer.parseInt(this.txtid.getText()));  
+                    pro.setMedida(this.txtmedida.getText());
+                    //cantidad
+                    pro.setStockmin(Double.parseDouble(this.txtcantidad.getText()));
+                    this.mov.colocar_producto_repro(pro);
+                    this.mov.setEnabled(true);
+                    this.mov.setState(NORMAL);
+                    this.dispose();  
+                }
+                       
             }
             else
             {

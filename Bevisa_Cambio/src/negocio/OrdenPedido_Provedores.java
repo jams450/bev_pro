@@ -1,6 +1,7 @@
 
 package negocio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrdenPedido_Provedores {
@@ -16,6 +17,12 @@ public class OrdenPedido_Provedores {
     private String observaciones;
     
     private List<Producto> productos;
+
+    public OrdenPedido_Provedores() {
+        this.productos = new ArrayList<>();
+    }
+    
+    
 
     public int getId() {
         return id;

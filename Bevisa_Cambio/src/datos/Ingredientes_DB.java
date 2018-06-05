@@ -16,7 +16,7 @@ public class Ingredientes_DB {
     private java.sql.Connection userConn;
     
     private final String SELECT_PRO_FI=
-            "select productos.id ,  productos.Clave, productos.Nombre, umedida.nombre from productos join umedida on productos.idmedida= umedida.id  where idcategoria = 2 or idcategoria = 4;";
+            "select productos.id ,  productos.Clave, productos.Nombre, umedida.nombre from productos join umedida on productos.idmedida= umedida.id  where idcategoria = 2 or idcategoria = 4 or idcategoria=1";
     private final String SELECT_PRO_MA=
             "select productos.id ,  productos.Clave, productos.Nombre, umedida.nombre from productos join umedida on productos.idmedida= umedida.id  where idcategoria = 1 or idcategoria = 3; ";
     private final String INSERT_ING=

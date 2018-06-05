@@ -4,6 +4,7 @@ package sistema;
 import datos.Conexion;
 import datos.DBcontrolador;
 import datos.OrdenPedido_Provedores_DB;
+import datos.Reproceso_DB;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
@@ -41,7 +42,9 @@ import javax.mail.internet.MimeMultipart;
 import negocio.Clientes;
 import negocio.Inventario;
 import negocio.OrdenPedido_Provedores;
+import negocio.Orden_de_Fabricacion;
 import negocio.Proveedores;
+import negocio.Reproceso;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -82,6 +85,9 @@ public class Movimientos extends javax.swing.JFrame {
     private DefaultTableModel tabla_Compra2;
     //OPC
     private DefaultTableModel tabla_OPC;
+    //OPC
+    private DefaultTableModel tabla_repro;
+    
     
     //pruebas
     private DefaultTableModel sensoriales;
@@ -106,10 +112,9 @@ public class Movimientos extends javax.swing.JFrame {
      */
     public Movimientos(Menu_Principal mp, Connection con) throws SQLException {
         initComponents();
-        ((JTextField) this.jdfechaopp.getDateEditor()).setEditable(false); 
         this.mp=mp;
         this.con=con;
-        
+        this.dbc = new DBcontrolador();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
         this.tabla_OPP=(DefaultTableModel) this.tbproductosopp.getModel();
@@ -119,6 +124,7 @@ public class Movimientos extends javax.swing.JFrame {
         this.sensoriales=(DefaultTableModel) this.tbliberacionsensoriales.getModel();
         this.micro=(DefaultTableModel) this.tblieracionmicrobiologicas.getModel();
         this.fisico=(DefaultTableModel) this.tblieracionfisicoquimicas.getModel();
+        this.tabla_repro=(DefaultTableModel) this.tb_repro.getModel();
         combo();
         
         Path c = Paths.get("");
@@ -226,6 +232,27 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel54 = new javax.swing.JLabel();
         txtproductoidliberacion = new javax.swing.JTextField();
         jdfechaLIB = new com.toedter.calendar.JDateChooser();
+        REPROCESO = new javax.swing.JPanel();
+        jLabel17 = new javax.swing.JLabel();
+        txtcantidad_repro = new javax.swing.JTextField();
+        jLabel56 = new javax.swing.JLabel();
+        txtidodp_repro = new javax.swing.JTextField();
+        jLabel57 = new javax.swing.JLabel();
+        txtnombre_repro = new javax.swing.JTextField();
+        jLabel58 = new javax.swing.JLabel();
+        btnbuscar_repro = new javax.swing.JButton();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        tb_repro = new javax.swing.JTable();
+        btnagregar_repro = new javax.swing.JButton();
+        btnquitar_repro = new javax.swing.JButton();
+        jLabel59 = new javax.swing.JLabel();
+        btnaceptar_repro = new javax.swing.JButton();
+        jdreproceso = new com.toedter.calendar.JDateChooser();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        txtarea_repro = new javax.swing.JTextArea();
+        jLabel23 = new javax.swing.JLabel();
+        txtidpro_repro = new javax.swing.JTextField();
+        jLabel60 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -631,6 +658,7 @@ public class Movimientos extends javax.swing.JFrame {
             tbopc.getColumnModel().getColumn(3).setPreferredWidth(50);
             tbopc.getColumnModel().getColumn(4).setPreferredWidth(100);
             tbopc.getColumnModel().getColumn(5).setPreferredWidth(150);
+            tbopc.getColumnModel().getColumn(5).setHeaderValue("No. Orden Cliente");
         }
 
         OPC.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 1230, 250));
@@ -806,6 +834,132 @@ public class Movimientos extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Liberacion O. Produccion", LOP);
 
+        REPROCESO.setBackground(new java.awt.Color(255, 255, 255));
+        REPROCESO.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel17.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel17.setText("Observaciones");
+        REPROCESO.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 140, -1, 39));
+
+        txtcantidad_repro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtcantidad_repro.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtcantidad_repro.setEnabled(false);
+        REPROCESO.add(txtcantidad_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 30, 118, -1));
+
+        jLabel56.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel56.setText("Cantidad :");
+        REPROCESO.add(jLabel56, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 30, -1, -1));
+
+        txtidodp_repro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtidodp_repro.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        REPROCESO.add(txtidodp_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 50, 118, -1));
+
+        jLabel57.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel57.setText("Lote :");
+        REPROCESO.add(jLabel57, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, -1, -1));
+
+        txtnombre_repro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtnombre_repro.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtnombre_repro.setEnabled(false);
+        REPROCESO.add(txtnombre_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 460, -1));
+
+        jLabel58.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel58.setText("Producto:");
+        REPROCESO.add(jLabel58, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, -1, -1));
+
+        btnbuscar_repro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnbuscar_repro.setText("Buscar");
+        btnbuscar_repro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbuscar_reproActionPerformed(evt);
+            }
+        });
+        REPROCESO.add(btnbuscar_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 40, 140, -1));
+
+        tb_repro.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Clave", "Nombre", "U. Medida", "Cantidad"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tb_repro.getTableHeader().setReorderingAllowed(false);
+        jScrollPane9.setViewportView(tb_repro);
+        if (tb_repro.getColumnModel().getColumnCount() > 0) {
+            tb_repro.getColumnModel().getColumn(0).setPreferredWidth(30);
+            tb_repro.getColumnModel().getColumn(1).setPreferredWidth(70);
+            tb_repro.getColumnModel().getColumn(2).setPreferredWidth(250);
+            tb_repro.getColumnModel().getColumn(3).setPreferredWidth(50);
+            tb_repro.getColumnModel().getColumn(4).setPreferredWidth(100);
+        }
+
+        REPROCESO.add(jScrollPane9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 690, 250));
+
+        btnagregar_repro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnagregar_repro.setText("Agregar Producto");
+        btnagregar_repro.setEnabled(false);
+        btnagregar_repro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnagregar_reproActionPerformed(evt);
+            }
+        });
+        REPROCESO.add(btnagregar_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 430, -1, -1));
+
+        btnquitar_repro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnquitar_repro.setText("Quitar Producto");
+        btnquitar_repro.setEnabled(false);
+        btnquitar_repro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnquitar_reproActionPerformed(evt);
+            }
+        });
+        REPROCESO.add(btnquitar_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 430, 160, -1));
+
+        jLabel59.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel59.setText("Fecha:");
+        REPROCESO.add(jLabel59, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 60, -1, -1));
+
+        btnaceptar_repro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        btnaceptar_repro.setText("Aceptar");
+        btnaceptar_repro.setEnabled(false);
+        btnaceptar_repro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnaceptar_reproActionPerformed(evt);
+            }
+        });
+        REPROCESO.add(btnaceptar_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 430, 107, -1));
+        REPROCESO.add(jdreproceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 60, 170, -1));
+
+        txtarea_repro.setColumns(20);
+        txtarea_repro.setRows(5);
+        jScrollPane10.setViewportView(txtarea_repro);
+
+        REPROCESO.add(jScrollPane10, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 180, 480, 230));
+
+        jLabel23.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel23.setText("Reproceso");
+        REPROCESO.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 0, -1, 39));
+
+        txtidpro_repro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtidpro_repro.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtidpro_repro.setEnabled(false);
+        REPROCESO.add(txtidpro_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 80, 118, -1));
+
+        jLabel60.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel60.setText("ID :");
+        REPROCESO.add(jLabel60, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 80, -1, -1));
+
+        jTabbedPane1.addTab("Reproceso", REPROCESO);
+
         jPanel4.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 56, 1290, 520));
 
         jLabel13.setFont(new java.awt.Font("Arial", 0, 36)); // NOI18N
@@ -870,7 +1024,6 @@ public class Movimientos extends javax.swing.JFrame {
         this.cbodpLIB.removeAllItems();
         String query="SELECT id FROM ordenes_prod where estatus = 1";
         op.clear();
-        
         op=this.dbc.seleccionar(query);
         for (int i = 0; i < op.size(); i++) {
             this.cbodpLIB.addItem(op.get(i)[0]);
@@ -893,11 +1046,13 @@ public class Movimientos extends javax.swing.JFrame {
        this.dispose();
     }//GEN-LAST:event_formWindowClosing
 
+    
+    //<editor-fold defaultstate="collapsed" desc="LIB">
     //LIB
     private void cbodpLIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbodpLIBActionPerformed
         comboliberacion();
     }//GEN-LAST:event_cbodpLIBActionPerformed
-
+    
     //LIB
     public void comboliberacion()
     {
@@ -970,6 +1125,230 @@ public class Movimientos extends javax.swing.JFrame {
         
     }
     
+    
+    //LIB
+    private void btnaceptarLIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarLIBActionPerformed
+        try{
+            boolean se=true;
+            boolean fi=true;
+            boolean mi=true;
+
+            for (int i = 0; i < this.tbliberacionsensoriales.getRowCount(); i++) {
+                 String res=this.tbliberacionsensoriales.getValueAt(i, 1).toString().toUpperCase();
+                        if (res.isEmpty()) {
+                            se=false;
+                        }
+            }
+
+            for (int i = 0; i < this.tblieracionmicrobiologicas.getRowCount(); i++) {
+                if (this.mi.get(i)[4].matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$")) {
+                    String[] c = this.mi.get(i)[4].split("-");
+                    double n1=Double.parseDouble(c[0]);
+                    double n2=Double.parseDouble(c[1]);
+                    double res=Double.parseDouble(this.tblieracionmicrobiologicas.getValueAt(i, 1).toString());
+                    if (res < n1|| res > n2) {
+                        mi=false;
+                    }
+                }
+                else
+                {
+                    if (this.mi.get(i)[4].matches("^>=?[0-9]+(.[0-9]+)?|<=?[0-9]+(.[0-9]+)?$")) {
+                        String[] c = this.mi.get(i)[4].split("=");
+
+                        double res=Double.parseDouble(this.tblieracionmicrobiologicas.getValueAt(i, 1).toString());
+                        double n2=Double.parseDouble(c[1]);
+                        if (c[0].compareTo("<")== 0) {
+                            if (res > n2) {
+                                mi=false;
+                            }
+                        }
+                        else
+                        {
+                            if (res < n2) {
+                                mi=false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        String res=this.tblieracionmicrobiologicas.getValueAt(i, 1).toString().toUpperCase();
+                        if (res.compareTo(this.mi.get(i)[4].toUpperCase()) != 0) {
+                            mi=false;
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < this.tblieracionfisicoquimicas.getRowCount(); i++) {
+                if (this.fi.get(i)[4].matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$")) {
+                    String[] c = this.fi.get(i)[4].split("-");
+                    double n1=Double.parseDouble(c[0]);
+                    double n2=Double.parseDouble(c[1]);
+                    double res=Double.parseDouble(this.tblieracionfisicoquimicas.getValueAt(i, 1).toString());
+                    if (res < n1|| res > n2) {
+                        fi=false;
+                    }
+                }
+                else
+                {
+                    if (this.fi.get(i)[4].matches("^>=?[0-9]+(.[0-9]+)?|<=?[0-9]+(.[0-9]+)?$")) {
+                        String[] c = this.fi.get(i)[4].split("=");
+
+                        double res=Double.parseDouble(this.tblieracionfisicoquimicas.getValueAt(i, 1).toString());
+                        double n2=Double.parseDouble(c[1]);
+                        if (c[0].compareTo("<")== 0) {
+                            if (res > n2) {
+                                fi=false;
+                            }
+                        }
+                        else
+                        {
+                            if (res < n2) {
+                                fi=false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        String res=this.tblieracionfisicoquimicas.getValueAt(i, 1).toString().toUpperCase();
+                        if (res.compareTo(this.fi.get(i)[4].toUpperCase()) != 0) {
+                            fi=false;
+                        }
+                    }
+                }
+            }
+
+            if (se) {
+                if (mi) {
+                    if (fi) {
+                        String query="update ordenes_prod set estatus = 2, observaciones = '"+this.txtcomentariosLIB.getText()+"' where id = "+ this.cbodpLIB.getSelectedItem().toString();
+                        this.dbc.operacion(query);
+                        
+                        query="insert into resultadosp_odp (idodp, idprueba, resultado) values (?,?,?)";
+                        for (int i = 0; i < this.se.size(); i++) {
+                            PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
+
+                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
+                            ps.setString(2, this.se.get(i)[0]);
+                            ps.setString(3, this.sensoriales.getValueAt(i, 1).toString());
+
+                            ps.executeUpdate();
+                            ps.close();
+                        }
+                        
+                        for (int i = 0; i < this.mi.size(); i++) {
+                            PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
+
+                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
+                            ps.setString(2, this.mi.get(i)[0]);
+                            ps.setString(3, this.micro.getValueAt(i, 1).toString());
+
+                            ps.executeUpdate();
+                            ps.close();
+                        }
+                         
+                        for (int i = 0; i < this.fi.size(); i++) {
+                            PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
+
+                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
+                            ps.setString(2, this.fi.get(i)[0]);
+                            ps.setString(3, this.fisico.getValueAt(i, 1).toString());
+
+                            ps.executeUpdate();
+                            ps.close();
+                        }
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                        //insertar pt en inventario
+                        query="insert into inventario(idproducto, fechaentrada, cantidadactual,lote, idopp,facturano, cantidad,costo,fechacaducidad) values (?,?,?,?,?,?,?,?,?)";
+                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
+                        ps.setString(1, this.txtproductoidliberacion.getText());
+                        ps.setString(2, this.fechadividir(formatter.format(this.jdfechaLIB.getDate()), 1) );
+                        String q2 =this.dbc.seleccionarid("select cantidad from ordenes_prod where id = "+this.cbodpLIB.getSelectedItem().toString());
+                        ps.setString(3, q2);
+                        ps.setString(4, this.cbodpLIB.getSelectedItem().toString());
+                        ps.setString(5, this.cbodpLIB.getSelectedItem().toString());
+                        ps.setString(6, this.cbodpLIB.getSelectedItem().toString());
+                        ps.setString(7, q2);
+                        String q3 =this.dbc.seleccionarid("select sum(costo) from mp_odp where idodp = "+this.cbodpLIB.getSelectedItem().toString());
+                        ps.setString(8, q3);
+                        String q4 =this.dbc.seleccionarid("select mesescaducidad from productos where id = "+this.txtproductoidliberacion.getText());
+                        LocalDate dt =  LocalDate.parse(this.fechadividir(formatter.format(this.jdfechaLIB.getDate()), 1)).plusMonths(Integer.parseInt(q4));
+                        ps.setString(9, dt.getYear()+"-"+dt.getMonthValue()+"-"+dt.getDayOfMonth());
+                        ps.executeUpdate();
+                        ps.close();
+                        
+                        this.sensoriales.setRowCount(0);
+                        this.micro.setRowCount(0);
+                        this.fisico.setRowCount(0);
+        
+                        this.txtcomentariosLIB.setText("");
+                        this.txtproductoidliberacion.setText("");
+                        this.txtproductoliberacion.setText("");
+                        
+                        this.btnaceptarLIB.setEnabled(false);
+                         
+                        
+                        
+                        
+                        JasperReport reporte; //Creo el objeto reporte
+                        // Ubicacion del Reporte
+                       String path = s+"\\Reportes\\Liberacion_ODP.jasper";
+                       try {
+                           reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
+                           Map id = new HashMap();
+                           id.put("ID_Inven", this.dbc.seleccionarid("select max(id) from inventario"));
+                           JasperPrint jprint = JasperFillManager.fillReport(path, id, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+                           File d = new File(s+"\\Liberacion");
+                           File pdf = File.createTempFile("Liberacion-"+this.cbodpLIB.getSelectedItem().toString()+"--", ".pdf",d);
+                           JasperExportManager.exportReportToPdfStream(jprint, new FileOutputStream(pdf));
+                           JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
+                           viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
+                           viewer.setVisible(true); //Inicializamos la vista del Reporte
+                           
+                       } catch (Exception ex) {
+                           Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                       }
+                        
+                        combo();
+                        comboliberacion();
+             
+                        
+                        
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "Valores incorrectos en pruebas Fisicoquimicas");
+                    }
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Valores incorrectos en pruebas Microbiologicas");
+                }
+
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Valores incorrectos en pruebas Sensoriales");
+            }
+        
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+            try {
+                this.dbc = new DBcontrolador ();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+           this.con=this.dbc.getCnx();
+           
+        }
+        
+        
+    }//GEN-LAST:event_btnaceptarLIBActionPerformed
+
+    
+    //</editor-fold>
+       
     //<editor-fold defaultstate="collapsed" desc="ODP">
     public void colocarcliente(Clientes cl)
     {
@@ -1037,7 +1416,6 @@ public class Movimientos extends javax.swing.JFrame {
                 String ingrefaltante="";
                 ArrayList <String[]> op = new ArrayList<>();
                 ArrayList <String[]> op2 = new ArrayList<>();
-                ArrayList <String[]> ingredientes = new ArrayList<>();
                 
                 boolean sipasa=true;
                 boolean existe=true;
@@ -1432,6 +1810,31 @@ public class Movimientos extends javax.swing.JFrame {
     
     //<editor-fold defaultstate="collapsed" desc="OCompra">
 
+    private void btncancelarCOMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelarCOMActionPerformed
+        try {
+            OrdenPedido_Provedores_DB opp = new OrdenPedido_Provedores_DB(this.con);
+            String[] id = this.cboppCOM.getSelectedItem().toString().split(" ");
+            if (JOptionPane.showConfirmDialog(null, "¿Desea Cancelar la Orden?", "Cancelacion", JOptionPane.YES_NO_OPTION)==0) {
+                opp.delete_opp(id[0]);
+                combo();
+            }
+            
+        }
+        catch(SQLException ex)
+        {
+            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+             try {
+                this.con=Conexion.getConnection();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error :"+ex);
+        } 
+        
+    }//GEN-LAST:event_btncancelarCOMActionPerformed
+    
     private boolean valida_vacio_compra()
     {
         boolean valida=true;
@@ -1529,7 +1932,7 @@ public class Movimientos extends javax.swing.JFrame {
             }
         }
         catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error :"+ex);
+            
         } 
 
     }//GEN-LAST:event_cboppCOMActionPerformed
@@ -1853,7 +2256,7 @@ public class Movimientos extends javax.swing.JFrame {
                    Map para = new HashMap();
                    para.put("id", id);
                    para.put("letra", num_text.toUpperCase());
-                   JasperPrint jprint = JasperFillManager.fillReport(path, para, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+                   JasperPrint jprint = JasperFillManager.fillReport(path, para, this.con); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
                    JasperExportManager.exportReportToPdfFile(jprint, s+"\\ODC\\ODC-"+id+".pdf");
                    JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
                    viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
@@ -1973,253 +2376,193 @@ public class Movimientos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnElegir_proveedorOPPActionPerformed
 
+   
+
     //</editor-fold>    
-
-    //LIB
-    private void btnaceptarLIBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptarLIBActionPerformed
-        try{
-            boolean se=true;
-            boolean fi=true;
-            boolean mi=true;
-
-            for (int i = 0; i < this.tbliberacionsensoriales.getRowCount(); i++) {
-                 String res=this.tbliberacionsensoriales.getValueAt(i, 1).toString().toUpperCase();
-                        if (res.isEmpty()) {
-                            se=false;
-                        }
-            }
-
-            for (int i = 0; i < this.tblieracionmicrobiologicas.getRowCount(); i++) {
-                if (this.mi.get(i)[4].matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$")) {
-                    String[] c = this.mi.get(i)[4].split("-");
-                    double n1=Double.parseDouble(c[0]);
-                    double n2=Double.parseDouble(c[1]);
-                    double res=Double.parseDouble(this.tblieracionmicrobiologicas.getValueAt(i, 1).toString());
-                    if (res < n1|| res > n2) {
-                        mi=false;
-                    }
-                }
-                else
-                {
-                    if (this.mi.get(i)[4].matches("^>=?[0-9]+(.[0-9]+)?|<=?[0-9]+(.[0-9]+)?$")) {
-                        String[] c = this.mi.get(i)[4].split("=");
-
-                        double res=Double.parseDouble(this.tblieracionmicrobiologicas.getValueAt(i, 1).toString());
-                        double n2=Double.parseDouble(c[1]);
-                        if (c[0].compareTo("<")== 0) {
-                            if (res > n2) {
-                                mi=false;
-                            }
-                        }
-                        else
-                        {
-                            if (res < n2) {
-                                mi=false;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        String res=this.tblieracionmicrobiologicas.getValueAt(i, 1).toString().toUpperCase();
-                        if (res.compareTo(this.mi.get(i)[4].toUpperCase()) != 0) {
-                            mi=false;
-                        }
-                    }
-                }
-            }
-
-            for (int i = 0; i < this.tblieracionfisicoquimicas.getRowCount(); i++) {
-                if (this.fi.get(i)[4].matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$")) {
-                    String[] c = this.fi.get(i)[4].split("-");
-                    double n1=Double.parseDouble(c[0]);
-                    double n2=Double.parseDouble(c[1]);
-                    double res=Double.parseDouble(this.tblieracionfisicoquimicas.getValueAt(i, 1).toString());
-                    if (res < n1|| res > n2) {
-                        fi=false;
-                    }
-                }
-                else
-                {
-                    if (this.fi.get(i)[4].matches("^>=?[0-9]+(.[0-9]+)?|<=?[0-9]+(.[0-9]+)?$")) {
-                        String[] c = this.fi.get(i)[4].split("=");
-
-                        double res=Double.parseDouble(this.tblieracionfisicoquimicas.getValueAt(i, 1).toString());
-                        double n2=Double.parseDouble(c[1]);
-                        if (c[0].compareTo("<")== 0) {
-                            if (res > n2) {
-                                fi=false;
-                            }
-                        }
-                        else
-                        {
-                            if (res < n2) {
-                                fi=false;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        String res=this.tblieracionfisicoquimicas.getValueAt(i, 1).toString().toUpperCase();
-                        if (res.compareTo(this.fi.get(i)[4].toUpperCase()) != 0) {
-                            fi=false;
-                        }
-                    }
-                }
-            }
-
-            if (se) {
-                if (mi) {
-                    if (fi) {
-                        String query="update ordenes_prod set estatus = 2, observaciones = '"+this.txtcomentariosLIB.getText()+"' where id = "+ this.cbodpLIB.getSelectedItem().toString();
-                        this.dbc.operacion(query);
-                        
-                        query="insert into resultadosp_odp (idodp, idprueba, resultado) values (?,?,?)";
-                        for (int i = 0; i < this.se.size(); i++) {
-                            PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
-
-                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
-                            ps.setString(2, this.se.get(i)[0]);
-                            ps.setString(3, this.sensoriales.getValueAt(i, 1).toString());
-
-                            ps.executeUpdate();
-                            ps.close();
-                        }
-                        
-                        for (int i = 0; i < this.mi.size(); i++) {
-                            PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
-
-                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
-                            ps.setString(2, this.mi.get(i)[0]);
-                            ps.setString(3, this.micro.getValueAt(i, 1).toString());
-
-                            ps.executeUpdate();
-                            ps.close();
-                        }
-                         
-                        for (int i = 0; i < this.fi.size(); i++) {
-                            PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
-
-                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
-                            ps.setString(2, this.fi.get(i)[0]);
-                            ps.setString(3, this.fisico.getValueAt(i, 1).toString());
-
-                            ps.executeUpdate();
-                            ps.close();
-                        }
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                        //insertar pt en inventario
-                        query="insert into inventario(idproducto, fechaentrada, cantidadactual,lote, idopp,facturano, cantidad,costo,fechacaducidad) values (?,?,?,?,?,?,?,?,?)";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
-                        ps.setString(1, this.txtproductoidliberacion.getText());
-                        ps.setString(2, this.fechadividir(formatter.format(this.jdfechaLIB.getDate()), 1) );
-                        String q2 =this.dbc.seleccionarid("select cantidad from ordenes_prod where id = "+this.cbodpLIB.getSelectedItem().toString());
-                        ps.setString(3, q2);
-                        ps.setString(4, this.cbodpLIB.getSelectedItem().toString());
-                        ps.setString(5, this.cbodpLIB.getSelectedItem().toString());
-                        ps.setString(6, this.cbodpLIB.getSelectedItem().toString());
-                        ps.setString(7, q2);
-                        String q3 =this.dbc.seleccionarid("select sum(costo) from mp_odp where idodp = "+this.cbodpLIB.getSelectedItem().toString());
-                        ps.setString(8, q3);
-                        String q4 =this.dbc.seleccionarid("select mesescaducidad from productos where id = "+this.txtproductoidliberacion.getText());
-                        LocalDate dt =  LocalDate.parse(this.fechadividir(formatter.format(this.jdfechaLIB.getDate()), 1)).plusMonths(Integer.parseInt(q4));
-                        ps.setString(9, dt.getYear()+"-"+dt.getMonthValue()+"-"+dt.getDayOfMonth());
-                        ps.executeUpdate();
-                        ps.close();
-                        
-                        this.sensoriales.setRowCount(0);
-                        this.micro.setRowCount(0);
-                        this.fisico.setRowCount(0);
+    
+    public void colocar_producto_repro(Producto pro)
+    {
+        Object[] obj = new Object[5];
+        obj[0]=pro.getId();
+        obj[1]=pro.getClave();
+        obj[2]=pro.getNombre();
+        obj[3]=pro.getMedida();
+        obj[4]=pro.getStockmin();
         
-                        this.txtcomentariosLIB.setText("");
-                        this.txtproductoidliberacion.setText("");
-                        this.txtproductoliberacion.setText("");
-                        
-                        this.btnaceptarLIB.setEnabled(false);
-                         
-                        
-                        
-                        
-                        JasperReport reporte; //Creo el objeto reporte
-                        // Ubicacion del Reporte
-                       String path = s+"\\Reportes\\Liberacion_ODP.jasper";
-                       try {
-                           reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
-                           Map id = new HashMap();
-                           id.put("ID_Inven", this.dbc.seleccionarid("select max(id) from inventario"));
-                           JasperPrint jprint = JasperFillManager.fillReport(path, id, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
-                           File d = new File(s+"\\Liberacion");
-                           File pdf = File.createTempFile("Liberacion-"+this.cbodpLIB.getSelectedItem().toString()+"--", ".pdf",d);
-                           JasperExportManager.exportReportToPdfStream(jprint, new FileOutputStream(pdf));
-                           JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
-                           viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
-                           viewer.setVisible(true); //Inicializamos la vista del Reporte
-                           
-                       } catch (Exception ex) {
-                           Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-                       }
-                        
-                        combo();
-                        comboliberacion();
-             
-                        
-                        
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(null, "Valores incorrectos en pruebas Fisicoquimicas");
-                    }
+        this.tabla_repro.addRow(obj);
+    }
+    
+
+     private void btnbuscar_reproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbuscar_reproActionPerformed
+         if (this.txtidodp_repro.getText().matches("^[0-9]+$")) {
+            try
+            {
+                Reproceso_DB db = new Reproceso_DB(this.con);
+                String[] dato_odp=db.select_odf(Integer.parseInt(this.txtidodp_repro.getText()));
+                if (dato_odp!=null) {
+                    this.txtnombre_repro.setText(dato_odp[1]);
+                    this.txtcantidad_repro.setText(dato_odp[2]);
+                    this.txtidpro_repro.setText(dato_odp[3]);
+                            
+                    this.btnagregar_repro.setEnabled(true);
+                    this.btnquitar_repro.setEnabled(true);
+                    this.btnaceptar_repro.setEnabled(true);
+                    this.txtarea_repro.setEnabled(true);
+                    
+                    Date date = new Date();
+                    this.jdreproceso.setDateFormatString("dd/MM/yyyy");
+                    this.jdreproceso.setDate(date);
+                    
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "Valores incorrectos en pruebas Microbiologicas");
+                    JOptionPane.showMessageDialog(null, "El lote No existe");
                 }
+                
+            }
+            catch(SQLException ex)
+            {
+                JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+                 try {
+                    this.con=Conexion.getConnection();
+                } catch (SQLException ex1) {
+                    Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error :"+ex);
+            }
+             
+            
+         }
+         else
+         {
+            JOptionPane.showMessageDialog(null, "Formato incorrecto en lote");
+         }
+         
+         
+    }//GEN-LAST:event_btnbuscar_reproActionPerformed
 
+    private void btnagregar_reproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnagregar_reproActionPerformed
+        try
+        {
+            Elegir_ProductoOPP productos = new Elegir_ProductoOPP (this,3,this.con);
+            this.setEnabled(false);
+            productos.setVisible(true);
+
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex.toString());
+        }
+    }//GEN-LAST:event_btnagregar_reproActionPerformed
+
+    private void btnquitar_reproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitar_reproActionPerformed
+        try
+        {
+            this.tabla_repro.removeRow(this.tb_repro.getSelectedRow());
+        }
+        catch(Exception ex)
+        {
+            
+        }
+    }//GEN-LAST:event_btnquitar_reproActionPerformed
+
+    private void btnaceptar_reproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptar_reproActionPerformed
+        
+        //validar inventario
+        try  
+        {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            String faltante="";
+            boolean sipasa=true;
+            Reproceso_DB db = new Reproceso_DB(this.con);
+            for (int i = 0; i < this.tabla_repro.getRowCount(); i++) {
+                Producto pro=db.select_inventario(fechadividir(formatter.format(this.jdreproceso.getDate()),1), Integer.parseInt(this.tabla_repro.getValueAt(i, 0).toString()));
+                
+                if (pro== null) {
+                        faltante += "Requiere "+this.tb_repro.getValueAt(i, 4).toString()+" de "+this.tb_repro.getValueAt(i, 2).toString()+"\n";
+                        sipasa=false;
+                        
+                }
+                else
+                {
+                    if (pro.getStockmin()< Double.parseDouble(this.tb_repro.getValueAt(i, 4).toString())) {
+                    sipasa=false;
+                    double falta = Double.parseDouble(this.tb_repro.getValueAt(i, 4).toString())- pro.getStockmin();
+                    faltante += "Requiere "+falta+" de "+pro.getNombre() +"\n";
+                    }
+                }
+                
+            }
+            
+            if (sipasa) {
+                
+
+                //crearodernproduccion
+                Orden_de_Fabricacion odf = new Orden_de_Fabricacion();
+                odf.setId(0);
+                odf.setIdproducto(Integer.parseInt(this.txtidpro_repro.getText()));
+                odf.setFecha(fechadividir(formatter.format(this.jdreproceso.getDate()),1));
+                odf.setCantidad(Double.parseDouble(this.txtcantidad_repro.getText()));
+                for (int i = 0; i <this.tabla_repro.getRowCount(); i++) {
+                    Producto pro = new Producto();
+                    pro.setId(Integer.parseInt(this.tabla_repro.getValueAt(i, 0).toString()));
+                    pro.setStockmin(Double.parseDouble(this.tabla_repro.getValueAt(i, 4).toString()));
+                    odf.getProduc().add(pro);
+                }
+                
+                Reproceso rp = new Reproceso();
+                rp.setId_loteant(Integer.parseInt(this.txtidodp_repro.getText()));
+                rp.setId_fecha(fechadividir(formatter.format(this.jdreproceso.getDate()),1));
+                rp.setObservaciones(this.txtarea_repro.getText());
+                System.out.println("aqui");
+                int id=db.insert_opf(odf,rp);
+                
+                //REPORTE
+                 JasperReport reporte; //Creo el objeto reporte
+                    // Ubicacion del Reporte
+                    String path = s+"\\Reportes\\Reproceso.jasper";
+               try {
+
+                   reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
+                   Map idodp = new HashMap();
+                   idodp.put("ID_RE", id);
+                   JasperPrint jprint = JasperFillManager.fillReport(path, idodp, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+                   JasperExportManager.exportReportToPdfFile(jprint, s+"\\ODP\\REPROCESO-"+id+".pdf");
+                   JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
+                   viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
+                   viewer.setVisible(true); //Inicializamos la vista del Reporte
+
+               } catch (Exception ex) {
+                   Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+               }
             }
             else
             {
-                JOptionPane.showMessageDialog(null, "Valores incorrectos en pruebas Sensoriales");
+                JOptionPane.showMessageDialog(null, "Falta:\n"+faltante);
             }
-        
-        }
-        catch(SQLException ex)
-        {
-            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
-            try {
-                this.dbc = new DBcontrolador ();
-            } catch (SQLException ex1) {
-                Logger.getLogger(Movimientos.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-           this.con=this.dbc.getCnx();
-           
-        }
-        
-        
-    }//GEN-LAST:event_btnaceptarLIBActionPerformed
-
-    private void btncancelarCOMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelarCOMActionPerformed
-        try {
-            OrdenPedido_Provedores_DB opp = new OrdenPedido_Provedores_DB(this.con);
-            String[] id = this.cboppCOM.getSelectedItem().toString().split(" ");
-            if (JOptionPane.showConfirmDialog(null, "¿Desea Cancelar la Orden?", "Cancelacion", JOptionPane.YES_NO_OPTION)==0) {
-                opp.delete_opp(id[0]);
-                combo();
-            }
+            
             
         }
         catch(SQLException ex)
-        {
-            JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
-             try {
-                this.con=Conexion.getConnection();
-            } catch (SQLException ex1) {
-                Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+            {
+                JOptionPane.showMessageDialog(null, "Error  de conexion "+ ex);
+                 try {
+                    this.con=Conexion.getConnection();
+                } catch (SQLException ex1) {
+                    Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             }
-        }
-        catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error :"+ex);
-        } 
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error :"+ex);
+            }
         
-    }//GEN-LAST:event_btncancelarCOMActionPerformed
+        
 
+        
+    }//GEN-LAST:event_btnaceptar_reproActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -2261,6 +2604,7 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JPanel LOP;
     private javax.swing.JPanel OPC;
     private javax.swing.JPanel OPP;
+    private javax.swing.JPanel REPROCESO;
     private javax.swing.JButton btnAgregarproCOM;
     private javax.swing.JButton btnAgregarproOPC;
     private javax.swing.JButton btnAgregarproOPP;
@@ -2269,8 +2613,12 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JButton btnaceptarCOM;
     private javax.swing.JButton btnaceptarLIB;
     private javax.swing.JButton btnaceptarOPC;
+    private javax.swing.JButton btnaceptar_repro;
     private javax.swing.JButton btnaceptaropp;
+    private javax.swing.JButton btnagregar_repro;
+    private javax.swing.JButton btnbuscar_repro;
     private javax.swing.JButton btncancelarCOM;
+    private javax.swing.JButton btnquitar_repro;
     private javax.swing.JButton btnquitarproCOM;
     private javax.swing.JButton btnquitarproOPC;
     private javax.swing.JButton btnquitarproOPP;
@@ -2283,11 +2631,13 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
@@ -2312,8 +2662,14 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel53;
     private javax.swing.JLabel jLabel54;
     private javax.swing.JLabel jLabel55;
+    private javax.swing.JLabel jLabel56;
+    private javax.swing.JLabel jLabel57;
+    private javax.swing.JLabel jLabel58;
+    private javax.swing.JLabel jLabel59;
+    private javax.swing.JLabel jLabel60;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -2321,12 +2677,15 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private com.toedter.calendar.JDateChooser jdfechaLIB;
     private com.toedter.calendar.JDateChooser jdfecha_caducidadcompra;
     private com.toedter.calendar.JDateChooser jdfecha_entradacompra;
     private com.toedter.calendar.JDateChooser jdfechaopp;
+    private com.toedter.calendar.JDateChooser jdreproceso;
+    private javax.swing.JTable tb_repro;
     private javax.swing.JTable tbliberacionsensoriales;
     private javax.swing.JTable tblieracionfisicoquimicas;
     private javax.swing.JTable tblieracionmicrobiologicas;
@@ -2334,6 +2693,8 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JTable tbproductosCOM;
     private javax.swing.JTable tbproductosCOM2;
     private javax.swing.JTable tbproductosopp;
+    private javax.swing.JTextArea txtarea_repro;
+    private javax.swing.JTextField txtcantidad_repro;
     private javax.swing.JTextField txtcantidadcompraCOM;
     private javax.swing.JTextField txtcapacidadcompraCOM;
     private javax.swing.JTextArea txtcomentariosLIB;
@@ -2341,10 +2702,13 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JTextField txtfechapedidocompra;
     private javax.swing.JTextField txtidOPP;
     private javax.swing.JTextField txtidclienteopc;
+    private javax.swing.JTextField txtidodp_repro;
     private javax.swing.JTextField txtidopc;
+    private javax.swing.JTextField txtidpro_repro;
     private javax.swing.JTextField txtidproveedorCOM;
     private javax.swing.JTextField txtidproveedorOPP;
     private javax.swing.JTextField txtlotecompra;
+    private javax.swing.JTextField txtnombre_repro;
     private javax.swing.JTextField txtnombreclienteOPC;
     private javax.swing.JTextField txtnombreproveedorCOM;
     private javax.swing.JTextField txtnombreproveedorOPP;

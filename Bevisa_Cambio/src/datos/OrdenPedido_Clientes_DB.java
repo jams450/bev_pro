@@ -15,7 +15,7 @@ public class OrdenPedido_Clientes_DB {
     
     private final String SELECT_CLIENTES="select clientes.id, clientes.nombre, clientes.telefono, clientes.correo  from clientes";
     private final String SELECT_PRODUCTOS="select productos.id , productos.Nombre, productos.Clave, umedida.nombre,productos.pventa,productos.iva,monedas.nombre "
-                    + " from productos join umedida on productos.idmedida= umedida.id join monedas on monedas.id=productos.idmoneda where idcategoria = 2 or idcategoria = 4   ";
+                    + " from productos join umedida on productos.idmedida= umedida.id join monedas on monedas.id=productos.idmoneda where idcategoria = 2 or idcategoria = 4 or idcategoria=1  ";
         
     public OrdenPedido_Clientes_DB(Connection userConn) {
         this.userConn = userConn;

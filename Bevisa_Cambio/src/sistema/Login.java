@@ -132,7 +132,7 @@ public class Login extends javax.swing.JFrame {
         txtuser.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         txtuser.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtpassKeyPressed(evt);
+                txtuskey(evt);
             }
         });
 
@@ -262,18 +262,21 @@ public class Login extends javax.swing.JFrame {
 
     public boolean validacion_vacio(){
         boolean pasa=true;
+        String error="";
         if (this.txtuser.getText().isEmpty()) {
             this.txtuser.setBackground(Color.decode("#FFCCCC"));
             pasa=false;
+            error+="El usuario esta vacio\n";
         }
         
         if (this.txtpass.getText().isEmpty()) {
             this.txtpass.setBackground(Color.decode("#FFCCCC"));
             pasa=false;
+            error+="El password esta vacio\n";
         }
         
         if (!pasa) {
-            JOptionPane.showMessageDialog(null, "Error : Campo vacio");
+            JOptionPane.showMessageDialog(null, "Error : Campo vacio\n"+error);
         }
         
         return pasa;
@@ -310,6 +313,16 @@ public class Login extends javax.swing.JFrame {
     private void btncancelarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btncancelarMouseExited
         this.resetcolor(btnAceptar);
     }//GEN-LAST:event_btncancelarMouseExited
+
+    private void txtuskey(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtuskey
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            entrar();
+         }
+         else
+         {
+             this.txtuser.setBackground(Color.white);
+         }
+    }//GEN-LAST:event_txtuskey
 
     /**
      * @param args the command line arguments
