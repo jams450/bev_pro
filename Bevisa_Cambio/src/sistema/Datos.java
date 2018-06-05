@@ -1,6 +1,7 @@
 
 package sistema;
 
+import com.toedter.calendar.JTextFieldDateEditor;
 import datos.Conexion;
 import negocio.*;
 import datos.*;
@@ -82,6 +83,11 @@ public class Datos extends javax.swing.JFrame {
             
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+            
+            JTextFieldDateEditor fecha1 = (JTextFieldDateEditor) this.jdfecha.getDateEditor();
+            fecha1.setEditable(false);
+            JTextFieldDateEditor fecha2 = (JTextFieldDateEditor) this.jdfecha_caducidad.getDateEditor();
+            fecha2.setEditable(false);
             
             this.tablaproductos();        
             creaciontablavendedores();
@@ -345,7 +351,7 @@ public class Datos extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel1.setText("Productos");
-        Productos.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 10, -1, 39));
+        Productos.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, -1, 39));
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1064,11 +1070,11 @@ public class Datos extends javax.swing.JFrame {
                 txtcantidad_actualinventarioKeyReleased(evt);
             }
         });
-        Inventario.add(txtcantidad_actualinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 210, 139, -1));
+        Inventario.add(txtcantidad_actualinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 240, 139, -1));
 
         jLabel86.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel86.setText("C. Actual :");
-        Inventario.add(jLabel86, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 210, -1, -1));
+        Inventario.add(jLabel86, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 240, -1, -1));
 
         txtloteinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtloteinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
@@ -1110,11 +1116,11 @@ public class Datos extends javax.swing.JFrame {
         txtcantidadtinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcantidadtinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcantidadtinventario.setEnabled(false);
-        Inventario.add(txtcantidadtinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 240, 139, -1));
+        Inventario.add(txtcantidadtinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 210, 139, -1));
 
         jLabel90.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel90.setText("Cantidad :");
-        Inventario.add(jLabel90, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 240, -1, -1));
+        Inventario.add(jLabel90, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 210, -1, -1));
 
         jLabel91.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel91.setText("Fecha Caducidad :");
@@ -2796,6 +2802,29 @@ public class Datos extends javax.swing.JFrame {
         return valida;
     }
     
+    public boolean validacion_formato_inventario()
+    {
+        boolean valida=true;
+        if (this.txtcantidad_actualinventario.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) 
+        {
+            double cantidad=Double.parseDouble(this.txtcantidadtinventario.getText());
+            double cantidad_actual=Double.parseDouble(this.txtcantidad_actualinventario.getText());
+            if (cantidad<cantidad_actual) {
+                valida=false;
+                this.txtcantidad_actualinventario.setBackground(Color.decode("#FFCCCC"));
+                JOptionPane.showMessageDialog(null, "Cantidad actual no puede ser mayor que Cantidad");
+            }
+        }
+        else
+        {
+            valida=false;
+            JOptionPane.showMessageDialog(null, "Formato incorrecto:\n\nCantidad actual: 0.00 ó 0");
+            this.txtcantidad_actualinventario.setBackground(Color.decode("#FFCCCC"));
+        }
+
+        return valida;
+    }
+      
     public void creaciontablainventario()
     {  
         try{
@@ -2910,7 +2939,7 @@ public class Datos extends javax.swing.JFrame {
             
             if (validacion_vacio_inventario()) {
                 
-                if (this.txtcantidad_actualinventario.getText().matches("^([0-9]+)(\\.[0-9]+)?$") ){
+                if (validacion_formato_inventario() ){
                     
                     Inventario_DB in = new Inventario_DB(this.con);
                     Inventario inventario = new Inventario();
@@ -2931,11 +2960,6 @@ public class Datos extends javax.swing.JFrame {
                     limpiarinventario();
                     deshabilitarinventario();
 
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
-                    this.txtcantidad_actualinventario.setBackground(Color.decode("#FFCCCC"));
                 }
             }
             else
@@ -2966,30 +2990,31 @@ public class Datos extends javax.swing.JFrame {
     private void tbinventarioMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            this.jdfecha_caducidad.setDateFormatString("dd/MM/yyyy");
-            this.jdfecha.setDateFormatString("dd/MM/yyyy");
+            if (!this.btnCambiarinventario.isEnabled()) {
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                this.jdfecha_caducidad.setDateFormatString("dd/MM/yyyy");
+                this.jdfecha.setDateFormatString("dd/MM/yyyy");
 
-            int columna=this.tbinventario.getSelectedRow();
+                int columna=this.tbinventario.getSelectedRow();
 
-            this.txtnoentradainventario.setText(this.tbinventario.getValueAt(columna, 0).toString());
-            this.txtclaveinventario.setText(this.tbinventario.getValueAt(columna, 1).toString());
-            this.txtnombreinventario.setText(this.tbinventario.getValueAt(columna, 2).toString());
-            Date date = formatter.parse(fechadividir(this.tbinventario.getValueAt(columna, 3).toString(),0));
-            this.jdfecha.setDate(date);
+                this.txtnoentradainventario.setText(this.tbinventario.getValueAt(columna, 0).toString());
+                this.txtclaveinventario.setText(this.tbinventario.getValueAt(columna, 1).toString());
+                this.txtnombreinventario.setText(this.tbinventario.getValueAt(columna, 2).toString());
+                Date date = formatter.parse(fechadividir(this.tbinventario.getValueAt(columna, 3).toString(),0));
+                this.jdfecha.setDate(date);
+
+                this.txtcantidad_actualinventario.setText(this.tbinventario.getValueAt(columna, 4).toString());
+                this.txtloteinventario.setText(this.tbinventario.getValueAt(columna, 5).toString());
+                this.txtidoppinventario.setText(this.tbinventario.getValueAt(columna, 6).toString());
+                this.txtfactinventario.setText(this.tbinventario.getValueAt(columna, 7).toString());
+                this.txtcantidadtinventario.setText(this.tbinventario.getValueAt(columna, 8).toString());     
+
+                date = formatter.parse(fechadividir(this.tbinventario.getValueAt(columna, 9).toString(),0));
+                this.jdfecha_caducidad.setDate(date);
+
+                this.btnCambiarinventario.setEnabled(true);
+            }
             
-            this.txtcantidad_actualinventario.setText(this.tbinventario.getValueAt(columna, 4).toString());
-            this.txtloteinventario.setText(this.tbinventario.getValueAt(columna, 5).toString());
-            this.txtidoppinventario.setText(this.tbinventario.getValueAt(columna, 6).toString());
-            this.txtfactinventario.setText(this.tbinventario.getValueAt(columna, 7).toString());
-            this.txtcantidadtinventario.setText(this.tbinventario.getValueAt(columna, 8).toString());     
-            
-            date = formatter.parse(fechadividir(this.tbinventario.getValueAt(columna, 9).toString(),0));
-            this.jdfecha_caducidad.setDate(date);
-            
-            
-           
-            this.btnCambiarinventario.setEnabled(true);
         }
         catch(Exception ex)
         {
@@ -4310,7 +4335,7 @@ public class Datos extends javax.swing.JFrame {
                     //this.con.commit();
                  }
                  else{
-                     JOptionPane.showMessageDialog(null, "Parametro Incorrecto :\n \t\tSolo letras\n\t\tRango #-#\n\t\tMayor o menor <=# >=#\n\t\tNumero Fijo ##.##");
+                     JOptionPane.showMessageDialog(null, "Parametro Incorrecto :\n\t\tSolo letras: AAAA\n\t\tRango 0-1\n\t\tMayor o menor <=1 >=1\n\t\tNumero Fijo 0.00");
                  }
             }
             else{

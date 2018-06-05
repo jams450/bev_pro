@@ -7,6 +7,7 @@ package sistema;
 
 import datos.Conexion;
 import datos.OrdenPedido_Clientes_DB;
+import datos.OrdenPedido_Compras_DB;
 import datos.OrdenPedido_Provedores_DB;
 import java.awt.Dimension;
 import static java.awt.Frame.NORMAL;
@@ -50,7 +51,7 @@ public class Elegir_ProveedorOPP extends javax.swing.JFrame {
      public void creaciontabla(int opc)
     {
         OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB(this.con);
-        OrdenPedido_Clientes_DB dbc = new OrdenPedido_Clientes_DB(this.con);
+        OrdenPedido_Compras_DB dbc = new OrdenPedido_Compras_DB(this.con);
         try{
             if(opc==1){
                 this.tabla=(DefaultTableModel) this.tbdatos.getModel();
