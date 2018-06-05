@@ -2809,11 +2809,11 @@ public class Datos extends javax.swing.JFrame {
         {
             double cantidad=Double.parseDouble(this.txtcantidadtinventario.getText());
             double cantidad_actual=Double.parseDouble(this.txtcantidad_actualinventario.getText());
-            if (cantidad<cantidad_actual) {
+            /*if (cantidad<cantidad_actual) {
                 valida=false;
                 this.txtcantidad_actualinventario.setBackground(Color.decode("#FFCCCC"));
                 JOptionPane.showMessageDialog(null, "Cantidad actual no puede ser mayor que Cantidad");
-            }
+            }*/
         }
         else
         {
@@ -2990,7 +2990,7 @@ public class Datos extends javax.swing.JFrame {
     private void tbinventarioMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
-            if (!this.btnCambiarinventario.isEnabled()) {
+            if (!this.btnGuardarinventario.isEnabled()) {
                 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                 this.jdfecha_caducidad.setDateFormatString("dd/MM/yyyy");
                 this.jdfecha.setDateFormatString("dd/MM/yyyy");

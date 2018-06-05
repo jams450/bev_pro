@@ -164,16 +164,14 @@ public class reportes extends javax.swing.JFrame {
         jLabel37 = new javax.swing.JLabel();
         jLabel38 = new javax.swing.JLabel();
         jLabel39 = new javax.swing.JLabel();
-        txtanopro = new javax.swing.JTextField();
-        txtmespro = new javax.swing.JTextField();
         produccion_odp_nombre = new javax.swing.JPanel();
         jLabel56 = new javax.swing.JLabel();
         jLabel58 = new javax.swing.JLabel();
         jLabel59 = new javax.swing.JLabel();
         txtodp = new javax.swing.JTextField();
         jLabel61 = new javax.swing.JLabel();
-        jMonthChooser1 = new com.toedter.calendar.JMonthChooser();
-        jYearChooser1 = new com.toedter.calendar.JYearChooser();
+        jmes_prodruccion = new com.toedter.calendar.JMonthChooser();
+        jano_prodruccion = new com.toedter.calendar.JYearChooser();
         produccion_odp_sinnombre = new javax.swing.JPanel();
         jLabel78 = new javax.swing.JLabel();
         jLabel79 = new javax.swing.JLabel();
@@ -199,6 +197,8 @@ public class reportes extends javax.swing.JFrame {
         jLabel51 = new javax.swing.JLabel();
         cbtipoventa = new javax.swing.JComboBox<>();
         jLabel55 = new javax.swing.JLabel();
+        jano_ventas = new com.toedter.calendar.JYearChooser();
+        jmes_ventas = new com.toedter.calendar.JMonthChooser();
         jPanel9 = new javax.swing.JPanel();
         jLabel52 = new javax.swing.JLabel();
         jLabel57 = new javax.swing.JLabel();
@@ -218,6 +218,10 @@ public class reportes extends javax.swing.JFrame {
         jLabel69 = new javax.swing.JLabel();
         cbtipoventa1 = new javax.swing.JComboBox<>();
         jLabel71 = new javax.swing.JLabel();
+        jdate_ventas_sem2 = new com.toedter.calendar.JDateChooser();
+        jdate_ventas_sem1 = new com.toedter.calendar.JDateChooser();
+        jano_detventa = new com.toedter.calendar.JYearChooser();
+        jmes_detventa = new com.toedter.calendar.JMonthChooser();
         jPanel2 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         vendedorestodos = new javax.swing.JPanel();
@@ -250,7 +254,7 @@ public class reportes extends javax.swing.JFrame {
         jPanel7.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, -1, 39));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bevisalogo.png"))); // NOI18N
-        jPanel7.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 200, 70));
+        jPanel7.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, 180, 80));
 
         jTabbedPane2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -884,8 +888,6 @@ public class reportes extends javax.swing.JFrame {
         jLabel39.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel39.setText("No. Mes");
         Produccion.add(jLabel39, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 120, -1, -1));
-        Produccion.add(txtanopro, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 330, 120, -1));
-        Produccion.add(txtmespro, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 330, 120, -1));
 
         produccion_odp_nombre.setBackground(new java.awt.Color(240, 200, 115));
         produccion_odp_nombre.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -939,8 +941,8 @@ public class reportes extends javax.swing.JFrame {
         jLabel61.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel61.setText("Lote");
         Produccion.add(jLabel61, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 70, -1, -1));
-        Produccion.add(jMonthChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 150, 100, -1));
-        Produccion.add(jYearChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 120, -1));
+        Produccion.add(jmes_prodruccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 150, 100, -1));
+        Produccion.add(jano_prodruccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 120, -1));
 
         produccion_odp_sinnombre.setBackground(new java.awt.Color(240, 200, 115));
         produccion_odp_sinnombre.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1012,7 +1014,7 @@ public class reportes extends javax.swing.JFrame {
             }
         });
 
-        jLabel41.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/vendedor.png"))); // NOI18N
+        jLabel41.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/ventas1.png"))); // NOI18N
 
         jLabel42.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel42.setForeground(new java.awt.Color(162, 127, 51));
@@ -1057,7 +1059,7 @@ public class reportes extends javax.swing.JFrame {
             }
         });
 
-        jLabel43.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/mexico.png"))); // NOI18N
+        jLabel43.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/ventas1.png"))); // NOI18N
 
         jLabel44.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel44.setForeground(new java.awt.Color(162, 127, 51));
@@ -1068,19 +1070,21 @@ public class reportes extends javax.swing.JFrame {
         vgpmesLayout.setHorizontalGroup(
             vgpmesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(vgpmesLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
                 .addGroup(vgpmesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel43)
                     .addGroup(vgpmesLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel44)))
-                .addContainerGap(42, Short.MAX_VALUE))
+                        .addGap(48, 48, 48)
+                        .addComponent(jLabel44))
+                    .addGroup(vgpmesLayout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(jLabel43)))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         vgpmesLayout.setVerticalGroup(
             vgpmesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(vgpmesLayout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel43)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel44)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1114,7 +1118,7 @@ public class reportes extends javax.swing.JFrame {
             }
         });
 
-        jLabel48.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/mexico.png"))); // NOI18N
+        jLabel48.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/vendedor.png"))); // NOI18N
 
         jLabel49.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel49.setForeground(new java.awt.Color(162, 127, 51));
@@ -1195,6 +1199,8 @@ public class reportes extends javax.swing.JFrame {
         jLabel55.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel55.setText("Tipo");
         jPanel8.add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, -1, -1));
+        jPanel8.add(jano_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 230, 120, -1));
+        jPanel8.add(jmes_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 330, -1, -1));
 
         jTabbedPane2.addTab("Ventas ", jPanel8);
 
@@ -1224,11 +1230,11 @@ public class reportes extends javax.swing.JFrame {
             }
         });
 
-        jLabel62.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/vendedor.png"))); // NOI18N
+        jLabel62.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/monedas.png"))); // NOI18N
 
         jLabel63.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel63.setForeground(new java.awt.Color(162, 127, 51));
-        jLabel63.setText("Año");
+        jLabel63.setText("Semanal");
 
         javax.swing.GroupLayout vsLayout = new javax.swing.GroupLayout(vs);
         vs.setLayout(vsLayout);
@@ -1237,19 +1243,19 @@ public class reportes extends javax.swing.JFrame {
             .addGroup(vsLayout.createSequentialGroup()
                 .addGroup(vsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(vsLayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jLabel63))
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel62))
                     .addGroup(vsLayout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jLabel62)))
-                .addContainerGap(39, Short.MAX_VALUE))
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel63)))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         vsLayout.setVerticalGroup(
             vsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(vsLayout.createSequentialGroup()
-                .addGap(9, 9, 9)
+                .addGap(4, 4, 4)
                 .addComponent(jLabel62)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel63)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1287,34 +1293,30 @@ public class reportes extends javax.swing.JFrame {
             }
         });
 
-        jLabel68.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/vendedor.png"))); // NOI18N
+        jLabel68.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cuenta.png"))); // NOI18N
 
         jLabel69.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel69.setForeground(new java.awt.Color(162, 127, 51));
-        jLabel69.setText("Año");
+        jLabel69.setText("Detalle");
 
         javax.swing.GroupLayout dventaLayout = new javax.swing.GroupLayout(dventa);
         dventa.setLayout(dventaLayout);
         dventaLayout.setHorizontalGroup(
             dventaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dventaLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dventaLayout.createSequentialGroup()
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addGroup(dventaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(dventaLayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jLabel69))
-                    .addGroup(dventaLayout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jLabel68)))
-                .addContainerGap(39, Short.MAX_VALUE))
+                    .addComponent(jLabel68)
+                    .addComponent(jLabel69))
+                .addGap(27, 27, 27))
         );
         dventaLayout.setVerticalGroup(
             dventaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dventaLayout.createSequentialGroup()
-                .addGap(9, 9, 9)
                 .addComponent(jLabel68)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel69)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel9.add(dventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 250, 120, 90));
@@ -1325,6 +1327,10 @@ public class reportes extends javax.swing.JFrame {
         jLabel71.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel71.setText("Tipo");
         jPanel9.add(jLabel71, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 70, -1, -1));
+        jPanel9.add(jdate_ventas_sem2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, 120, -1));
+        jPanel9.add(jdate_ventas_sem1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 140, 120, -1));
+        jPanel9.add(jano_detventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 160, 120, -1));
+        jPanel9.add(jmes_detventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 210, -1, -1));
 
         jTabbedPane2.addTab("Ventas Semanales", jPanel9);
 
@@ -1436,17 +1442,17 @@ public class reportes extends javax.swing.JFrame {
         clientes.setLayout(clientesLayout);
         clientesLayout.setHorizontalGroup(
             clientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clientesLayout.createSequentialGroup()
-                .addContainerGap(38, Short.MAX_VALUE)
+            .addGroup(clientesLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
                 .addComponent(jLabel27)
-                .addGap(37, 37, 37))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         clientesLayout.setVerticalGroup(
             clientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clientesLayout.createSequentialGroup()
-                .addContainerGap(28, Short.MAX_VALUE)
+            .addGroup(clientesLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
                 .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         buttonGroup1.add(rbAceptados);
@@ -1821,8 +1827,8 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("mes", this.txtmespro.getText());
-            c.put("ano", this.txtanopro.getText());
+            c.put("mes", this.jmes_prodruccion.getMonth()+"");
+            c.put("ano", this.jano_prodruccion.getYear()+"");
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
             JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
             viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
@@ -1847,13 +1853,13 @@ public class reportes extends javax.swing.JFrame {
     }//GEN-LAST:event_produccion_anoMouseEntered
 
     private void produccion_anoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_produccion_anoMouseClicked
-        JasperReport reporte; //Creo el objeto reporte
+        JasperReport reporte; 
         // Ubicacion del Reporte
         String path = s+"Produccion_Ano.jasper";
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("ano", this.txtanopro.getText());
+            c.put("ano",this.jano_prodruccion.getYear()+"");
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
             JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
             viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
@@ -1913,6 +1919,10 @@ public class reportes extends javax.swing.JFrame {
     }//GEN-LAST:event_produccion_odp_sinnombreMouseExited
     
     //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="VENTAS">
+    //</editor-fold>
+    
     
     private void vsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_vsMouseExited
         this.resetcolor(vs);
@@ -2528,15 +2538,21 @@ public class reportes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel80;
     private javax.swing.JLabel jLabel9;
-    private com.toedter.calendar.JMonthChooser jMonthChooser1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private com.toedter.calendar.JYearChooser jYearChooser1;
+    private com.toedter.calendar.JYearChooser jano_detventa;
     private com.toedter.calendar.JYearChooser jano_inventario;
+    private com.toedter.calendar.JYearChooser jano_prodruccion;
+    private com.toedter.calendar.JYearChooser jano_ventas;
+    private com.toedter.calendar.JDateChooser jdate_ventas_sem1;
+    private com.toedter.calendar.JDateChooser jdate_ventas_sem2;
+    private com.toedter.calendar.JMonthChooser jmes_detventa;
     private com.toedter.calendar.JMonthChooser jmes_inventario;
+    private com.toedter.calendar.JMonthChooser jmes_prodruccion;
+    private com.toedter.calendar.JMonthChooser jmes_ventas;
     private javax.swing.JPanel produccion_ano;
     private javax.swing.JPanel produccion_mes;
     private javax.swing.JPanel produccion_odp_nombre;
@@ -2548,12 +2564,10 @@ public class reportes extends javax.swing.JFrame {
     private javax.swing.JRadioButton rbAceptados;
     private javax.swing.JRadioButton rbProspectos;
     private javax.swing.JTextField txtanodv;
-    private javax.swing.JTextField txtanopro;
     private javax.swing.JTextField txtanovg;
     private javax.swing.JTextField txtfivs;
     private javax.swing.JTextField txtinivs;
     private javax.swing.JTextField txtmesdv;
-    private javax.swing.JTextField txtmespro;
     private javax.swing.JTextField txtmesvg;
     private javax.swing.JTextField txtodp;
     private javax.swing.JPanel vendedoresdele;
