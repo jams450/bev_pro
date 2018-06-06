@@ -73,6 +73,7 @@ public class Elegir_Producto_Ingredientes extends javax.swing.JFrame {
             } 
             
             this.lbcantidad.setVisible(false);
+            this.lblnota.setVisible(false);
             this.txtcantidad.setVisible(false);
             }
             else
@@ -125,6 +126,7 @@ public class Elegir_Producto_Ingredientes extends javax.swing.JFrame {
         lbcantidad = new javax.swing.JLabel();
         txtcantidad = new javax.swing.JTextField();
         btnAceptar = new javax.swing.JButton();
+        lblnota = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -172,6 +174,7 @@ public class Elegir_Producto_Ingredientes extends javax.swing.JFrame {
         tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         tbdatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tbdatos.setGridColor(new java.awt.Color(204, 204, 204));
+        tbdatos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbdatos.setShowHorizontalLines(false);
         tbdatos.setShowVerticalLines(false);
         tbdatos.getTableHeader().setReorderingAllowed(false);
@@ -263,6 +266,11 @@ public class Elegir_Producto_Ingredientes extends javax.swing.JFrame {
         });
         jPanel2.add(btnAceptar, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 230, 150, -1));
 
+        lblnota.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        lblnota.setText("*Nota: Para campos numericos se aceptan con o sin punto decimal");
+        lblnota.setFocusable(false);
+        jPanel2.add(lblnota, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 330, 30));
+
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 56, 780, 280));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -313,24 +321,32 @@ public class Elegir_Producto_Ingredientes extends javax.swing.JFrame {
                 }
                 else
                 {
-                    if(this.txtcantidad.getText().matches("([0-9]+)(\\.[0-9]+)?")){
-                    Ingrediente ing = new Ingrediente();    
+                    if (!this.txtcantidad.getText().isEmpty()) {
+                        if(this.txtcantidad.getText().matches("([0-9]+)(\\.[0-9]+)?")){
+                        Ingrediente ing = new Ingrediente();    
 
-                    ing.setNombre(this.txtnombre.getText());
-                    ing.setClave(this.txtclave.getText());
-                    ing.setId(Integer.parseInt(this.txtid.getText())); 
-                    ing.setCantidad(Double.parseDouble(this.txtcantidad.getText()));
+                        ing.setNombre(this.txtnombre.getText());
+                        ing.setClave(this.txtclave.getText());
+                        ing.setId(Integer.parseInt(this.txtid.getText())); 
+                        ing.setCantidad(Double.parseDouble(this.txtcantidad.getText()));
 
-                    this.vpro.insetaringre(ing);
-                    this.vpro.setEnabled(true);
-                    this.vpro.setState(NORMAL);
-                    this.dispose();
+                        this.vpro.insetaringre(ing);
+                        this.vpro.setEnabled(true);
+                        this.vpro.setState(NORMAL);
+                        this.dispose();
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(null, "Formato Incorrecto:\nEjemplo: 14.25 ó 5");
+                            this.txtcantidad.setBackground(Color.decode("#FFCCCC"));
+                        }
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog(null, "La cantidad esta mal");
+                        JOptionPane.showMessageDialog(null, "Cantidad Vacia");
                         this.txtcantidad.setBackground(Color.decode("#FFCCCC"));
                     }
+                    
                 }
             }
         } 
@@ -420,6 +436,7 @@ public class Elegir_Producto_Ingredientes extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbcantidad;
+    private javax.swing.JLabel lblnota;
     private javax.swing.JTable tbdatos;
     private javax.swing.JTextField txtbuscar;
     private javax.swing.JTextField txtcantidad;

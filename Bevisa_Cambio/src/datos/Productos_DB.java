@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import negocio.Producto;
 
 
@@ -43,8 +44,7 @@ public class Productos_DB {
     
     private final String UPDATE_GA =
             "Update productos set  clave = ?,nombre=? ,   idcategoria = ? ,  idmedida = ?, pventa=?,mesescaducidad=?,idproceso=?,smin=?,iva=? where id = ? ;";
-    
-    
+
     private final String CATEGORIA= "select * from categoria;";
     
     private final String MEDIDA = "select * from umedida;";
@@ -53,9 +53,7 @@ public class Productos_DB {
     
     private final String PROCESO = "select * from procesos;";
     
-    
-    
-    
+    private final String SELECT_CLAVE="select * from productos where clave=?";
     
     public Productos_DB(Connection userConn) {
         this.userConn = userConn;
@@ -194,35 +192,41 @@ public class Productos_DB {
         }
     }
     
-    
     public int insert_mp(Producto pro,int medida,int cate, int moneda) throws SQLException 
     {
-        Connection conn = null;
-        PreparedStatement stmt = null;		
-        int rows = 0; 
-        try {
+        if (this.existe_producto(pro.getClave())) {
+            Connection conn = null;
+            PreparedStatement stmt = null;		
+            int rows = 0; 
+            try {
 
-            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
-            stmt = conn.prepareStatement(this.INSERT_MP);
-            int index = 1;//contador de columnas
-            
-            stmt.setString(index++, pro.getClave());
-            stmt.setString(index++, pro.getNombre());
-            stmt.setInt(index++, cate);
-            stmt.setInt(index++, medida);
-            stmt.setDouble(index++, pro.getStockmin());
-            stmt.setDouble(index++, pro.getPventa());
-            stmt.setInt(index++, pro.getIva());
-            stmt.setInt(index++, moneda);
-            rows = stmt.executeUpdate();
-        } finally {
-            Conexion.close(stmt);
-            //Unicamente cerramos la conexión si fue creada en este metodo
-            if (this.userConn == null) {
-                Conexion.close(conn);
+                conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+                stmt = conn.prepareStatement(this.INSERT_MP);
+                int index = 1;//contador de columnas
+
+                stmt.setString(index++, pro.getClave());
+                stmt.setString(index++, pro.getNombre());
+                stmt.setInt(index++, cate);
+                stmt.setInt(index++, medida);
+                stmt.setDouble(index++, pro.getStockmin());
+                stmt.setDouble(index++, pro.getPventa());
+                stmt.setInt(index++, pro.getIva());
+                stmt.setInt(index++, moneda);
+                rows = stmt.executeUpdate();
+            } finally {
+                Conexion.close(stmt);
+                //Unicamente cerramos la conexión si fue creada en este metodo
+                if (this.userConn == null) {
+                    Conexion.close(conn);
+                }
             }
+            return rows;
         }
-        return rows;
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Ya existe la materia prima");
+        }
+        return 0;
     }
     
     public int update_mp(Producto pro,int medida,int cate,int moneda) throws SQLException 
@@ -259,32 +263,39 @@ public class Productos_DB {
 
     public int insert_empaque(Producto pro,int medida,int cate,int moneda) throws SQLException 
     {
-        Connection conn = null;
-        PreparedStatement stmt = null;		
-        int rows = 0; 
-        try {
-            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
-            stmt = conn.prepareStatement(this.INSERT_EM);
-            int index = 1;//contador de columnas
-            
-            stmt.setString(index++, pro.getClave());
-            stmt.setString(index++, pro.getNombre());
-            stmt.setInt(index++, cate);
-            stmt.setInt(index++, medida);
-            stmt.setDouble(index++, pro.getStockmin());
-            stmt.setDouble(index++, pro.getPeso());
-            stmt.setDouble(index++, pro.getPventa());
-            stmt.setInt(index++, pro.getIva());
-            stmt.setInt(index++, moneda);
-            rows = stmt.executeUpdate();
-        } finally {
-            Conexion.close(stmt);
-            //Unicamente cerramos la conexión si fue creada en este metodo
-            if (this.userConn == null) {
-                Conexion.close(conn);
+        if (this.existe_producto(pro.getClave())) {
+            Connection conn = null;
+            PreparedStatement stmt = null;		
+            int rows = 0; 
+            try {
+                conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+                stmt = conn.prepareStatement(this.INSERT_EM);
+                int index = 1;//contador de columnas
+
+                stmt.setString(index++, pro.getClave());
+                stmt.setString(index++, pro.getNombre());
+                stmt.setInt(index++, cate);
+                stmt.setInt(index++, medida);
+                stmt.setDouble(index++, pro.getStockmin());
+                stmt.setDouble(index++, pro.getPeso());
+                stmt.setDouble(index++, pro.getPventa());
+                stmt.setInt(index++, pro.getIva());
+                stmt.setInt(index++, moneda);
+                rows = stmt.executeUpdate();
+            } finally {
+                Conexion.close(stmt);
+                //Unicamente cerramos la conexión si fue creada en este metodo
+                if (this.userConn == null) {
+                    Conexion.close(conn);
+                }
             }
+            return rows;
         }
-        return rows;
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Ya existe el empaque");
+        }
+        return 0;
     }
     
     public int update_empaque(Producto pro,int medida,int cate,int moneda) throws SQLException 
@@ -316,37 +327,45 @@ public class Productos_DB {
                 Conexion.close(conn);
             }
         }
+        
         return rows;
     }
     
     public int insert_pt(Producto pro,int medida,int cate, int proceso) throws SQLException 
     {
-        Connection conn = null;
-        PreparedStatement stmt = null;		
-        int rows = 0; 
-        try {          
-            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
-            stmt = conn.prepareStatement(this.INSERT_PT);
-            int index = 1;//contador de columnas
-            
-            stmt.setString(index++, pro.getClave());
-            stmt.setString(index++, pro.getNombre());
-            stmt.setInt(index++, cate);
-            stmt.setInt(index++, medida);
-            stmt.setDouble(index++,pro.getPventa());
-            stmt.setInt(index++,pro.getIva());
-            stmt.setInt(index++,proceso);
-            stmt.setDouble(index++,pro.getMeses_caducidad());
+        if (this.existe_producto(pro.getClave())) {
+            Connection conn = null;
+            PreparedStatement stmt = null;		
+            int rows = 0; 
+            try {          
+                conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+                stmt = conn.prepareStatement(this.INSERT_PT);
+                int index = 1;//contador de columnas
 
-            rows = stmt.executeUpdate();
-        } finally {
-            Conexion.close(stmt);
-            //Unicamente cerramos la conexión si fue creada en este metodo
-            if (this.userConn == null) {
-                Conexion.close(conn);
+                stmt.setString(index++, pro.getClave());
+                stmt.setString(index++, pro.getNombre());
+                stmt.setInt(index++, cate);
+                stmt.setInt(index++, medida);
+                stmt.setDouble(index++,pro.getPventa());
+                stmt.setInt(index++,pro.getIva());
+                stmt.setInt(index++,proceso);
+                stmt.setDouble(index++,pro.getMeses_caducidad());
+
+                rows = stmt.executeUpdate();
+            } finally {
+                Conexion.close(stmt);
+                //Unicamente cerramos la conexión si fue creada en este metodo
+                if (this.userConn == null) {
+                    Conexion.close(conn);
+                }
             }
+            return rows;
         }
-        return rows;
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Ya existe el producto");
+        }
+        return 0;
     }
     
     public int update_pt(Producto pro,int medida,int cate, int proceso) throws SQLException 
@@ -382,35 +401,42 @@ public class Productos_DB {
 
     public int insert_galeria(Producto pro,int medida,int cate, int proceso) throws SQLException 
     {
-        Connection conn = null;
-        PreparedStatement stmt = null;		
-        int rows = 0; 
-        try {          
-            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
-            stmt = conn.prepareStatement(this.INSERT_GA);
-            int index = 1;//contador de columnas
-            
-            stmt.setString(index++, pro.getClave());
-            stmt.setString(index++, pro.getNombre());
-            stmt.setInt(index++, cate);
-            stmt.setInt(index++, medida);
-            stmt.setDouble(index++,pro.getPventa());
-            stmt.setDouble(index++,pro.getMeses_caducidad());
-            stmt.setInt(index++,proceso);
-            stmt.setDouble(index++,pro.getStockmin());
-            stmt.setInt(index++,pro.getIva());
-            
-            
+        if (this.existe_producto(pro.getClave())) {
+            Connection conn = null;
+            PreparedStatement stmt = null;		
+            int rows = 0; 
+            try {          
+                conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+                stmt = conn.prepareStatement(this.INSERT_GA);
+                int index = 1;//contador de columnas
 
-            rows = stmt.executeUpdate();
-        } finally {
-            Conexion.close(stmt);
-            //Unicamente cerramos la conexión si fue creada en este metodo
-            if (this.userConn == null) {
-                Conexion.close(conn);
+                stmt.setString(index++, pro.getClave());
+                stmt.setString(index++, pro.getNombre());
+                stmt.setInt(index++, cate);
+                stmt.setInt(index++, medida);
+                stmt.setDouble(index++,pro.getPventa());
+                stmt.setDouble(index++,pro.getMeses_caducidad());
+                stmt.setInt(index++,proceso);
+                stmt.setDouble(index++,pro.getStockmin());
+                stmt.setInt(index++,pro.getIva());
+
+
+
+                rows = stmt.executeUpdate();
+            } finally {
+                Conexion.close(stmt);
+                //Unicamente cerramos la conexión si fue creada en este metodo
+                if (this.userConn == null) {
+                    Conexion.close(conn);
+                }
             }
+            return rows;
         }
-        return rows;
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Ya existe el producto");
+        }
+        return 0;
     }
     
     public int update_galeria(Producto pro,int medida,int cate, int proceso) throws SQLException 
@@ -446,6 +472,29 @@ public class Productos_DB {
         return rows;
     }
 
-
+    public boolean existe_producto(String clave)throws SQLException 
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean existe=true;
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(this.SELECT_CLAVE);
+            stmt.setString(1, clave);
+            rs = stmt.executeQuery();
+            if (rs.first()) {
+                existe=false;
+            }
+            return existe;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
+    }
+    
         
 }

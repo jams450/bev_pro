@@ -61,8 +61,14 @@ public class Datos extends javax.swing.JFrame {
     private Menu_Principal mp;
     private Connection con;
     
+    
+    final String regex_telefono="^(\\d{2})?\\d{8}(\\s(EXT|ext)\\s\\d{3,4})?(,(\\d{2})?\\d{8}(\\s(EXT|ext)\\s\\d{3,5})?)*$";
+    
+    final String regex_celular="^\\d{10}$";
+    
    //</editor-fold>
 
+   
     /**
      *
      * @param mp Menu Principal
@@ -146,6 +152,8 @@ public class Datos extends javax.swing.JFrame {
         lblpeso = new javax.swing.JLabel();
         cbmonedaproducto = new javax.swing.JComboBox<>();
         lbcantidad2 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         Ingredientes = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         txtidingrediente = new javax.swing.JTextField();
@@ -180,6 +188,7 @@ public class Datos extends javax.swing.JFrame {
         txtdeterminacion = new javax.swing.JTextField();
         txtparametro = new javax.swing.JTextField();
         txtmetodo = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
         Inventario = new javax.swing.JPanel();
         jLabel80 = new javax.swing.JLabel();
         jScrollPane8 = new javax.swing.JScrollPane();
@@ -209,6 +218,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel91 = new javax.swing.JLabel();
         jdfecha_caducidad = new com.toedter.calendar.JDateChooser();
         jdfecha = new com.toedter.calendar.JDateChooser();
+        jLabel11 = new javax.swing.JLabel();
         Vendedores = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -237,6 +247,8 @@ public class Datos extends javax.swing.JFrame {
         btnGuardarvendedor = new javax.swing.JButton();
         btnCancelarvendedor = new javax.swing.JButton();
         txtnoextvendedor = new javax.swing.JTextField();
+        jLabel93 = new javax.swing.JLabel();
+        jLabel96 = new javax.swing.JLabel();
         Proovedores = new javax.swing.JPanel();
         jLabel45 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -275,6 +287,8 @@ public class Datos extends javax.swing.JFrame {
         txtsistemacalidad = new javax.swing.JTextField();
         jLabel70 = new javax.swing.JLabel();
         txtcpproveedor = new javax.swing.JTextField();
+        jLabel78 = new javax.swing.JLabel();
+        jLabel94 = new javax.swing.JLabel();
         Clientes = new javax.swing.JPanel();
         jLabel27 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -330,6 +344,9 @@ public class Datos extends javax.swing.JFrame {
         txtcelularclientes = new javax.swing.JTextField();
         cbvendedorcliente = new javax.swing.JComboBox<>();
         jLabel77 = new javax.swing.JLabel();
+        jLabel79 = new javax.swing.JLabel();
+        jLabel92 = new javax.swing.JLabel();
+        jLabel95 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -351,7 +368,7 @@ public class Datos extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel1.setText("Productos");
-        Productos.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, -1, 39));
+        Productos.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, -1, 39));
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -544,7 +561,7 @@ public class Datos extends javax.swing.JFrame {
         });
 
         lblcaducidad.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        lblcaducidad.setText("Caducidad :");
+        lblcaducidad.setText("Meses de Caducidad :");
 
         lblproceso.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblproceso.setText("Proceso :");
@@ -583,48 +600,41 @@ public class Datos extends javax.swing.JFrame {
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblproceso)
+                    .addComponent(lblcaducidad)
+                    .addComponent(lblpventa)
+                    .addComponent(lblsmin)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel3)
+                    .addComponent(lblpeso)
+                    .addComponent(lbcantidad2)
+                    .addComponent(lbliva)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                                .addComponent(lbliva)
-                                .addGap(318, 318, 318))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblproceso)
-                                    .addComponent(lblcaducidad)
-                                    .addComponent(lblpventa)
-                                    .addComponent(lblsmin)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel3)
-                                    .addComponent(lblpeso))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtidproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtclaveproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbcategoriaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtbuscar_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbmedidaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtsminproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtpventaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtcaducidadproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbprocesoproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtnombreproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtpeso_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addGap(63, 63, 63)
-                        .addComponent(lbcantidad2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtbuscar_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel9Layout.createSequentialGroup()
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chivaproducto)
-                            .addComponent(cbmonedaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(164, 164, 164)))
-                .addGap(0, 32, Short.MAX_VALUE))
+                            .addComponent(txtidproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtclaveproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbcategoriaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbmedidaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtsminproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtpventaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtcaducidadproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbprocesoproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtnombreproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtpeso_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbmonedaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chivaproducto))
+                        .addContainerGap(36, Short.MAX_VALUE))))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -633,7 +643,7 @@ public class Datos extends javax.swing.JFrame {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtbuscar_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
+                .addGap(30, 30, 30)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtidproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -650,7 +660,7 @@ public class Datos extends javax.swing.JFrame {
                     .addComponent(cbcategoriaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jLabel5)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -664,7 +674,7 @@ public class Datos extends javax.swing.JFrame {
                     .addComponent(txtpventaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
-                        .addComponent(lblpventa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(lblpventa)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblcaducidad, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -673,24 +683,37 @@ public class Datos extends javax.swing.JFrame {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblproceso, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbprocesoproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(lblpeso, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtpeso_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtpeso_producto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblpeso, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbmonedaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbcantidad2))
+                    .addComponent(lbcantidad2)
+                    .addComponent(cbmonedaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chivaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbliva))
-                .addContainerGap(66, Short.MAX_VALUE))
+                    .addComponent(lbliva)
+                    .addComponent(chivaproducto, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         txtbuscar_producto.getAccessibleContext().setAccessibleName("");
 
-        Productos.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 30, 460, 420));
+        Productos.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 10, 460, 430));
+
+        jLabel8.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel8.setText("Para campos numericos se aceptan con o sin punto decimal");
+        jLabel8.setFocusable(false);
+        Productos.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 460, 290, 30));
+
+        jLabel9.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel9.setText("*Nota: Todos los campos son obligatorios de llenar");
+        jLabel9.setFocusable(false);
+        Productos.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 430, -1, 39));
 
         jTabbedPane2.addTab("Productos", Productos);
 
@@ -852,7 +875,7 @@ public class Datos extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -933,6 +956,11 @@ public class Datos extends javax.swing.JFrame {
         });
         Pruebas.add(txtmetodo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, 190, -1));
 
+        jLabel10.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel10.setText("*Nota: Todos los campos son obligatorios de llenar");
+        jLabel10.setFocusable(false);
+        Pruebas.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 310, -1, 20));
+
         jTabbedPane2.addTab("Pruebas", Pruebas);
 
         Inventario.setBackground(new java.awt.Color(255, 255, 255));
@@ -987,7 +1015,7 @@ public class Datos extends javax.swing.JFrame {
             tbinventario.getColumnModel().getColumn(9).setPreferredWidth(150);
         }
 
-        Inventario.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 56, 650, 370));
+        Inventario.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 650, 370));
 
         btnCambiarinventario.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnCambiarinventario.setText("Cambiar");
@@ -1034,33 +1062,33 @@ public class Datos extends javax.swing.JFrame {
         txtnoentradainventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtnoentradainventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtnoentradainventario.setEnabled(false);
-        Inventario.add(txtnoentradainventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 60, 139, -1));
+        Inventario.add(txtnoentradainventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 70, 139, -1));
 
         jLabel82.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel82.setText("Numero Entrada :");
-        Inventario.add(jLabel82, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 60, -1, -1));
+        Inventario.add(jLabel82, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 70, -1, -1));
 
         jLabel83.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel83.setText("Clave :");
-        Inventario.add(jLabel83, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 90, -1, -1));
+        Inventario.add(jLabel83, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 100, -1, -1));
 
         txtclaveinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtclaveinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtclaveinventario.setEnabled(false);
-        Inventario.add(txtclaveinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 90, 139, -1));
+        Inventario.add(txtclaveinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 100, 139, -1));
 
         txtnombreinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtnombreinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtnombreinventario.setEnabled(false);
-        Inventario.add(txtnombreinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 120, 290, -1));
+        Inventario.add(txtnombreinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 130, 290, -1));
 
         jLabel84.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel84.setText("Nombre Producto :");
-        Inventario.add(jLabel84, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 120, -1, -1));
+        Inventario.add(jLabel84, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 130, -1, -1));
 
         jLabel85.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel85.setText("Fecha :");
-        Inventario.add(jLabel85, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 150, -1, -1));
+        Inventario.add(jLabel85, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 160, -1, -1));
 
         txtcantidad_actualinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcantidad_actualinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
@@ -1070,11 +1098,11 @@ public class Datos extends javax.swing.JFrame {
                 txtcantidad_actualinventarioKeyReleased(evt);
             }
         });
-        Inventario.add(txtcantidad_actualinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 240, 139, -1));
+        Inventario.add(txtcantidad_actualinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 250, 139, -1));
 
         jLabel86.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel86.setText("C. Actual :");
-        Inventario.add(jLabel86, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 240, -1, -1));
+        Inventario.add(jLabel86, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 250, -1, -1));
 
         txtloteinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtloteinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
@@ -1084,20 +1112,20 @@ public class Datos extends javax.swing.JFrame {
                 txtloteinventarioKeyReleased(evt);
             }
         });
-        Inventario.add(txtloteinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 270, 139, -1));
+        Inventario.add(txtloteinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 280, 139, -1));
 
         jLabel87.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel87.setText("Lote :");
-        Inventario.add(jLabel87, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 270, -1, -1));
+        Inventario.add(jLabel87, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 280, -1, -1));
 
         txtidoppinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtidoppinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtidoppinventario.setEnabled(false);
-        Inventario.add(txtidoppinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 300, 139, -1));
+        Inventario.add(txtidoppinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 310, 139, -1));
 
         jLabel88.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel88.setText("ID OPP :");
-        Inventario.add(jLabel88, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 300, -1, -1));
+        Inventario.add(jLabel88, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 310, -1, -1));
 
         txtfactinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtfactinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
@@ -1107,31 +1135,36 @@ public class Datos extends javax.swing.JFrame {
                 txtfactinventarioKeyReleased(evt);
             }
         });
-        Inventario.add(txtfactinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 330, 139, -1));
+        Inventario.add(txtfactinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 340, 139, -1));
 
         jLabel89.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel89.setText("Factura No. :");
-        Inventario.add(jLabel89, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 330, -1, -1));
+        Inventario.add(jLabel89, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 340, -1, -1));
 
         txtcantidadtinventario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcantidadtinventario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcantidadtinventario.setEnabled(false);
-        Inventario.add(txtcantidadtinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 210, 139, -1));
+        Inventario.add(txtcantidadtinventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 220, 139, -1));
 
         jLabel90.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel90.setText("Cantidad :");
-        Inventario.add(jLabel90, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 210, -1, -1));
+        Inventario.add(jLabel90, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 220, -1, -1));
 
         jLabel91.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel91.setText("Fecha Caducidad :");
-        Inventario.add(jLabel91, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 180, -1, -1));
+        Inventario.add(jLabel91, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 190, -1, -1));
 
         jdfecha_caducidad.setBackground(new java.awt.Color(255, 255, 255));
         jdfecha_caducidad.setEnabled(false);
-        Inventario.add(jdfecha_caducidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 180, 140, 20));
+        Inventario.add(jdfecha_caducidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 190, 140, 20));
 
         jdfecha.setEnabled(false);
-        Inventario.add(jdfecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 150, 140, -1));
+        Inventario.add(jdfecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 160, 140, -1));
+
+        jLabel11.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel11.setText("*Nota: Todos los campos son obligatorios de llenar");
+        jLabel11.setFocusable(false);
+        Inventario.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 390, -1, 20));
 
         jTabbedPane2.addTab("Inventario", Inventario);
 
@@ -1194,7 +1227,7 @@ public class Datos extends javax.swing.JFrame {
 
         jLabel19.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel19.setText("Buscar  :");
-        Vendedores.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 60, -1, -1));
+        Vendedores.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 20, -1, -1));
 
         txtbuscarvendedores.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtbuscarvendedores.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1202,7 +1235,7 @@ public class Datos extends javax.swing.JFrame {
                 txtbuscarvendedoresKeyReleased(evt);
             }
         });
-        Vendedores.add(txtbuscarvendedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 60, 310, -1));
+        Vendedores.add(txtbuscarvendedores, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 20, 310, -1));
 
         jLabel20.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel20.setText("ID Vendedor :");
@@ -1220,6 +1253,11 @@ public class Datos extends javax.swing.JFrame {
         txttelefonovendedor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txttelefonovendedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txttelefonovendedor.setEnabled(false);
+        txttelefonovendedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txttelefonovendedorKeyReleased(evt);
+            }
+        });
         Vendedores.add(txttelefonovendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 150, 220, -1));
 
         jLabel22.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1333,6 +1371,16 @@ public class Datos extends javax.swing.JFrame {
         txtnoextvendedor.setEnabled(false);
         Vendedores.add(txtnoextvendedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 330, 220, -1));
 
+        jLabel93.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel93.setText("*Nota: Solo el campo nombre es obligatorio");
+        jLabel93.setFocusable(false);
+        Vendedores.add(jLabel93, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 370, -1, 20));
+
+        jLabel96.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel96.setText("Para varios telefonos separarlos por una coma (,)");
+        jLabel96.setFocusable(false);
+        Vendedores.add(jLabel96, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 390, -1, 20));
+
         jTabbedPane2.addTab("Vendedores", Vendedores);
 
         Proovedores.setBackground(new java.awt.Color(255, 255, 255));
@@ -1424,6 +1472,11 @@ public class Datos extends javax.swing.JFrame {
         txttelefonoproveedor.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txttelefonoproveedor.setEnabled(false);
         txttelefonoproveedor.setNextFocusableComponent(txtcorreoproveedor);
+        txttelefonoproveedor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txttelefonoproveedorKeyReleased(evt);
+            }
+        });
         Proovedores.add(txttelefonoproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 110, 240, -1));
 
         jLabel49.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1606,6 +1659,16 @@ public class Datos extends javax.swing.JFrame {
         });
         Proovedores.add(txtcpproveedor, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 170, 240, -1));
 
+        jLabel78.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel78.setText("*Nota: Solo el campo nombre es obligatorio");
+        jLabel78.setFocusable(false);
+        Proovedores.add(jLabel78, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 470, -1, 20));
+
+        jLabel94.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel94.setText("Para varios telefonos separarlos por una coma (,)");
+        jLabel94.setFocusable(false);
+        Proovedores.add(jLabel94, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 490, -1, 20));
+
         jTabbedPane2.addTab("Proveedores", Proovedores);
 
         Clientes.setBackground(new java.awt.Color(255, 255, 255));
@@ -1663,7 +1726,7 @@ public class Datos extends javax.swing.JFrame {
 
         jLabel30.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel30.setText("Buscar  :");
-        Clientes.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 30, -1, -1));
+        Clientes.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 20, -1, -1));
 
         txtbuscarclientes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtbuscarclientes.setFocusCycleRoot(true);
@@ -1693,6 +1756,11 @@ public class Datos extends javax.swing.JFrame {
         txttelefonoclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txttelefonoclientes.setEnabled(false);
         txttelefonoclientes.setNextFocusableComponent(txtcorreoclientes);
+        txttelefonoclientes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txttelefonoclientesKeyReleased(evt);
+            }
+        });
         Clientes.add(txttelefonoclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 110, 200, -1));
 
         jLabel33.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1940,6 +2008,11 @@ public class Datos extends javax.swing.JFrame {
         txtcelularclientes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcelularclientes.setEnabled(false);
         txtcelularclientes.setNextFocusableComponent(txtcorreoclientes);
+        txtcelularclientes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcelularclientesKeyReleased(evt);
+            }
+        });
         Clientes.add(txtcelularclientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 140, 200, -1));
 
         cbvendedorcliente.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -1949,6 +2022,21 @@ public class Datos extends javax.swing.JFrame {
         jLabel77.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel77.setText("Vendedor :");
         Clientes.add(jLabel77, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 350, -1, -1));
+
+        jLabel79.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel79.setText("*Nota: Solo el campo nombre es obligatorio");
+        jLabel79.setFocusable(false);
+        Clientes.add(jLabel79, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 470, -1, 20));
+
+        jLabel92.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel92.setText("*Nota: Los Campos de Facturacion son opcionales");
+        jLabel92.setFocusable(false);
+        Clientes.add(jLabel92, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 390, -1, 20));
+
+        jLabel95.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel95.setText("Para varios telefonos separarlos por una coma (,)");
+        jLabel95.setFocusable(false);
+        Clientes.add(jLabel95, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 490, -1, 20));
 
         jTabbedPane2.addTab("Clientes", Clientes);
 
@@ -2139,12 +2227,12 @@ public class Datos extends javax.swing.JFrame {
                 if (!this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
                     valida = false;
                     this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
-                    error+="Ejemplo de Stock Minimo: 0.00 ó 0 \n";
+                    error+="Ejemplo de Stock Minimo: 1.25 ó 2 \n";
                 }
                 if (!this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
                     valida = false;
                     this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
-                    error+="Ejemplo de Precio de Venta: 0.00 ó 0 \n";
+                    error+="Ejemplo de Precio de Venta: 1.25 ó 2 \n";
                 }          
             break;
             
@@ -2153,12 +2241,12 @@ public class Datos extends javax.swing.JFrame {
                 if (!this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
                     valida = false;
                     this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
-                    error+="Ejemplo de Precio de Venta: 0.00 ó 0 \n";
+                    error+="Ejemplo de Precio de Venta: 1.25 ó 2 \n";
                 }
                 if (!this.txtcaducidadproducto.getText().matches("^[0-9]+$")) {
                     valida = false;
                     this.txtcaducidadproducto.setBackground(Color.decode("#FFCCCC"));
-                    error+="Ejemplo de Caducidad: 0 \n";
+                    error+="Ejemplo de Caducidad: 10 \n";
                 }
             break;
             //EMPAQUE
@@ -2166,7 +2254,7 @@ public class Datos extends javax.swing.JFrame {
                 if (!this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$") ) {
                     valida = false;
                     this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
-                    error+="Ejemplo de Stock Minimo: 0.00 ó 0 \n";
+                    error+="Ejemplo de Stock Minimo: 1.25 ó 2 \n";
                 }
                 break;
             //GALERIA    
@@ -2174,17 +2262,17 @@ public class Datos extends javax.swing.JFrame {
                 if (!this.txtpventaproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
                     valida = false;
                     this.txtpventaproducto.setBackground(Color.decode("#FFCCCC"));
-                    error+="Ejemplo de Precio de Venta: 0.00 ó 0 \n";
+                    error+="Ejemplo de Precio de Venta: 1.25 ó 2 \n";
                 }
                 if (!this.txtcaducidadproducto.getText().matches("^[0-9]+$")) {
                     valida = false;
                     this.txtcaducidadproducto.setBackground(Color.decode("#FFCCCC"));
-                    error+="Ejemplo de Caducidad: 0 \n";
+                    error+="Ejemplo de Caducidad: 4 \n";
                 }
                 if (!this.txtsminproducto.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
                     valida = false;
                     this.txtsminproducto.setBackground(Color.decode("#FFCCCC"));
-                    error+="Ejemplo de Stock Minimo: 0.00 ó 0 \n";
+                    error+="Ejemplo de Stock Minimo: 1.25 ó 2 \n";
                 }
             break;      
         }
@@ -2303,6 +2391,7 @@ public class Datos extends javax.swing.JFrame {
            this.cbprocesoproducto.setEnabled(true);
            
            this.btnAgregar_producto.setEnabled(false);
+           this.btnCambiar_producto.setEnabled(false);
            this.btnCancelar_producto.setEnabled(true);
            this.btnGuardar_producto.setEnabled(true);
            this.chivaproducto.setEnabled(true);
@@ -2371,8 +2460,8 @@ public class Datos extends javax.swing.JFrame {
                             {
                                 Productos_DB p = new Productos_DB(this.con);
                                 Producto pro = new Producto();
-                                pro.setNombre(this.txtnombreproducto.getText());
-                                pro.setClave(this.txtclaveproducto.getText());
+                                pro.setNombre(this.txtnombreproducto.getText().toUpperCase());
+                                pro.setClave(this.txtclaveproducto.getText().toUpperCase());
                                 int cate=this.cbcategoriaproducto.getSelectedIndex()+1;
                                 int medida=this.cbmedidaproducto.getSelectedIndex()+1;
                                 pro.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
@@ -2392,8 +2481,8 @@ public class Datos extends javax.swing.JFrame {
                             {
                                 Productos_DB p = new Productos_DB(this.con);
                                 Producto pro = new Producto();
-                                pro.setNombre(this.txtnombreproducto.getText());
-                                pro.setClave(this.txtclaveproducto.getText());
+                                pro.setNombre(this.txtnombreproducto.getText().toUpperCase());
+                                pro.setClave(this.txtclaveproducto.getText().toUpperCase());
                                 int cate=this.cbcategoriaproducto.getSelectedIndex()+1;
                                 int medida=this.cbmedidaproducto.getSelectedIndex()+1;
                                 pro.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
@@ -2428,8 +2517,8 @@ public class Datos extends javax.swing.JFrame {
                         if(this.seleccionproducto==1)
                         {
                             Producto producto = new Producto();
-                            producto.setNombre(this.txtnombreproducto.getText());
-                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setNombre(this.txtnombreproducto.getText().toUpperCase());
+                            producto.setClave(this.txtclaveproducto.getText().toUpperCase());
                             producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
                             producto.setMeses_caducidad(Integer.parseInt(this.txtcaducidadproducto.getText()));
                             if (this.chivaproducto.isSelected()) {
@@ -2445,8 +2534,8 @@ public class Datos extends javax.swing.JFrame {
                         if(this.seleccionproducto==2)
                         {
                             Producto producto = new Producto();
-                            producto.setNombre(this.txtnombreproducto.getText());
-                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setNombre(this.txtnombreproducto.getText().toUpperCase());
+                            producto.setClave(this.txtclaveproducto.getText().toUpperCase());
                             producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
                             producto.setMeses_caducidad(Integer.parseInt(this.txtcaducidadproducto.getText()));
                             if (this.chivaproducto.isSelected()) {
@@ -2482,8 +2571,8 @@ public class Datos extends javax.swing.JFrame {
                         if(this.seleccionproducto==1)
                         {
                             Producto producto = new Producto();
-                            producto.setNombre(this.txtnombreproducto.getText());
-                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setNombre(this.txtnombreproducto.getText().toUpperCase());
+                            producto.setClave(this.txtclaveproducto.getText().toUpperCase());
                             producto.setPeso(Double.parseDouble(this.txtpeso_producto.getText()));
                             producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
                             producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
@@ -2500,8 +2589,8 @@ public class Datos extends javax.swing.JFrame {
                         if(this.seleccionproducto==2)
                         {
                             Producto producto = new Producto();
-                            producto.setNombre(this.txtnombreproducto.getText());
-                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setNombre(this.txtnombreproducto.getText().toUpperCase());
+                            producto.setClave(this.txtclaveproducto.getText().toUpperCase());
                             producto.setPeso(Double.parseDouble(this.txtpeso_producto.getText()));
                             producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
                             producto.setId(Integer.parseInt(this.txtidproducto.getText()));
@@ -2539,8 +2628,8 @@ public class Datos extends javax.swing.JFrame {
                         if(this.seleccionproducto==1)
                         {
                             Producto producto = new Producto();
-                            producto.setNombre(this.txtnombreproducto.getText());
-                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setNombre(this.txtnombreproducto.getText().toUpperCase());
+                            producto.setClave(this.txtclaveproducto.getText().toUpperCase());
                             producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
                             producto.setMeses_caducidad(Integer.parseInt(this.txtcaducidadproducto.getText()));
                             if (this.chivaproducto.isSelected()) {
@@ -2557,8 +2646,8 @@ public class Datos extends javax.swing.JFrame {
                         if(this.seleccionproducto==2)
                         {
                             Producto producto = new Producto();
-                            producto.setNombre(this.txtnombreproducto.getText());
-                            producto.setClave(this.txtclaveproducto.getText());
+                            producto.setNombre(this.txtnombreproducto.getText().toUpperCase());
+                            producto.setClave(this.txtclaveproducto.getText().toUpperCase());
                             producto.setPventa(Double.parseDouble(this.txtpventaproducto.getText()));
                             producto.setMeses_caducidad(Integer.parseInt(this.txtcaducidadproducto.getText()));
                             if (this.chivaproducto.isSelected()) {
@@ -2932,6 +3021,9 @@ public class Datos extends javax.swing.JFrame {
     private void btnCancelarinventarioActionPerformed(java.awt.event.ActionEvent evt) { 
         deshabilitarinventario();
         limpiarinventario();
+        regresar_color(txtcantidad_actualinventario);
+        regresar_color(txtloteinventario);
+        regresar_color(txtfactinventario);
     } 
 
     private void btnGuardarinventarioActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -2945,8 +3037,8 @@ public class Datos extends javax.swing.JFrame {
                     Inventario inventario = new Inventario();
                     
                     inventario.setCantidad_actual(Double.parseDouble(this.txtcantidad_actualinventario.getText()));
-                    inventario.setLote(this.txtloteinventario.getText());
-                    inventario.setFactura(this.txtfactinventario.getText());
+                    inventario.setLote(this.txtloteinventario.getText().toUpperCase());
+                    inventario.setFactura(this.txtfactinventario.getText().toUpperCase());
                     
                     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -2964,7 +3056,7 @@ public class Datos extends javax.swing.JFrame {
             }
             else
             {
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+                JOptionPane.showMessageDialog(null, "Campos Vacios");
             }
         }
         catch(Exception ex)
@@ -3029,6 +3121,7 @@ public class Datos extends javax.swing.JFrame {
     private void txtnombreclientesKeyReleased(java.awt.event.KeyEvent evt) {
         regresar_color(txtnombreclientes);
     }
+    
     private void txtcorreoclientesKeyReleased(java.awt.event.KeyEvent evt) {
         regresar_color(txtcorreoclientes);
     }
@@ -3041,6 +3134,14 @@ public class Datos extends javax.swing.JFrame {
         regresar_color(txtcuentaclientes);
     }
     
+    private void txttelefonoclientesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txttelefonoclientesKeyReleased
+        this.regresar_color(txttelefonoclientes);
+    }//GEN-LAST:event_txttelefonoclientesKeyReleased
+
+    private void txtcelularclientesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcelularclientesKeyReleased
+        this.regresar_color(txtcelularclientes);
+    }//GEN-LAST:event_txtcelularclientesKeyReleased
+
     public void creaciontablaclientes()
     {  
         try{
@@ -3146,8 +3247,9 @@ public class Datos extends javax.swing.JFrame {
        
        this.cbvendedorcliente.setEnabled(true);
        
-       
        this.txtbuscarclientes.setEnabled(false);
+       
+       this.tbclientes.setEnabled(false);
     }
      
     public void deshabilitarcliente()
@@ -3183,9 +3285,11 @@ public class Datos extends javax.swing.JFrame {
        this.cbvendedorcliente.setEnabled(false);
        
        this.txtbuscarclientes.setEnabled(true);
+       
+       this.tbclientes.setEnabled(true);
     }
     
-     public void limpiarcliente()
+    public void limpiarcliente()
     {
        
        this.txtnombreclientes.setText("");
@@ -3214,14 +3318,15 @@ public class Datos extends javax.swing.JFrame {
        this.txtbuscarclientes.setText("");
     }
     
-     public boolean validar_cliente()
+    public boolean validar_cliente()
      {
          boolean valida =true;
-         
+         String error="";
          if (!this.txtcorreoclientes.getText().isEmpty()) {
             if (!this.txtcorreoclientes.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
                 valida=false;
                 this.txtcorreoclientes.setBackground(Color.decode("#FFCCCC"));
+                error+="Correo:\nejemplo@gmail.com\nejemplo@bevisagaleria.com.mx\n";
             }
         }
 
@@ -3229,21 +3334,49 @@ public class Datos extends javax.swing.JFrame {
             if (!this.txtrfcclientes.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")) {
                 valida=false;
                 this.txtrfcclientes.setBackground(Color.decode("#FFCCCC"));
+                error+="RFC:\nAAA111111AAA\nAAAA111111AAA\n";
             }
         }
         if (!this.txtcuentaclientes.getText().isEmpty()) {
             if (!this.txtcuentaclientes.getText().matches("^[0-9]{4}$")) {
                 valida=false;
                 this.txtcuentaclientes.setBackground(Color.decode("#FFCCCC"));
+                error+="Cuenta:\n1234\n";
             }
         }
+        
+        if (!this.txttelefonoclientes.getText().isEmpty()) {
+            if (!this.txttelefonoclientes.getText().matches(this.regex_telefono)) {
+                valida=false;
+                this.txttelefonoclientes.setBackground(Color.decode("#FFCCCC"));
+                error+="Telefono:\n5559958338\n5559958335 EXT 333\n";
+            }
+        }
+        
+        if (!this.txtcelularclientes.getText().isEmpty()) {
+            if (!this.txtcelularclientes.getText().matches(this.regex_celular)) {
+                valida=false;
+                this.txtcelularclientes.setBackground(Color.decode("#FFCCCC"));
+                error+="Celular:\n5559958338\n";
+            }
+        }
+        
+        if (!valida) {
+           JOptionPane.showMessageDialog(null, "Error en el formato:\n"+error);
+        }
          return valida;
-     }
-     
+     }   
      
     private void btnCancelarclienteActionPerformed(java.awt.event.ActionEvent evt) { 
         deshabilitarcliente();
         limpiarcliente();
+        this.seleccionclientes=0;
+        this.regresar_color(txtnombreclientes);
+        this.regresar_color(txtcorreoclientes);
+        this.regresar_color(txtrfcclientes);
+        this.regresar_color(txtcuentaclientes);
+        this.regresar_color(txttelefonoclientes);
+        this.regresar_color(txtcelularclientes);
     } 
 
     private void btnGuardarclienteActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -3256,19 +3389,19 @@ public class Datos extends javax.swing.JFrame {
                         Clientes_DB  cb = new  Clientes_DB(this.con);
                         Clientes cliente = new Clientes();
                         
-                        cliente.setNombre(this.txtnombreclientes.getText());
+                        cliente.setNombre(this.txtnombreclientes.getText().toUpperCase());
                         cliente.setTelefono(this.txttelefonoclientes.getText());
                         cliente.setCelular(this.txtcelularclientes.getText());
-                        cliente.setCorreo(this.txtcorreoclientes.getText());
+                        cliente.setCorreo(this.txtcorreoclientes.getText().toUpperCase());
                         cliente.setDelegacion(this.cbdelegacioncliente.getSelectedIndex()+1+"");
-                        cliente.setColonia(this.txtcoloniaclientes.getText() );
-                        cliente.setCalle(this.txtcalleclientes.getText());
-                        cliente.setNo_int(this.txtnointclientes.getText());
-                        cliente.setNo_ext(this.txtnoextclientes.getText());
-                        cliente.setRfc(this.txtrfcclientes.getText());
+                        cliente.setColonia(this.txtcoloniaclientes.getText().toUpperCase());
+                        cliente.setCalle(this.txtcalleclientes.getText().toUpperCase());
+                        cliente.setNo_int(this.txtnointclientes.getText().toUpperCase());
+                        cliente.setNo_ext(this.txtnoextclientes.getText().toUpperCase());
+                        cliente.setRfc(this.txtrfcclientes.getText().toUpperCase());
                         cliente.setPago(this.cbmodopagocliente.getSelectedIndex()+1+"");
                         cliente.setCuenta(this.txtcuentaclientes.getText());
-                        cliente.setContacto(this.txtcontactoclientes.getText());
+                        cliente.setContacto(this.txtcontactoclientes.getText().toUpperCase());
 
                         if (this.chestatusclientes.isSelected()) {
                             cliente.setEstatus(2+"");
@@ -3278,11 +3411,11 @@ public class Datos extends javax.swing.JFrame {
                             cliente.setEstatus(1+"");
                         }
 
-                        cliente.setNombref(this.txtnombreclientes1.getText());
-                        cliente.setColoniaf(this.txtcoloniaclientes1.getText() );
-                        cliente.setCallef(this.txtcalleclientes1.getText());
-                        cliente.setNo_intf(this.txtnointclientes1.getText());
-                        cliente.setNo_extf(this.txtnoextclientes1.getText());
+                        cliente.setNombref(this.txtnombreclientes1.getText().toUpperCase());
+                        cliente.setColoniaf(this.txtcoloniaclientes1.getText().toUpperCase());
+                        cliente.setCallef(this.txtcalleclientes1.getText().toUpperCase());
+                        cliente.setNo_intf(this.txtnointclientes1.getText().toUpperCase());
+                        cliente.setNo_extf(this.txtnoextclientes1.getText().toUpperCase());
                         cliente.setDelegacionf(this.cbdelegacionclientef.getSelectedIndex()+1+"");
                         cliente.setVendedor(this.cbvendedorcliente.getSelectedIndex()+1+"");
 
@@ -3294,19 +3427,19 @@ public class Datos extends javax.swing.JFrame {
                         Clientes_DB  cb = new  Clientes_DB(this.con);
                         Clientes cliente = new Clientes();
                         
-                        cliente.setNombre(this.txtnombreclientes.getText());
+                        cliente.setNombre(this.txtnombreclientes.getText().toUpperCase());
                         cliente.setTelefono(this.txttelefonoclientes.getText());
                         cliente.setCelular(this.txtcelularclientes.getText());
-                        cliente.setCorreo(this.txtcorreoclientes.getText());
+                        cliente.setCorreo(this.txtcorreoclientes.getText().toUpperCase());
                         cliente.setDelegacion(this.cbdelegacioncliente.getSelectedIndex()+1+"");
-                        cliente.setColonia(this.txtcoloniaclientes.getText() );
-                        cliente.setCalle(this.txtcalleclientes.getText());
-                        cliente.setNo_int(this.txtnointclientes.getText());
-                        cliente.setNo_ext(this.txtnoextclientes.getText());
-                        cliente.setRfc(this.txtrfcclientes.getText());
+                        cliente.setColonia(this.txtcoloniaclientes.getText().toUpperCase() );
+                        cliente.setCalle(this.txtcalleclientes.getText().toUpperCase());
+                        cliente.setNo_int(this.txtnointclientes.getText().toUpperCase());
+                        cliente.setNo_ext(this.txtnoextclientes.getText().toUpperCase());
+                        cliente.setRfc(this.txtrfcclientes.getText().toUpperCase());
                         cliente.setPago(this.cbmodopagocliente.getSelectedIndex()+1+"");
                         cliente.setCuenta(this.txtcuentaclientes.getText());
-                        cliente.setContacto(this.txtcontactoclientes.getText());
+                        cliente.setContacto(this.txtcontactoclientes.getText().toUpperCase());
 
                         if (this.chestatusclientes.isSelected()) {
                             cliente.setEstatus(2+"");
@@ -3316,11 +3449,11 @@ public class Datos extends javax.swing.JFrame {
                             cliente.setEstatus(1+"");
                         }
 
-                        cliente.setNombref(this.txtnombreclientes1.getText());
-                        cliente.setColoniaf(this.txtcoloniaclientes1.getText() );
-                        cliente.setCallef(this.txtcalleclientes1.getText());
-                        cliente.setNo_intf(this.txtnointclientes1.getText());
-                        cliente.setNo_extf(this.txtnoextclientes1.getText());
+                        cliente.setNombref(this.txtnombreclientes1.getText().toUpperCase());
+                        cliente.setColoniaf(this.txtcoloniaclientes1.getText().toUpperCase() );
+                        cliente.setCallef(this.txtcalleclientes1.getText().toUpperCase());
+                        cliente.setNo_intf(this.txtnointclientes1.getText().toUpperCase());
+                        cliente.setNo_extf(this.txtnoextclientes1.getText().toUpperCase());
                         cliente.setDelegacionf(this.cbdelegacionclientef.getSelectedIndex()+1+"");
                         cliente.setVendedor(this.cbvendedorcliente.getSelectedIndex()+1+"");
                         cliente.setId(Integer.parseInt(this.txtidclientes.getText()));
@@ -3339,11 +3472,7 @@ public class Datos extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Campo nombre esta vacio");
                     this.txtnombreclientes.setBackground(Color.decode("#FFCCCC"));
                 }
-            }
-            else{
-                JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
-            }
-            
+            } 
 
         }
         catch(SQLException ex)
@@ -3381,42 +3510,45 @@ public class Datos extends javax.swing.JFrame {
     private void tbclientesMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
-            int columna=this.tbclientes.getSelectedRow();
+            if (this.seleccionclientes==0) {
+                int columna=this.tbclientes.getSelectedRow();
 
-            this.txtidclientes.setText(this.tbclientes.getValueAt(columna, 0).toString());
-            this.txtnombreclientes.setText(this.tbclientes.getValueAt(columna, 1).toString());
-            this.txttelefonoclientes.setText(this.tbclientes.getValueAt(columna, 2).toString());
-            this.txtcelularclientes.setText(this.tbclientes.getValueAt(columna, 3).toString());
-            this.txtcorreoclientes.setText(this.tbclientes.getValueAt(columna, 4).toString());
-            this.cbdelegacioncliente.setSelectedItem(this.tbclientes.getValueAt(columna, 5).toString());
-            this.txtcoloniaclientes.setText(this.tbclientes.getValueAt(columna, 6).toString());
-            this.txtcalleclientes.setText(this.tbclientes.getValueAt(columna, 7).toString());
-            this.txtnointclientes.setText(this.tbclientes.getValueAt(columna, 8).toString());
-            this.txtnoextclientes.setText(this.tbclientes.getValueAt(columna, 9).toString());
-            this.txtrfcclientes.setText(this.tbclientes.getValueAt(columna, 10).toString());
-            this.cbmodopagocliente.setSelectedItem(this.tbclientes.getValueAt(columna, 11).toString());
-            this.txtcuentaclientes.setText(this.tbclientes.getValueAt(columna, 12).toString());
-            this.txtcontactoclientes.setText(this.tbclientes.getValueAt(columna, 13).toString());
+                this.txtidclientes.setText(this.tbclientes.getValueAt(columna, 0).toString());
+                this.txtnombreclientes.setText(this.tbclientes.getValueAt(columna, 1).toString());
+                this.txttelefonoclientes.setText(this.tbclientes.getValueAt(columna, 2).toString());
+                this.txtcelularclientes.setText(this.tbclientes.getValueAt(columna, 3).toString());
+                this.txtcorreoclientes.setText(this.tbclientes.getValueAt(columna, 4).toString());
+                this.cbdelegacioncliente.setSelectedItem(this.tbclientes.getValueAt(columna, 5).toString());
+                this.txtcoloniaclientes.setText(this.tbclientes.getValueAt(columna, 6).toString());
+                this.txtcalleclientes.setText(this.tbclientes.getValueAt(columna, 7).toString());
+                this.txtnointclientes.setText(this.tbclientes.getValueAt(columna, 8).toString());
+                this.txtnoextclientes.setText(this.tbclientes.getValueAt(columna, 9).toString());
+                this.txtrfcclientes.setText(this.tbclientes.getValueAt(columna, 10).toString());
+                this.cbmodopagocliente.setSelectedItem(this.tbclientes.getValueAt(columna, 11).toString());
+                this.txtcuentaclientes.setText(this.tbclientes.getValueAt(columna, 12).toString());
+                this.txtcontactoclientes.setText(this.tbclientes.getValueAt(columna, 13).toString());
 
-            this.txtnombreclientes1.setText(this.tbclientes.getValueAt(columna, 15).toString());
-            this.txtcoloniaclientes1.setText(this.tbclientes.getValueAt(columna, 16).toString());
-            this.txtcalleclientes1.setText(this.tbclientes.getValueAt(columna, 17).toString());
-            this.txtnointclientes1.setText(this.tbclientes.getValueAt(columna, 18).toString());
-            this.txtnoextclientes1.setText(this.tbclientes.getValueAt(columna, 19).toString());
-            this.cbdelegacionclientef.setSelectedItem(this.tbclientes.getValueAt(columna, 20).toString());
+                this.txtnombreclientes1.setText(this.tbclientes.getValueAt(columna, 15).toString());
+                this.txtcoloniaclientes1.setText(this.tbclientes.getValueAt(columna, 16).toString());
+                this.txtcalleclientes1.setText(this.tbclientes.getValueAt(columna, 17).toString());
+                this.txtnointclientes1.setText(this.tbclientes.getValueAt(columna, 18).toString());
+                this.txtnoextclientes1.setText(this.tbclientes.getValueAt(columna, 19).toString());
+                this.cbdelegacionclientef.setSelectedItem(this.tbclientes.getValueAt(columna, 20).toString());
+
+                this.cbvendedorcliente.setSelectedItem(this.tbclientes.getValueAt(columna, 21).toString());
+
+                if ( Integer.parseInt(this.tbclientes.getValueAt(columna, 14).toString() ) == 1 )
+                {
+                    this.chestatusclientes.setSelected(false);
+                }
+                else
+                {
+                    this.chestatusclientes.setSelected(true);
+                }
+
+                this.btnCambiarcliente.setEnabled(true);
+            }
             
-            this.cbvendedorcliente.setSelectedItem(this.tbclientes.getValueAt(columna, 21).toString());
-
-            if ( Integer.parseInt(this.tbclientes.getValueAt(columna, 14).toString() ) == 1 )
-            {
-                this.chestatusclientes.setSelected(false);
-            }
-            else
-            {
-                this.chestatusclientes.setSelected(true);
-            }
-
-            this.btnCambiarcliente.setEnabled(true);
         }
         catch(Exception ex)
         {
@@ -3449,6 +3581,10 @@ public class Datos extends javax.swing.JFrame {
         regresar_color(txtcuentaproveedor);
     }
     
+    private void txttelefonoproveedorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txttelefonoproveedorKeyReleased
+        regresar_color(txttelefonoproveedor);
+    }//GEN-LAST:event_txttelefonoproveedorKeyReleased
+
     public void creaciontablaproveedor()
     {
          try{
@@ -3511,7 +3647,6 @@ public class Datos extends javax.swing.JFrame {
         }
     }
     
-    
     public void habilitarproveedor()
     {
        this.btnCancelarproveedor.setEnabled(true);
@@ -3534,6 +3669,8 @@ public class Datos extends javax.swing.JFrame {
        this.txtcontactoproveedor.setEnabled(true);
        
        this.txtbuscarproveedor.setEnabled(false);
+       
+       this.tbproveedor.setEnabled(false);
     }
     
     public void deshabilitarproveedor()
@@ -3559,6 +3696,8 @@ public class Datos extends javax.swing.JFrame {
        this.txtcontactoproveedor.setEnabled(false);
     
        this.txtbuscarproveedor.setEnabled(true);
+       
+       this.tbproveedor.setEnabled(true);
     }
     
     public void limpiarproveedor()
@@ -3584,30 +3723,45 @@ public class Datos extends javax.swing.JFrame {
     public boolean validar_proveedor()
     {
         boolean validado= true;
-        
+        String error="";
         if (!this.txtcorreoproveedor.getText().isEmpty()) {
             if (!this.txtcorreoproveedor.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
                 validado=false;
                 this.txtcorreoproveedor.setBackground(Color.decode("#FFCCCC"));
+                error+="Correo:\nejemplo@gmail.com\nejemplo@bevisagaleria.com.mx\n";
             }
         }
         if (!this.txtcpproveedor.getText().isEmpty()) {
             if (!this.txtcpproveedor.getText().matches("^[0-9]{5}$")) {
                 validado=false;
                 this.txtcpproveedor.setBackground(Color.decode("#FFCCCC"));
+                error+="CP:\n06850\n";
             }
         }
         if (!this.txtrfcproveedor.getText().isEmpty()) {
             if (!this.txtrfcproveedor.getText().matches("^[A-Z]{3,4}[0-9]{6}[A-Z0-9]{3}$")) {
                 validado=false;
                 this.txtrfcproveedor.setBackground(Color.decode("#FFCCCC"));
+                error+="RFC:\nAAA111111AAA\nAAAA111111AAA\n";
             }
         }
         if (!this.txtcuentaproveedor.getText().isEmpty()) {
             if (!this.txtcuentaproveedor.getText().matches("^[0-9]{4}$")) {
                 validado=false;
                 this.txtcuentaproveedor.setBackground(Color.decode("#FFCCCC"));
+                error+="Cuenta:\n1234\n";
             }
+        }
+        
+        if (!this.txttelefonoproveedor.getText().isEmpty()) {
+            if (!this.txttelefonoproveedor.getText().matches(this.regex_telefono)) {
+                validado=false;
+                this.txttelefonoproveedor.setBackground(Color.decode("#FFCCCC"));
+                error+="Telefono:\n5559958338\n5559958335 EXT 333\n";
+            }
+        }
+        if (!validado) {
+            JOptionPane.showMessageDialog(null, "Error en el Formato:\n"+error);
         }
         
         return validado;
@@ -3616,6 +3770,13 @@ public class Datos extends javax.swing.JFrame {
     private void btnCancelarproveedorActionPerformed(java.awt.event.ActionEvent evt) { 
         deshabilitarproveedor();
         limpiarproveedor();
+        this.seleccionproveedor=0;
+        regresar_color(txtnombreproveedor);
+        regresar_color(txtcorreoproveedor);
+        regresar_color(txtcpproveedor);
+        regresar_color(txtrfcproveedor);
+        regresar_color(txtcuentaproveedor);
+        regresar_color(txttelefonoproveedor);
     } 
 
     private void btnGuardarproveedorActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -3629,19 +3790,19 @@ public class Datos extends javax.swing.JFrame {
                         Proveedores proveedor = new Proveedores();
                         Proveedores_DB pr = new Proveedores_DB(this.con);
                         
-                        proveedor.setNombre(this.txtnombreproveedor.getText());
+                        proveedor.setNombre(this.txtnombreproveedor.getText().toUpperCase());
                         proveedor.setTelefono(this.txttelefonoproveedor.getText());
-                        proveedor.setCorreo(this.txtcorreoproveedor.getText());
+                        proveedor.setCorreo(this.txtcorreoproveedor.getText().toUpperCase());
                         proveedor.setCp(this.txtcpproveedor.getText());
-                        proveedor.setColonia(this.txtcoloniaproveedor.getText() );
-                        proveedor.setCalle(this.txtcalleproveedor.getText());
-                        proveedor.setNoint(this.txtnointproveedor.getText());
-                        proveedor.setNoext(this.txtnoextproveedor.getText());
+                        proveedor.setColonia(this.txtcoloniaproveedor.getText().toUpperCase());
+                        proveedor.setCalle(this.txtcalleproveedor.getText().toUpperCase());
+                        proveedor.setNoint(this.txtnointproveedor.getText().toUpperCase());
+                        proveedor.setNoext(this.txtnoextproveedor.getText().toUpperCase());
 
-                        proveedor.setRfc(this.txtrfcproveedor.getText());
+                        proveedor.setRfc(this.txtrfcproveedor.getText().toUpperCase());
                         proveedor.setIdmpago(this.cbmodopagoproveedor.getSelectedIndex()+1+"");
                         proveedor.setCuenta(this.txtcuentaproveedor.getText());
-                        proveedor.setContacto(this.txtcontactoproveedor.getText());
+                        proveedor.setContacto(this.txtcontactoproveedor.getText().toUpperCase());
                         proveedor.setSistema_calidad(this.txtsistemacalidad.getText());
 
                         pr.insert(proveedor);
@@ -3651,19 +3812,19 @@ public class Datos extends javax.swing.JFrame {
                         Proveedores proveedor = new Proveedores();
                         Proveedores_DB pr = new Proveedores_DB(this.con);
                         
-                        proveedor.setNombre(this.txtnombreproveedor.getText());
+                        proveedor.setNombre(this.txtnombreproveedor.getText().toUpperCase());
                         proveedor.setTelefono(this.txttelefonoproveedor.getText());
-                        proveedor.setCorreo(this.txtcorreoproveedor.getText());
+                        proveedor.setCorreo(this.txtcorreoproveedor.getText().toUpperCase());
                         proveedor.setCp(this.txtcpproveedor.getText());
-                        proveedor.setColonia(this.txtcoloniaproveedor.getText() );
-                        proveedor.setCalle(this.txtcalleproveedor.getText());
-                        proveedor.setNoint(this.txtnointproveedor.getText());
-                        proveedor.setNoext(this.txtnoextproveedor.getText());
+                        proveedor.setColonia(this.txtcoloniaproveedor.getText().toUpperCase());
+                        proveedor.setCalle(this.txtcalleproveedor.getText().toUpperCase());
+                        proveedor.setNoint(this.txtnointproveedor.getText().toUpperCase());
+                        proveedor.setNoext(this.txtnoextproveedor.getText().toUpperCase());
 
-                        proveedor.setRfc(this.txtrfcproveedor.getText());
+                        proveedor.setRfc(this.txtrfcproveedor.getText().toUpperCase());
                         proveedor.setIdmpago(this.cbmodopagoproveedor.getSelectedIndex()+1+"");
                         proveedor.setCuenta(this.txtcuentaproveedor.getText());
-                        proveedor.setContacto(this.txtcontactoproveedor.getText());
+                        proveedor.setContacto(this.txtcontactoproveedor.getText().toUpperCase());
                         proveedor.setSistema_calidad(this.txtsistemacalidad.getText());
                       
                         proveedor.setId(Integer.parseInt(this.txtidproveedor.getText()));
@@ -3682,11 +3843,7 @@ public class Datos extends javax.swing.JFrame {
                     this.txtnombreproveedor.setBackground(Color.decode("#FFCCCC"));
                 }
             }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "Algun campo no corresponde con el tipo de dato");
-            }
-
+            
         }
         catch(SQLException ex)
         {
@@ -3738,24 +3895,28 @@ public class Datos extends javax.swing.JFrame {
     private void tbproveedorMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
-            int columna=this.tbproveedor.getSelectedRow();
+            if (this.seleccionproveedor==0) {
+                int columna=this.tbproveedor.getSelectedRow();
 
-            this.txtidproveedor.setText(this.tbproveedor.getValueAt(columna, 0).toString());
-            this.txtnombreproveedor.setText(this.tbproveedor.getValueAt(columna, 1).toString());
-            this.txttelefonoproveedor.setText(this.tbproveedor.getValueAt(columna, 2).toString());
-            this.txtcorreoproveedor.setText(this.tbproveedor.getValueAt(columna, 3).toString());
-            this.txtcpproveedor.setText(this.tbproveedor.getValueAt(columna, 4).toString());
-            this.txtcoloniaproveedor.setText(this.tbproveedor.getValueAt(columna, 5).toString());
-            this.txtcalleproveedor.setText(this.tbproveedor.getValueAt(columna, 6).toString());
-            this.txtnointproveedor.setText(this.tbproveedor.getValueAt(columna, 7).toString());
-            this.txtnoextproveedor.setText(this.tbproveedor.getValueAt(columna, 8).toString());
-            this.txtrfcproveedor.setText(this.tbproveedor.getValueAt(columna, 9).toString());
-            this.cbmodopagoproveedor.setSelectedItem(this.tbproveedor.getValueAt(columna, 10).toString());
-            this.txtcuentaproveedor.setText(this.tbproveedor.getValueAt(columna, 11).toString());
-            this.txtcontactoproveedor.setText(this.tbproveedor.getValueAt(columna, 12).toString());
-            this.txtsistemacalidad.setText(this.tbproveedor.getValueAt(columna, 13).toString());
+                this.txtidproveedor.setText(this.tbproveedor.getValueAt(columna, 0).toString());
+                this.txtnombreproveedor.setText(this.tbproveedor.getValueAt(columna, 1).toString());
+                this.txttelefonoproveedor.setText(this.tbproveedor.getValueAt(columna, 2).toString());
+                this.txtcorreoproveedor.setText(this.tbproveedor.getValueAt(columna, 3).toString());
+                this.txtcpproveedor.setText(this.tbproveedor.getValueAt(columna, 4).toString());
+                this.txtcoloniaproveedor.setText(this.tbproveedor.getValueAt(columna, 5).toString());
+                this.txtcalleproveedor.setText(this.tbproveedor.getValueAt(columna, 6).toString());
+                this.txtnointproveedor.setText(this.tbproveedor.getValueAt(columna, 7).toString());
+                this.txtnoextproveedor.setText(this.tbproveedor.getValueAt(columna, 8).toString());
+                this.txtrfcproveedor.setText(this.tbproveedor.getValueAt(columna, 9).toString());
+                this.cbmodopagoproveedor.setSelectedItem(this.tbproveedor.getValueAt(columna, 10).toString());
+                this.txtcuentaproveedor.setText(this.tbproveedor.getValueAt(columna, 11).toString());
+                this.txtcontactoproveedor.setText(this.tbproveedor.getValueAt(columna, 12).toString());
+                this.txtsistemacalidad.setText(this.tbproveedor.getValueAt(columna, 13).toString());
 
-            this.btnCambiarproveedor.setEnabled(true);
+                this.btnCambiarproveedor.setEnabled(true);
+            }
+            
+            
         }
         catch(Exception ex)
         {
@@ -3773,6 +3934,10 @@ public class Datos extends javax.swing.JFrame {
     private void txtcorreovendedorKeyReleased(java.awt.event.KeyEvent evt) {
         regresar_color(txtcorreovendedor);
     }
+    
+    private void txttelefonovendedorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txttelefonovendedorKeyReleased
+        regresar_color(txttelefonovendedor);
+    }//GEN-LAST:event_txttelefonovendedorKeyReleased
     
     public void creaciontablavendedores()
     {
@@ -3853,12 +4018,15 @@ public class Datos extends javax.swing.JFrame {
         this.btnCancelarvendedor.setEnabled(false);
         this.btnGuardarvendedor.setEnabled(false);
         this.btnCambiarvendedor.setEnabled(false);
+        
+        this.tbvendedores.setEnabled(true);
 
     }
      
       public void habilitarvendedor()
     {
-        this.btnCancelarvendedor.setEnabled(true);
+       this.tbvendedores.setEnabled(false);
+       this.btnCancelarvendedor.setEnabled(true);
        this.btnGuardarvendedor.setEnabled(true);
        this.btnAgregarvendedor.setEnabled(false);
        this.btnCambiarvendedor.setEnabled(false);
@@ -3888,37 +4056,58 @@ public class Datos extends javax.swing.JFrame {
        
     }
 
+    public boolean valida_formato_vendedor()
+    {
+        String error="";
+        boolean validacion=true;
+        if (!this.txtcorreovendedor.getText().isEmpty()) {
+            if (!this.txtcorreovendedor.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
+                validacion=false;
+                this.txtcorreovendedor.setBackground(Color.decode("#FFCCCC"));
+                error+="Correo:\nejemplo@gmail.com\nejemplo@bevisagaleria.com.mx\n";
+            }
+        }
+        if (!this.txttelefonovendedor.getText().isEmpty()) {
+            if (!this.txttelefonovendedor.getText().matches(this.regex_telefono)) {
+                validacion=false;
+                this.txttelefonovendedor.setBackground(Color.decode("#FFCCCC"));
+                error+="Telefono:\n5559958338\n5559958335 EXT 333\n";
+            }
+        }
+        if (!validacion) {
+            JOptionPane.showMessageDialog(null, "Formato Incorrecto\n"+error);
+        }
+        return validacion;
+    }
     
     private void btnCancelarvendedorActionPerformed(java.awt.event.ActionEvent evt) { 
         deshabilitarvendedor();
         limpiarvendedor();
+        this.seleccionvendedor=0;
+        regresar_color(txtnombrevendedor);
+        regresar_color(txtcorreovendedor);
+        regresar_color(txttelefonovendedor);
     } 
 
     private void btnGuardarvendedorActionPerformed(java.awt.event.ActionEvent evt) { 
         try
         {
             //SI HAY CORREO
-            boolean validacion=true;
-            if (!this.txtcorreovendedor.getText().isEmpty()) {
-                if (!this.txtcorreovendedor.getText().matches("^[_A-Za-z0-9-]+(.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(.[A-Za-z0-9-]+)*(.[A-Za-z]{2,4})$")) {
-                    validacion=false;
-                    this.txtcorreovendedor.setBackground(Color.decode("#FFCCCC"));
-                }
-            }
+            
             if (!this.txtnombrevendedor.getText().isEmpty()) {
-                if (validacion) {
+                if (valida_formato_vendedor()) {
                     if(this.seleccionvendedor==1)
                     {         
                         Vendedores_DB db = new Vendedores_DB(this.con);
                         Vendedor vende= new Vendedor();
-                        vende.setNombre(this.txtnombrevendedor.getText());
+                        vende.setNombre(this.txtnombrevendedor.getText().toUpperCase());
                         vende.setTelefono(this.txttelefonovendedor.getText());
-                        vende.setCorreo(this.txtcorreovendedor.getText());
+                        vende.setCorreo(this.txtcorreovendedor.getText().toUpperCase());
                         vende.setDele_muni(this.cbdelegacionvendedor.getSelectedIndex()+1+"");
-                        vende.setColonia(this.txtcoloniavendedor.getText() );
-                        vende.setCalle(this.txtcallevendedor.getText());
-                        vende.setNoint(this.txtnointvendedor.getText());
-                        vende.setNoext(this.txtnoextvendedor.getText());
+                        vende.setColonia(this.txtcoloniavendedor.getText().toUpperCase() );
+                        vende.setCalle(this.txtcallevendedor.getText().toUpperCase());
+                        vende.setNoint(this.txtnointvendedor.getText().toUpperCase());
+                        vende.setNoext(this.txtnoextvendedor.getText().toUpperCase());
 
                         db.insert(vende);
                     }
@@ -3927,14 +4116,14 @@ public class Datos extends javax.swing.JFrame {
 
                         Vendedores_DB db = new Vendedores_DB(this.con);
                         Vendedor vende= new Vendedor();
-                        vende.setNombre(this.txtnombrevendedor.getText());
+                        vende.setNombre(this.txtnombrevendedor.getText().toUpperCase());
                         vende.setTelefono(this.txttelefonovendedor.getText());
-                        vende.setCorreo(this.txtcorreovendedor.getText());
+                        vende.setCorreo(this.txtcorreovendedor.getText().toUpperCase());
                         vende.setDele_muni(this.cbdelegacionvendedor.getSelectedIndex()+1+"");
-                        vende.setColonia(this.txtcoloniavendedor.getText() );
-                        vende.setCalle(this.txtcallevendedor.getText());
-                        vende.setNoint(this.txtnointvendedor.getText());
-                        vende.setNoext(this.txtnoextvendedor.getText());
+                        vende.setColonia(this.txtcoloniavendedor.getText().toUpperCase() );
+                        vende.setCalle(this.txtcallevendedor.getText().toUpperCase());
+                        vende.setNoint(this.txtnointvendedor.getText().toUpperCase());
+                        vende.setNoext(this.txtnoextvendedor.getText().toUpperCase());
                         vende.setId(Integer.parseInt(this.txtidvendedor.getText()));
                         db.update(vende);
 
@@ -3943,10 +4132,7 @@ public class Datos extends javax.swing.JFrame {
                     this.seleccionvendedor=0;
                     deshabilitarvendedor();
                     creaciontablaclientes();
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(null, "Algun campo tiene informacion incorrecta");
+                    this.limpiarvendedor();
                 }
             }
             else
@@ -4007,19 +4193,22 @@ public class Datos extends javax.swing.JFrame {
     private void tbvendedoresMouseClicked(java.awt.event.MouseEvent evt) { 
         try
         {
-            int columna=this.tbvendedores.getSelectedRow();
+            if (this.seleccionvendedor==0) {
+                int columna=this.tbvendedores.getSelectedRow();
 
-            this.txtidvendedor.setText(this.tbvendedores.getValueAt(columna, 0).toString());
-            this.txtnombrevendedor.setText(this.tbvendedores.getValueAt(columna, 1).toString());
-            this.txttelefonovendedor.setText(this.tbvendedores.getValueAt(columna, 2).toString());
-            this.txtcorreovendedor.setText(this.tbvendedores.getValueAt(columna, 3).toString());
-            this.cbdelegacionvendedor.setSelectedItem(this.tbvendedores.getValueAt(columna, 4).toString());
-            this.txtcoloniavendedor.setText(this.tbvendedores.getValueAt(columna, 5).toString());
-            this.txtcallevendedor.setText(this.tbvendedores.getValueAt(columna, 6).toString());
-            this.txtnointvendedor.setText(this.tbvendedores.getValueAt(columna, 7).toString());
-            this.txtnoextvendedor.setText(this.tbvendedores.getValueAt(columna, 8).toString());
+                this.txtidvendedor.setText(this.tbvendedores.getValueAt(columna, 0).toString());
+                this.txtnombrevendedor.setText(this.tbvendedores.getValueAt(columna, 1).toString());
+                this.txttelefonovendedor.setText(this.tbvendedores.getValueAt(columna, 2).toString());
+                this.txtcorreovendedor.setText(this.tbvendedores.getValueAt(columna, 3).toString());
+                this.cbdelegacionvendedor.setSelectedItem(this.tbvendedores.getValueAt(columna, 4).toString());
+                this.txtcoloniavendedor.setText(this.tbvendedores.getValueAt(columna, 5).toString());
+                this.txtcallevendedor.setText(this.tbvendedores.getValueAt(columna, 6).toString());
+                this.txtnointvendedor.setText(this.tbvendedores.getValueAt(columna, 7).toString());
+                this.txtnoextvendedor.setText(this.tbvendedores.getValueAt(columna, 8).toString());
 
-            this.btnCambiarvendedor.setEnabled(true);
+                this.btnCambiarvendedor.setEnabled(true); 
+            }
+           
         }
         catch(Exception ex)
         {
@@ -4037,6 +4226,7 @@ public class Datos extends javax.swing.JFrame {
         this.txtidingrediente.setText(pro.getId()+"");
         this.txtnombreingrediente.setText(pro.getNombre());
         this.btnAgregaringre.setEnabled(true);
+        this.btnquitaringre.setEnabled(false);
         actualizaringrediente();
     }
     
@@ -4139,6 +4329,9 @@ public class Datos extends javax.swing.JFrame {
                 Ingredientes_DB ingre = new Ingredientes_DB(this.con);
                 ingre.delete_ingrediente(ing);
                 actualizaringrediente();
+                if (this.tbingredientes.getRowCount()==0) {
+                    this.btnquitaringre.setEnabled(false);
+                }
                 //this.con.commit();
             }
             
@@ -4236,8 +4429,8 @@ public class Datos extends javax.swing.JFrame {
     public boolean validar_formato_prueba()
     {
         boolean valida=true;
-        if (this.txtparametro.getText().matches("^[A-Za-z\\s]+$") || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$") || this.txtparametro.getText().matches("^>=[0-9]+(.[0-9]+)?|<=[0-9]+(.[0-9]+)?$") 
-             || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?$") ) {
+        if (!(this.txtparametro.getText().matches("^[A-Za-z\\s]+$") || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$") || this.txtparametro.getText().matches("^>=[0-9]+(.[0-9]+)?|<=[0-9]+(.[0-9]+)?$") 
+             || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?$")) ) {
             valida = false;
             this.txtparametro.setBackground(Color.decode("#FFCCCC"));
         }
@@ -4258,7 +4451,7 @@ public class Datos extends javax.swing.JFrame {
         this.txtclaveprueba.setText(pro.getClave());
         this.txtnombreprueba.setText(pro.getNombre());
         this.btnAgregarprueba.setEnabled(true);
-        
+        this.btnquitarprueba.setEnabled(false);
         actualizarprueba();
     }
     
@@ -4279,7 +4472,7 @@ public class Datos extends javax.swing.JFrame {
             obj[1]=prueba.get(i).getDeterminacion();
             obj[2]=prueba.get(i).getParametro();
             obj[3]=prueba.get(i).getMetodo();
-            this.tabla_ingredientes.addRow(obj);
+            this.tabla_pruebas.addRow(obj);
         } 
         }
         catch(SQLException ex)
@@ -4326,9 +4519,9 @@ public class Datos extends javax.swing.JFrame {
 
                     prueba.setId_producto(Integer.parseInt(this.txtidprueba.getText()));
                     int cate=this.cbcategoriaprueba.getSelectedIndex()+1;
-                    prueba.setDeterminacion(this.txtdeterminacion.getText() );
-                    prueba.setParametro(this.txtparametro.getText());
-                    prueba.setMetodo(this.txtmetodo.getText() );
+                    prueba.setDeterminacion(this.txtdeterminacion.getText().toUpperCase() );
+                    prueba.setParametro(this.txtparametro.getText().toUpperCase());
+                    prueba.setMetodo(this.txtmetodo.getText().toUpperCase() );
 
                     pr.insert(prueba, cate);
                     actualizarprueba();
@@ -4339,7 +4532,7 @@ public class Datos extends javax.swing.JFrame {
                  }
             }
             else{
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+                JOptionPane.showMessageDialog(null, "Campos vacios");
             }
         }
         catch(SQLException ex)
@@ -4363,19 +4556,25 @@ public class Datos extends javax.swing.JFrame {
 
     private void btnquitarpruebaActionPerformed(java.awt.event.ActionEvent evt) { 
         try{
-            Pruebas_DB pr = new Pruebas_DB(this.con);
-            int columna=this.tbpruebas.getSelectedRow();
-            Prueba prueba = new Prueba();
-            prueba.setId_producto(Integer.parseInt(this.txtidprueba.getText()));
-            prueba.setDeterminacion(this.tbpruebas.getValueAt(columna, 1).toString());
+            
+            if (JOptionPane.showConfirmDialog(null, "¿Desea Eliminar la Prueba?", "Cancelacion", JOptionPane.YES_NO_OPTION)==0) {
+                Pruebas_DB pr = new Pruebas_DB(this.con);
+                int columna=this.tbpruebas.getSelectedRow();
+                Prueba prueba = new Prueba();
+                prueba.setId_producto(Integer.parseInt(this.txtidprueba.getText()));
+                prueba.setDeterminacion(this.tbpruebas.getValueAt(columna, 1).toString());
 
-            pr.delete(prueba);
-            actualizarprueba();
-            //this.con.commit();
+                pr.delete(prueba);
+                actualizarprueba();
+                //this.con.commit();
+                if (this.tabla_pruebas.getRowCount()==0) {
+                    this.btnquitarprueba.setEnabled(false);
+                }
+            }
         }
         catch(SQLException ex)
         {
-            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez");
+            JOptionPane.showMessageDialog(null, "Error de conexion, intente otra vez " +ex);
             try {
                 this.con=Conexion.getConnection();
             } catch (SQLException ex1) {
@@ -4392,8 +4591,10 @@ public class Datos extends javax.swing.JFrame {
     
     private void tbpruebasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbpruebasMouseClicked
         this.btnquitarprueba.setEnabled(true);
-        
     }//GEN-LAST:event_tbpruebasMouseClicked
+
+  
+
     
 
 //</editor-fold>
@@ -4486,6 +4687,8 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JCheckBox chestatusclientes;
     private javax.swing.JCheckBox chivaproducto;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -4557,6 +4760,9 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel75;
     private javax.swing.JLabel jLabel76;
     private javax.swing.JLabel jLabel77;
+    private javax.swing.JLabel jLabel78;
+    private javax.swing.JLabel jLabel79;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel80;
     private javax.swing.JLabel jLabel81;
     private javax.swing.JLabel jLabel82;
@@ -4567,8 +4773,14 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel87;
     private javax.swing.JLabel jLabel88;
     private javax.swing.JLabel jLabel89;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabel90;
     private javax.swing.JLabel jLabel91;
+    private javax.swing.JLabel jLabel92;
+    private javax.swing.JLabel jLabel93;
+    private javax.swing.JLabel jLabel94;
+    private javax.swing.JLabel jLabel95;
+    private javax.swing.JLabel jLabel96;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;

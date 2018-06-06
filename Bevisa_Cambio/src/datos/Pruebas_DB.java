@@ -22,7 +22,7 @@ public class Pruebas_DB {
     
     private final String INSERT="Insert into pruebas(idproducto, idcategoria, determinacion,parametro,metodo) values (?,?,?,?,?)";
     
-    private final String DELETE="Delete from pruebas where idproducto = ? and determinacion = '?' ";
+    private final String DELETE="Delete from pruebas where idproducto = ? and determinacion = ? ";
     
     private final String CATEGORIA="select * from categoria_prueba";
     
@@ -30,7 +30,7 @@ public class Pruebas_DB {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Prueba prueba = new Prueba();
+        
         List<Prueba> pruebas = new ArrayList<>();
         try {
             conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
@@ -38,6 +38,7 @@ public class Pruebas_DB {
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
             while (rs.next()) {
+                Prueba prueba = new Prueba();
                 prueba.setCategoria(rs.getString(1));
                 prueba.setDeterminacion(rs.getString(2));
                 prueba.setParametro(rs.getString(3));
