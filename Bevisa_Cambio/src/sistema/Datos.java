@@ -24,6 +24,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import funciones.NumberRenderer;
 import java.awt.Color;
+import java.awt.Image;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JTextField;
@@ -101,6 +102,7 @@ public class Datos extends javax.swing.JFrame {
             creaciontablaproveedor(); 
             creaciontablainventario();  
             this.combo_prueba();
+            permisos();
             
         }
         catch(Exception ex)
@@ -110,13 +112,54 @@ public class Datos extends javax.swing.JFrame {
         
     }
 
-
+    public void permisos()
+    {
+        switch(this.mp.user.getPerfil())
+        {
+            //VENTAS       
+            case 2:
+                this.tabpanel.setEnabledAt(0, false);
+                this.tabpanel.setEnabledAt(1, false);
+                this.tabpanel.setEnabledAt(2, false);
+                this.tabpanel.setEnabledAt(3, false);
+                this.tabpanel.setEnabledAt(4, true);
+                this.tabpanel.setEnabledAt(5, false);
+                this.tabpanel.setEnabledAt(6, true);
+                this.tabpanel.setSelectedIndex(4);
+                break;
+            //ALMACEN    
+            case 3:
+                
+                this.tabpanel.setEnabledAt(0, false);
+                this.tabpanel.setEnabledAt(1, false);
+                this.tabpanel.setEnabledAt(2, false);
+                this.tabpanel.setEnabledAt(3, true);
+                this.tabpanel.setEnabledAt(4, false);
+                this.tabpanel.setEnabledAt(5, true);
+                this.tabpanel.setEnabledAt(6, false);
+                this.tabpanel.setSelectedIndex(3);
+                break;
+            //PRODUCC    
+            case 4:
+                
+                this.tabpanel.setEnabledAt(0, true);
+                this.tabpanel.setEnabledAt(1, true);
+                this.tabpanel.setEnabledAt(2, true);
+                this.tabpanel.setEnabledAt(3, false);
+                this.tabpanel.setEnabledAt(4, false);
+                this.tabpanel.setEnabledAt(5, false);
+                this.tabpanel.setEnabledAt(6, false);
+                break;
+        }
+    }
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
+        tabpanel = new javax.swing.JTabbedPane();
         Productos = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -351,6 +394,7 @@ public class Datos extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Datos");
+        setIconImage(getIconImage());
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -361,7 +405,7 @@ public class Datos extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(162, 127, 51));
 
-        jTabbedPane2.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabpanel.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
 
         Productos.setBackground(new java.awt.Color(255, 255, 255));
         Productos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -715,7 +759,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel9.setFocusable(false);
         Productos.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 430, -1, 39));
 
-        jTabbedPane2.addTab("Productos", Productos);
+        tabpanel.addTab("Productos", Productos);
 
         Ingredientes.setBackground(new java.awt.Color(255, 255, 255));
         Ingredientes.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -825,7 +869,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel14.setText("Ingredientes");
         Ingredientes.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 0, -1, 39));
 
-        jTabbedPane2.addTab("Ingredientes", Ingredientes);
+        tabpanel.addTab("Ingredientes", Ingredientes);
 
         Pruebas.setBackground(new java.awt.Color(255, 255, 255));
         Pruebas.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -961,7 +1005,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel10.setFocusable(false);
         Pruebas.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 310, -1, 20));
 
-        jTabbedPane2.addTab("Pruebas", Pruebas);
+        tabpanel.addTab("Pruebas", Pruebas);
 
         Inventario.setBackground(new java.awt.Color(255, 255, 255));
         Inventario.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1166,7 +1210,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel11.setFocusable(false);
         Inventario.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 390, -1, 20));
 
-        jTabbedPane2.addTab("Inventario", Inventario);
+        tabpanel.addTab("Inventario", Inventario);
 
         Vendedores.setBackground(new java.awt.Color(255, 255, 255));
         Vendedores.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1381,7 +1425,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel96.setFocusable(false);
         Vendedores.add(jLabel96, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 390, -1, 20));
 
-        jTabbedPane2.addTab("Vendedores", Vendedores);
+        tabpanel.addTab("Vendedores", Vendedores);
 
         Proovedores.setBackground(new java.awt.Color(255, 255, 255));
         Proovedores.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1669,7 +1713,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel94.setFocusable(false);
         Proovedores.add(jLabel94, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 490, -1, 20));
 
-        jTabbedPane2.addTab("Proveedores", Proovedores);
+        tabpanel.addTab("Proveedores", Proovedores);
 
         Clientes.setBackground(new java.awt.Color(255, 255, 255));
         Clientes.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -2038,7 +2082,7 @@ public class Datos extends javax.swing.JFrame {
         jLabel95.setFocusable(false);
         Clientes.add(jLabel95, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 490, -1, 20));
 
-        jTabbedPane2.addTab("Clientes", Clientes);
+        tabpanel.addTab("Clientes", Clientes);
 
         jLabel13.setFont(new java.awt.Font("Arial", 0, 36)); // NOI18N
         jLabel13.setText("Datos");
@@ -2047,7 +2091,7 @@ public class Datos extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2)
+            .addComponent(tabpanel)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel13)
@@ -2059,7 +2103,7 @@ public class Datos extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTabbedPane2))
+                .addComponent(tabpanel))
         );
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1140, 620));
@@ -2067,7 +2111,15 @@ public class Datos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //ICONO
+    @Override
+    public Image getIconImage() {
+       Image retValue = Toolkit.getDefaultToolkit().
+             getImage(ClassLoader.getSystemResource("img/icono.png"));
 
+
+       return retValue;
+    }
     //CIERRA VENTANA  
     private void formWindowClosing(java.awt.event.WindowEvent evt) { 
         this.mp.setVisible(true);
@@ -2101,6 +2153,8 @@ public class Datos extends javax.swing.JFrame {
     
     //<editor-fold defaultstate="collapsed" desc="Productos">
 
+    private String clave="";
+    
     private void txtclaveproductoKeyReleased(java.awt.event.KeyEvent evt) {
         regresar_color(txtclaveproducto);
     }
@@ -2441,6 +2495,7 @@ public class Datos extends javax.swing.JFrame {
         regresar_color(txtpventaproducto);
         regresar_color(txtcaducidadproducto);
         regresar_color(txtpeso_producto);
+        this.clave="";
     } 
 
     private void btnGuardar_productoActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -2455,7 +2510,7 @@ public class Datos extends javax.swing.JFrame {
                     if (this.validacion_vacio_productos(1)) {
                         
                         if (this.validacion_formato_productos(1)) {
-                            
+
                             if(this.seleccionproducto==1)
                             {
                                 Productos_DB p = new Productos_DB(this.con);
@@ -2473,9 +2528,18 @@ public class Datos extends javax.swing.JFrame {
                                 {
                                     pro.setIva(0);
                                 }
-                                p.insert_mp(pro, medida, cate,this.cbmonedaproducto.getSelectedIndex()+1);
-                                tablaproductos();
-                                deshabilitar();
+                                if(p.existe_producto(this.txtclaveproducto.getText().toUpperCase())){
+                                    p.insert_mp(pro, medida, cate,this.cbmonedaproducto.getSelectedIndex()+1);
+                                    tablaproductos();
+                                    deshabilitar();
+                                    this.seleccionproducto=0;
+                                }
+                                else
+                                {
+                                    JOptionPane.showMessageDialog(null, "Ya existe un producto con una clave identica");
+                                    this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                                }
+                                
                             }
                             if(this.seleccionproducto==2)
                             {
@@ -2495,11 +2559,30 @@ public class Datos extends javax.swing.JFrame {
                                 {
                                     pro.setIva(0);
                                 }
-                                p.update_mp(pro, medida, cate,this.cbmonedaproducto.getSelectedIndex()+1);
-                                tablaproductos();
+                                if (!this.clave.equals(this.txtclaveproducto.getText())) {
+                                    if(p.existe_producto(this.txtclaveproducto.getText().toUpperCase())){
+                                        p.update_mp(pro, medida, cate,this.cbmonedaproducto.getSelectedIndex()+1);
+                                        tablaproductos();
+                                        this.seleccionproducto=0;
+                                        deshabilitar();
+                                        this.clave="";
+                                    }
+                                    else
+                                    {
+                                        JOptionPane.showMessageDialog(null, "Ya existe un producto con una clave identica");
+                                        this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                                    }
+                                }
+                                else
+                                {
+                                    p.update_mp(pro, medida, cate,this.cbmonedaproducto.getSelectedIndex()+1);
+                                    tablaproductos();
+                                    this.seleccionproducto=0;
+                                    deshabilitar();
+                                    this.clave="";
+                                }
                             }
-                            this.seleccionproducto=0;
-                            deshabilitar();
+                            
                         }
                     }
                     else
@@ -2528,8 +2611,20 @@ public class Datos extends javax.swing.JFrame {
                             {
                                 producto.setIva(0);
                             }
-                            pro.insert_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
-                            this.tablaproductos();
+                            
+                            if(pro.existe_producto(this.txtclaveproducto.getText().toUpperCase())){
+                                pro.insert_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                                this.tablaproductos();
+                                this.seleccionproducto=0;
+                                deshabilitar();
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(null, "Ya existe un producto con una clave identica");
+                                this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                            }
+                            
+                            
                         }
                         if(this.seleccionproducto==2)
                         {
@@ -2546,11 +2641,32 @@ public class Datos extends javax.swing.JFrame {
                                 producto.setIva(0);
                             }
                             producto.setId(Integer.parseInt(this.txtidproducto.getText()));
-                            pro.update_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
-                            this.tablaproductos();
+                            
+                            if (!this.clave.equals(this.txtclaveproducto.getText())) {
+                                if(pro.existe_producto(this.txtclaveproducto.getText().toUpperCase())){
+                                    pro.update_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                                    this.tablaproductos();
+                                    this.seleccionproducto=0;
+                                    deshabilitar();
+                                    this.clave="";
+                                }
+                                else
+                                {
+                                    JOptionPane.showMessageDialog(null, "Ya existe un producto con una clave identica");
+                                    this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                                }
+                            }
+                            else
+                            {
+                                pro.update_pt(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                                this.tablaproductos();
+                                this.seleccionproducto=0;
+                                deshabilitar();
+                                this.clave="";
+                            }
+                            
                         }
-                        this.seleccionproducto=0;
-                        deshabilitar();
+                        
                     }
                     else
                     {
@@ -2583,8 +2699,18 @@ public class Datos extends javax.swing.JFrame {
                             {
                                 producto.setIva(0);
                             }
-                            pro.insert_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmonedaproducto.getSelectedIndex()+1);
-                            this.tablaproductos();
+
+                            if(pro.existe_producto(this.txtclaveproducto.getText().toUpperCase())){
+                                pro.insert_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmonedaproducto.getSelectedIndex()+1);
+                                this.tablaproductos();
+                                this.seleccionproducto=0;
+                                deshabilitar();
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(null, "Ya existe un producto con una clave identica");
+                                this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                            }
                         }
                         if(this.seleccionproducto==2)
                         {
@@ -2602,11 +2728,32 @@ public class Datos extends javax.swing.JFrame {
                             {
                                 producto.setIva(0);
                             }
-                            pro.update_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmonedaproducto.getSelectedIndex()+1);
-                            this.tablaproductos();
+                            
+                            if (!this.clave.equals(this.txtclaveproducto.getText())) {
+                                if(pro.existe_producto(this.txtclaveproducto.getText().toUpperCase())){
+                                    pro.update_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmonedaproducto.getSelectedIndex()+1);
+                                    this.tablaproductos();
+                                    this.clave="";
+                                    this.seleccionproducto=0;
+                                    deshabilitar();
+                                }
+                                else
+                                {
+                                    JOptionPane.showMessageDialog(null, "Ya existe un producto con una clave identica");
+                                    this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                                }
+                            }
+                            else
+                            {
+                                pro.update_empaque(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbmonedaproducto.getSelectedIndex()+1);
+                                this.tablaproductos();
+                                this.clave="";
+                                this.seleccionproducto=0;
+                                deshabilitar();
+                            }
+                            
                         }
-                        this.seleccionproducto=0;
-                        deshabilitar();
+                        
                     }
                     else
                     {
@@ -2640,8 +2787,18 @@ public class Datos extends javax.swing.JFrame {
                                 producto.setIva(0);
                             }
                             producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
-                            pro.insert_galeria(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
-                            this.tablaproductos();
+                            
+                            if(pro.existe_producto(this.txtclaveproducto.getText().toUpperCase())){
+                                pro.insert_galeria(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                                this.tablaproductos(); 
+                                this.seleccionproducto=0;
+                                deshabilitar();
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(null, "Ya existe un producto con una clave identica");
+                                this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                            }
                         }
                         if(this.seleccionproducto==2)
                         {
@@ -2659,12 +2816,32 @@ public class Datos extends javax.swing.JFrame {
                             }
                             producto.setStockmin(Double.parseDouble(this.txtsminproducto.getText()));
                             producto.setId(Integer.parseInt(this.txtidproducto.getText()));
-                            pro.update_galeria(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
-                            this.tablaproductos();
+                            
+                            if (!this.clave.equals(this.txtclaveproducto.getText())) {
+                                if(pro.existe_producto(this.txtclaveproducto.getText().toUpperCase())){
+                                    pro.update_galeria(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                                    this.tablaproductos();
+                                    this.seleccionproducto=0;
+                                    deshabilitar();
+                                    this.clave="";
+                                }
+                                else
+                                {
+                                    JOptionPane.showMessageDialog(null, "Ya existe un producto con una clave identica");
+                                    this.txtclaveproducto.setBackground(Color.decode("#FFCCCC"));
+                                }
+                            }
+                            else
+                            {
+                                pro.update_galeria(producto, this.cbmedidaproducto.getSelectedIndex()+1, this.cbcategoriaproducto.getSelectedIndex()+1,this.cbprocesoproducto.getSelectedIndex()+1);
+                                this.tablaproductos();
+                                this.seleccionproducto=0;
+                                deshabilitar();
+                                this.clave="";
+                            }
                             
                         }
-                        this.seleccionproducto=0;
-                        deshabilitar();
+                        
                     }
                     else
                     {
@@ -2701,6 +2878,7 @@ public class Datos extends javax.swing.JFrame {
             habilitar();
             this.btnCambiar_producto.setEnabled(false);
             this.seleccionproducto=2;
+            this.clave=this.txtclaveproducto.getText();
         }
         catch(Exception ex)
         {
@@ -3118,6 +3296,8 @@ public class Datos extends javax.swing.JFrame {
     
     //<editor-fold defaultstate="collapsed" desc="Clientes">
 
+    private String nombre_cliente="";
+            
     private void txtnombreclientesKeyReleased(java.awt.event.KeyEvent evt) {
         regresar_color(txtnombreclientes);
     }
@@ -3377,6 +3557,7 @@ public class Datos extends javax.swing.JFrame {
         this.regresar_color(txtcuentaclientes);
         this.regresar_color(txttelefonoclientes);
         this.regresar_color(txtcelularclientes);
+        this.nombre_cliente="";
     } 
 
     private void btnGuardarclienteActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -3418,8 +3599,19 @@ public class Datos extends javax.swing.JFrame {
                         cliente.setNo_extf(this.txtnoextclientes1.getText().toUpperCase());
                         cliente.setDelegacionf(this.cbdelegacionclientef.getSelectedIndex()+1+"");
                         cliente.setVendedor(this.cbvendedorcliente.getSelectedIndex()+1+"");
-
-                        cb.insert(cliente);
+                        if (cb.existe_cliente(this.txtnombreclientes.getText())) {
+                            cb.insert(cliente);
+                            creaciontablaclientes();
+                            this.seleccionclientes=0;
+                            deshabilitarcliente();
+                            limpiarcliente();
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(null, "Ya existe un cliente con el mismo nombre");
+                            this.txtnombreclientes.setBackground(Color.decode("#FFCCCC"));
+                        }
+                        
 
                     }
                     if(this.seleccionclientes==2)
@@ -3458,14 +3650,31 @@ public class Datos extends javax.swing.JFrame {
                         cliente.setVendedor(this.cbvendedorcliente.getSelectedIndex()+1+"");
                         cliente.setId(Integer.parseInt(this.txtidclientes.getText()));
                         
-                        cb.update(cliente);
                         
+                        if (!this.nombre_cliente.equals(this.txtnombreclientes.getText())) {
+                            if (cb.existe_cliente(this.txtnombreclientes.getText())) {
+                                cb.update(cliente);
+                                creaciontablaclientes();
+                                this.seleccionclientes=0;
+                                deshabilitarcliente();
+                                limpiarcliente();
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(null, "Ya existe un cliente con el mismo nombre");
+                                this.txtnombreclientes.setBackground(Color.decode("#FFCCCC"));
+                            }
+                        }
+                        else
+                        {
+                            cb.update(cliente);
+                            creaciontablaclientes();
+                            this.seleccionclientes=0;
+                            deshabilitarcliente();
+                            limpiarcliente();
+                        }
                     }
-                    creaciontablaclientes();
-
-                    this.seleccionvendedor=0;
-                    deshabilitarcliente();
-                    limpiarcliente();
+                    
                 }
                 else
                 {
@@ -3492,6 +3701,7 @@ public class Datos extends javax.swing.JFrame {
     private void btnCambiarclienteActionPerformed(java.awt.event.ActionEvent evt) { 
         habilitarcliente();
         this.seleccionclientes=2;
+        this.nombre_cliente=this.txtnombreclientes.getText();
     } 
 
     private void btnAgregarclienteActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -3561,6 +3771,8 @@ public class Datos extends javax.swing.JFrame {
     
     //<editor-fold defaultstate="collapsed" desc="Proveedores">
 
+    private String nombre_proveedor="";
+    
     private void txtnombreproveedorKeyReleased(java.awt.event.KeyEvent evt) {
         regresar_color(txtnombreproveedor);
     }
@@ -3777,6 +3989,7 @@ public class Datos extends javax.swing.JFrame {
         regresar_color(txtrfcproveedor);
         regresar_color(txtcuentaproveedor);
         regresar_color(txttelefonoproveedor);
+        this.nombre_proveedor="";
     } 
 
     private void btnGuardarproveedorActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -3804,8 +4017,20 @@ public class Datos extends javax.swing.JFrame {
                         proveedor.setCuenta(this.txtcuentaproveedor.getText());
                         proveedor.setContacto(this.txtcontactoproveedor.getText().toUpperCase());
                         proveedor.setSistema_calidad(this.txtsistemacalidad.getText());
-
-                        pr.insert(proveedor);
+                        
+                        if (pr.existe_proveedor(this.txtnombreproveedor.getText().toUpperCase())) {
+                            pr.insert(proveedor);
+                            creaciontablaproveedor();
+                            this.seleccionproveedor=0;
+                            deshabilitarproveedor();
+                            limpiarproveedor();
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(null, "Ya existe un proveedor con el mismo nombre");
+                            this.txtnombreproveedor.setBackground(Color.decode("#FFCCCC"));
+                        }
+                        
                     }
                     if(this.seleccionproveedor==2)
                     {
@@ -3829,13 +4054,34 @@ public class Datos extends javax.swing.JFrame {
                       
                         proveedor.setId(Integer.parseInt(this.txtidproveedor.getText()));
                         
-                        pr.update(proveedor);
+                        if (!this.nombre_proveedor.equals(this.txtnombreproveedor.getText().toUpperCase())) {
+                            if (pr.existe_proveedor(this.txtnombreproveedor.getText().toUpperCase())) {
+                                pr.update(proveedor);
+                                creaciontablaproveedor();
+                                this.seleccionproveedor=0;
+                                deshabilitarproveedor();
+                                limpiarproveedor();
+                                this.nombre_proveedor="";
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(null, "Ya existe un proveedor con el mismo nombre");
+                                this.txtnombreproveedor.setBackground(Color.decode("#FFCCCC"));
+                            }
+                        }
+                        else
+                        {
+                            pr.update(proveedor);
+                            creaciontablaproveedor();
+                            this.seleccionproveedor=0;
+                            deshabilitarproveedor();
+                            limpiarproveedor();
+                            this.nombre_proveedor="";
+                        }
+                        
                         
                     }
-                    creaciontablaproveedor();
-                    this.seleccionproveedor=0;
-                    deshabilitarproveedor();
-                    limpiarproveedor();
+                    
                 }
                 else
                 {
@@ -3870,6 +4116,7 @@ public class Datos extends javax.swing.JFrame {
     private void btnCambiarproveedorActionPerformed(java.awt.event.ActionEvent evt) { 
         habilitarproveedor();
         this.seleccionproveedor=2;
+        this.nombre_proveedor=this.txtnombreproveedor.getText();
     } 
 
     private void btnAgregarproveedorActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -3927,6 +4174,8 @@ public class Datos extends javax.swing.JFrame {
     
     //<editor-fold defaultstate="collapsed" desc="Vendedores">
 
+    private String nombre_vendedor="";
+    
     private void txtnombrevendedorKeyReleased(java.awt.event.KeyEvent evt) {
        regresar_color(txtnombrevendedor);
     }
@@ -4023,7 +4272,7 @@ public class Datos extends javax.swing.JFrame {
 
     }
      
-      public void habilitarvendedor()
+    public void habilitarvendedor()
     {
        this.tbvendedores.setEnabled(false);
        this.btnCancelarvendedor.setEnabled(true);
@@ -4087,6 +4336,7 @@ public class Datos extends javax.swing.JFrame {
         regresar_color(txtnombrevendedor);
         regresar_color(txtcorreovendedor);
         regresar_color(txttelefonovendedor);
+        this.nombre_vendedor="";
     } 
 
     private void btnGuardarvendedorActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -4109,7 +4359,19 @@ public class Datos extends javax.swing.JFrame {
                         vende.setNoint(this.txtnointvendedor.getText().toUpperCase());
                         vende.setNoext(this.txtnoextvendedor.getText().toUpperCase());
 
-                        db.insert(vende);
+                        if (db.existe_vendedor(this.txtnombrevendedor.getText().toUpperCase())) {
+                            db.insert(vende);
+                            creaciontablavendedores();
+                            this.seleccionvendedor=0;
+                            deshabilitarvendedor();
+                            creaciontablaclientes();
+                            this.limpiarvendedor();
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(null, "Ya existe un vendedor con el mismo nombre");
+                            this.txtnombrevendedor.setBackground(Color.decode("#FFCCCC"));
+                        }
                     }
                     if(this.seleccionvendedor==2)
                     {
@@ -4125,14 +4387,37 @@ public class Datos extends javax.swing.JFrame {
                         vende.setNoint(this.txtnointvendedor.getText().toUpperCase());
                         vende.setNoext(this.txtnoextvendedor.getText().toUpperCase());
                         vende.setId(Integer.parseInt(this.txtidvendedor.getText()));
-                        db.update(vende);
+                        if (!this.nombre_vendedor.equals(this.txtnombrevendedor.getText().toUpperCase())) {
+                            if (db.existe_vendedor(this.txtnombrevendedor.getText().toUpperCase())) {
+                                db.update(vende);
+                                creaciontablavendedores();
+                                this.seleccionvendedor=0;
+                                deshabilitarvendedor();
+                                creaciontablaclientes();
+                                this.limpiarvendedor();
+                                this.nombre_vendedor="";
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(null, "Ya existe un vendedor con el mismo nombre");
+                                this.txtnombrevendedor.setBackground(Color.decode("#FFCCCC"));
+                            }
+                            
+                        }
+                        else
+                        {
+                            db.update(vende);
+                            creaciontablavendedores();
+                            this.seleccionvendedor=0;
+                            deshabilitarvendedor();
+                            creaciontablaclientes();
+                            this.limpiarvendedor();
+                            this.nombre_vendedor="";
+                        }
+                        
 
                     }
-                    creaciontablavendedores();
-                    this.seleccionvendedor=0;
-                    deshabilitarvendedor();
-                    creaciontablaclientes();
-                    this.limpiarvendedor();
+                   
                 }
             }
             else
@@ -4167,6 +4452,7 @@ public class Datos extends javax.swing.JFrame {
     private void btnCambiarvendedorActionPerformed(java.awt.event.ActionEvent evt) { 
         this.seleccionvendedor=2;
         habilitarvendedor();
+        this.nombre_vendedor=this.txtnombrevendedor.getText();
     } 
 
     private void btnAgregarvendedorActionPerformed(java.awt.event.ActionEvent evt) { 
@@ -4396,6 +4682,7 @@ public class Datos extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="Pruebas">
     
     //Prueba
+     
     private void txtdeterminacionKeyReleased(java.awt.event.KeyEvent evt) { 
         regresar_color(txtdeterminacion);
     } 
@@ -4522,9 +4809,19 @@ public class Datos extends javax.swing.JFrame {
                     prueba.setDeterminacion(this.txtdeterminacion.getText().toUpperCase() );
                     prueba.setParametro(this.txtparametro.getText().toUpperCase());
                     prueba.setMetodo(this.txtmetodo.getText().toUpperCase() );
-
-                    pr.insert(prueba, cate);
-                    actualizarprueba();
+                    if (pr.existe_prueba(this.txtdeterminacion.getText().toUpperCase())) {
+                        pr.insert(prueba, cate);
+                        actualizarprueba();
+                        this.txtdeterminacion.setText("");
+                        this.txtmetodo.setText("");
+                        this.txtparametro.setText("");
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null, "Ya existe una prueba con la misma Determinacion");
+                        this.txtdeterminacion.setBackground(Color.decode("#FFCCCC"));
+                    }
+                    
                     //this.con.commit();
                  }
                  else{
@@ -4790,7 +5087,6 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane8;
-    private javax.swing.JTabbedPane jTabbedPane2;
     private com.toedter.calendar.JDateChooser jdfecha;
     private com.toedter.calendar.JDateChooser jdfecha_caducidad;
     private javax.swing.JLabel lbcantidad2;
@@ -4800,6 +5096,7 @@ public class Datos extends javax.swing.JFrame {
     private javax.swing.JLabel lblproceso;
     private javax.swing.JLabel lblpventa;
     private javax.swing.JLabel lblsmin;
+    private javax.swing.JTabbedPane tabpanel;
     private javax.swing.JTable tbclientes;
     private javax.swing.JTable tbingredientes;
     private javax.swing.JTable tbinventario;

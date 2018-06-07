@@ -4,6 +4,7 @@ package sistema;
 import datos.Ventas_DB;
 import java.awt.Dimension;
 import static java.awt.Frame.NORMAL;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -43,6 +44,15 @@ public class Elegir_Cliente_Vendedor_Ventas extends javax.swing.JFrame {
         this.opc=opc;
         
         creaciontabla(this.opc);
+    }
+    
+    @Override
+    public Image getIconImage() {
+       Image retValue = Toolkit.getDefaultToolkit().
+             getImage(ClassLoader.getSystemResource("img/icono.png"));
+
+
+       return retValue;
     }
     
      public void creaciontabla(int opc) throws SQLException
@@ -105,6 +115,8 @@ public class Elegir_Cliente_Vendedor_Ventas extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconImage(getIconImage());
+        setIconImages(getIconImages());
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -146,8 +158,8 @@ public class Elegir_Cliente_Vendedor_Ventas extends javax.swing.JFrame {
             }
         });
         tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tbdatos.setColumnSelectionAllowed(true);
         tbdatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tbdatos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbdatos.setShowHorizontalLines(false);
         tbdatos.setShowVerticalLines(false);
         tbdatos.getTableHeader().setReorderingAllowed(false);

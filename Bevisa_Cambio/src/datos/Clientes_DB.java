@@ -29,6 +29,8 @@ public class Clientes_DB {
     private final String PAGO="select * from modo_pago";
     private final String VENDEDOR="select id,nombre from vendedores";
     
+    private final String SELECT_NOMBRE="select * from clientes where nombre=? ";
+    
     public Clientes_DB(Connection userConn) {
         this.userConn = userConn;
     }
@@ -247,7 +249,29 @@ public class Clientes_DB {
         return rows;
     }
      
-     
+     public boolean existe_cliente(String clave)throws SQLException 
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean existe=true;
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(this.SELECT_NOMBRE);
+            stmt.setString(1, clave);
+            rs = stmt.executeQuery();
+            if (rs.first()) {
+                existe=false;
+            }
+            return existe;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
+    }
    
    
 }

@@ -7,6 +7,7 @@ import datos.OrdenPedido_Provedores_DB;
 import java.awt.Color;
 import java.awt.Dimension;
 import static java.awt.Frame.NORMAL;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -54,6 +56,15 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
             this.lbliva.setVisible(false);
         }
        
+    }
+    
+    @Override
+    public Image getIconImage() {
+       Image retValue = Toolkit.getDefaultToolkit().
+             getImage(ClassLoader.getSystemResource("img/icono.png"));
+
+
+       return retValue;
     }
     
      public void creaciontabla()
@@ -167,6 +178,8 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
         chivaproducto = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconImage(getIconImage());
+        setIconImages(getIconImages());
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -208,8 +221,8 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
             }
         });
         tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        tbdatos.setColumnSelectionAllowed(true);
         tbdatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tbdatos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbdatos.setShowHorizontalLines(false);
         tbdatos.setShowVerticalLines(false);
         tbdatos.getTableHeader().setReorderingAllowed(false);
@@ -256,11 +269,21 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
         txtpunitario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtpunitario.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtpunitario.setEnabled(false);
+        txtpunitario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtpunitarioKeyReleased(evt);
+            }
+        });
         jPanel2.add(txtpunitario, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 190, 133, -1));
 
         txtcantidad.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcantidad.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcantidad.setEnabled(false);
+        txtcantidad.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcantidadKeyReleased(evt);
+            }
+        });
         jPanel2.add(txtcantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 160, 133, -1));
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -341,6 +364,12 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //METODO PARA QUITAR COLOR ROJO 
+    public void regresar_color(JTextField jx)
+    {
+        jx.setBackground(Color.WHITE);
+    }
+    
     private boolean valida_vacio(int opc)
     {
         boolean valida=true;
@@ -454,12 +483,12 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, "Formato invalido");
+                    JOptionPane.showMessageDialog(null, "Formato invalido: \nNumero: 5.5 ó 5");
                 }
             }
             else
             {
-                JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+                JOptionPane.showMessageDialog(null, "Campos vacios");
             }
             
         }
@@ -498,7 +527,7 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
             }
             else
             {
-                JOptionPane.showMessageDialog(null, "Formato de cantidad invalido");
+                JOptionPane.showMessageDialog(null, "Formato invalido: \nNumero: 5.5 ó 5");
             }
             
         }
@@ -510,6 +539,14 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
          this.mov.setEnabled(true);
          this.mov.setState(NORMAL);
     }//GEN-LAST:event_formWindowClosing
+
+    private void txtcantidadKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcantidadKeyReleased
+        this.regresar_color(txtcantidad);
+    }//GEN-LAST:event_txtcantidadKeyReleased
+
+    private void txtpunitarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtpunitarioKeyReleased
+        this.regresar_color(txtpunitario);
+    }//GEN-LAST:event_txtpunitarioKeyReleased
 
     /**
      * @param args the command line arguments

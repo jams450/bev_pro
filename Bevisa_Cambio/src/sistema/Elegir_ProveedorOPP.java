@@ -6,11 +6,11 @@
 package sistema;
 
 import datos.Conexion;
-import datos.OrdenPedido_Clientes_DB;
 import datos.OrdenPedido_Compras_DB;
 import datos.OrdenPedido_Provedores_DB;
 import java.awt.Dimension;
 import static java.awt.Frame.NORMAL;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -48,6 +48,15 @@ public class Elegir_ProveedorOPP extends javax.swing.JFrame {
         creaciontabla(this.opc);
     }
     
+    @Override
+    public Image getIconImage() {
+       Image retValue = Toolkit.getDefaultToolkit().
+             getImage(ClassLoader.getSystemResource("img/icono.png"));
+
+
+       return retValue;
+    }
+    
      public void creaciontabla(int opc)
     {
         OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB(this.con);
@@ -67,6 +76,8 @@ public class Elegir_ProveedorOPP extends javax.swing.JFrame {
                     obj[3]=prove.get(i).getCorreo();
                     this.tabla.addRow(obj);
                 } 
+                
+                this.lbltitulo.setText("Proveedores");
 
             }
             else
@@ -84,6 +95,8 @@ public class Elegir_ProveedorOPP extends javax.swing.JFrame {
                     obj[3]=client.get(i).getCorreo();
                     this.tabla.addRow(obj);
                 } 
+                
+                this.lbltitulo.setText("Clientes");
             }
         }
         catch(SQLException ex)
@@ -110,7 +123,7 @@ public class Elegir_ProveedorOPP extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        lbltitulo = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbdatos = new javax.swing.JTable();
@@ -127,6 +140,8 @@ public class Elegir_ProveedorOPP extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconImage(getIconImage());
+        setIconImages(getIconImages());
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -137,9 +152,9 @@ public class Elegir_ProveedorOPP extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(162, 127, 51));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
-        jLabel1.setText("Proveedores / Clientes");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 10, -1, 39));
+        lbltitulo.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        lbltitulo.setText("Proveedores / Clientes");
+        jPanel1.add(lbltitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 10, -1, 39));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -168,8 +183,8 @@ public class Elegir_ProveedorOPP extends javax.swing.JFrame {
             }
         });
         tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tbdatos.setColumnSelectionAllowed(true);
         tbdatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tbdatos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbdatos.setShowHorizontalLines(false);
         tbdatos.setShowVerticalLines(false);
         tbdatos.getTableHeader().setReorderingAllowed(false);
@@ -361,7 +376,6 @@ public class Elegir_ProveedorOPP extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -370,6 +384,7 @@ public class Elegir_ProveedorOPP extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbltitulo;
     private javax.swing.JTable tbdatos;
     private javax.swing.JTextField txtbuscar;
     private javax.swing.JTextField txtcorreo;

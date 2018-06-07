@@ -1,6 +1,7 @@
 
 package sistema;
 
+import com.toedter.calendar.JTextFieldDateEditor;
 import datos.Conexion;
 import datos.DBcontrolador;
 import datos.OrdenPedido_Provedores_DB;
@@ -28,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
 import negocio.Producto;
 import funciones.n2t;
 import java.awt.Color;
+import java.awt.Image;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -127,8 +129,35 @@ public class Movimientos extends javax.swing.JFrame {
         this.tabla_repro=(DefaultTableModel) this.tb_repro.getModel();
         combo();
         
+        JTextFieldDateEditor fecha1 = (JTextFieldDateEditor) this.jdfechaopp.getDateEditor();
+        fecha1.setEditable(false);
+        
+        JTextFieldDateEditor fecha2 = (JTextFieldDateEditor) this.jdfecha_entradacompra.getDateEditor();
+        fecha2.setEditable(false);
+        JTextFieldDateEditor fecha3 = (JTextFieldDateEditor) this.jdfecha_caducidadcompra.getDateEditor();
+        fecha3.setEditable(false);
+        
+        JTextFieldDateEditor fecha4 = (JTextFieldDateEditor) this.jDfechaopc.getDateEditor();
+        fecha4.setEditable(false);
+        
+        JTextFieldDateEditor fecha5 = (JTextFieldDateEditor) this.jdfechaLIB.getDateEditor();
+        fecha5.setEditable(false);
+        
+        JTextFieldDateEditor fecha6 = (JTextFieldDateEditor) this.jdreproceso.getDateEditor();
+        fecha6.setEditable(false);
+        
+        permisos();
         Path c = Paths.get("");
         s = c.toAbsolutePath().toString();
+    }
+    
+    @Override
+    public Image getIconImage() {
+       Image retValue = Toolkit.getDefaultToolkit().
+             getImage(ClassLoader.getSystemResource("img/icono.png"));
+
+
+       return retValue;
     }
 
     /**
@@ -142,7 +171,7 @@ public class Movimientos extends javax.swing.JFrame {
 
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel4 = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabpanel = new javax.swing.JTabbedPane();
         OPP = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
         txtidOPP = new javax.swing.JTextField();
@@ -193,6 +222,9 @@ public class Movimientos extends javax.swing.JFrame {
         jdfecha_caducidadcompra = new com.toedter.calendar.JDateChooser();
         jdfecha_entradacompra = new com.toedter.calendar.JDateChooser();
         btncancelarCOM = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         OPC = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         txtidopc = new javax.swing.JTextField();
@@ -209,6 +241,7 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel42 = new javax.swing.JLabel();
         btnaceptarOPC = new javax.swing.JButton();
         jDfechaopc = new com.toedter.calendar.JDateChooser();
+        jLabel12 = new javax.swing.JLabel();
         LOP = new javax.swing.JPanel();
         cbodpLIB = new javax.swing.JComboBox<>();
         jLabel44 = new javax.swing.JLabel();
@@ -256,6 +289,9 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Movimientos");
+        setIconImage(getIconImage());
+        setIconImages(getIconImages());
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -265,7 +301,7 @@ public class Movimientos extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(162, 127, 51));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
+        tabpanel.setBackground(new java.awt.Color(255, 255, 255));
 
         OPP.setBackground(new java.awt.Color(255, 255, 255));
         OPP.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -327,6 +363,11 @@ public class Movimientos extends javax.swing.JFrame {
             }
         });
         tbproductosopp.getTableHeader().setReorderingAllowed(false);
+        tbproductosopp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbproductosoppMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbproductosopp);
         if (tbproductosopp.getColumnModel().getColumnCount() > 0) {
             tbproductosopp.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -374,17 +415,18 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel43.setText("Condicion de pago:");
         OPP.add(jLabel43, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 80, -1, -1));
 
+        cbcondicion_pagoOPP.setEnabled(false);
         OPP.add(cbcondicion_pagoOPP, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 80, 130, 20));
 
         jLabel55.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel55.setText("Fecha:");
-        OPP.add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 40, -1, -1));
+        OPP.add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 40, -1, -1));
 
         jdfechaopp.setDateFormatString("dd/MM/yyyy");
         jdfechaopp.setEnabled(false);
-        OPP.add(jdfechaopp, new org.netbeans.lib.awtextra.AbsoluteConstraints(1060, 40, 190, -1));
+        OPP.add(jdfechaopp, new org.netbeans.lib.awtextra.AbsoluteConstraints(1120, 40, 130, -1));
 
-        jTabbedPane1.addTab("Orden de Pedido a Proveedores", OPP);
+        tabpanel.addTab("Orden de Pedido a Proveedores", OPP);
 
         Compra.setBackground(new java.awt.Color(255, 255, 255));
         Compra.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -536,11 +578,21 @@ public class Movimientos extends javax.swing.JFrame {
         txtcantidadcompraCOM.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcantidadcompraCOM.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcantidadcompraCOM.setEnabled(false);
+        txtcantidadcompraCOM.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcantidadcompraCOMKeyReleased(evt);
+            }
+        });
         Compra.add(txtcantidadcompraCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 410, 121, -1));
 
         txtcapacidadcompraCOM.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcapacidadcompraCOM.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcapacidadcompraCOM.setEnabled(false);
+        txtcapacidadcompraCOM.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtcapacidadcompraCOMKeyReleased(evt);
+            }
+        });
         Compra.add(txtcapacidadcompraCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 410, 121, -1));
 
         jLabel38.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -554,6 +606,11 @@ public class Movimientos extends javax.swing.JFrame {
         txtlotecompra.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtlotecompra.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtlotecompra.setEnabled(false);
+        txtlotecompra.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtlotecompraKeyReleased(evt);
+            }
+        });
         Compra.add(txtlotecompra, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 60, 160, -1));
 
         jLabel40.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -563,6 +620,11 @@ public class Movimientos extends javax.swing.JFrame {
         txtfactnoCOM.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtfactnoCOM.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtfactnoCOM.setEnabled(false);
+        txtfactnoCOM.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtfactnoCOMKeyReleased(evt);
+            }
+        });
         Compra.add(txtfactnoCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 90, 160, -1));
 
         jLabel45.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -583,7 +645,22 @@ public class Movimientos extends javax.swing.JFrame {
         });
         Compra.add(btncancelarCOM, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 70, 150, -1));
 
-        jTabbedPane1.addTab("Registro de Compra", Compra);
+        jLabel9.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel9.setText("Capacidad: Cantidad por numero de entrada");
+        jLabel9.setFocusable(false);
+        Compra.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 470, 220, 20));
+
+        jLabel10.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel10.setText("*Nota: Todos los productos deben entrar al inventario.");
+        jLabel10.setFocusable(false);
+        Compra.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 430, 280, 20));
+
+        jLabel11.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel11.setText("Cantidad: Numero de entradas al inventario");
+        jLabel11.setFocusable(false);
+        Compra.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 450, 220, 20));
+
+        tabpanel.addTab("Registro de Compra", Compra);
 
         OPC.setBackground(new java.awt.Color(255, 255, 255));
         OPC.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -696,9 +773,16 @@ public class Movimientos extends javax.swing.JFrame {
             }
         });
         OPC.add(btnaceptarOPC, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 430, 107, -1));
+
+        jDfechaopc.setEnabled(false);
         OPC.add(jDfechaopc, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 40, 170, -1));
 
-        jTabbedPane1.addTab("Orden de Pedido a Clientes", OPC);
+        jLabel12.setFont(new java.awt.Font("Arial", 0, 10)); // NOI18N
+        jLabel12.setText("*Nota: El No. de Orden de Cliente es obligatorio de llenar");
+        jLabel12.setFocusable(false);
+        OPC.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 430, 280, 20));
+
+        tabpanel.addTab("Orden de Pedido a Clientes", OPC);
 
         LOP.setBackground(new java.awt.Color(255, 255, 255));
         LOP.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -832,7 +916,7 @@ public class Movimientos extends javax.swing.JFrame {
         jdfechaLIB.setEnabled(false);
         LOP.add(jdfechaLIB, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 70, 180, -1));
 
-        jTabbedPane1.addTab("Liberacion O. Produccion", LOP);
+        tabpanel.addTab("Liberacion O. Produccion", LOP);
 
         REPROCESO.setBackground(new java.awt.Color(255, 255, 255));
         REPROCESO.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -844,11 +928,11 @@ public class Movimientos extends javax.swing.JFrame {
         txtcantidad_repro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtcantidad_repro.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtcantidad_repro.setEnabled(false);
-        REPROCESO.add(txtcantidad_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 30, 118, -1));
+        REPROCESO.add(txtcantidad_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(1088, 70, 150, -1));
 
         jLabel56.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel56.setText("Cantidad :");
-        REPROCESO.add(jLabel56, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 30, -1, -1));
+        REPROCESO.add(jLabel56, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 70, -1, -1));
 
         txtidodp_repro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtidodp_repro.setDisabledTextColor(new java.awt.Color(0, 0, 0));
@@ -874,7 +958,7 @@ public class Movimientos extends javax.swing.JFrame {
                 btnbuscar_reproActionPerformed(evt);
             }
         });
-        REPROCESO.add(btnbuscar_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 40, 140, -1));
+        REPROCESO.add(btnbuscar_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 50, 100, -1));
 
         tb_repro.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -926,7 +1010,7 @@ public class Movimientos extends javax.swing.JFrame {
 
         jLabel59.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel59.setText("Fecha:");
-        REPROCESO.add(jLabel59, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 60, -1, -1));
+        REPROCESO.add(jLabel59, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 100, -1, -1));
 
         btnaceptar_repro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         btnaceptar_repro.setText("Aceptar");
@@ -937,7 +1021,9 @@ public class Movimientos extends javax.swing.JFrame {
             }
         });
         REPROCESO.add(btnaceptar_repro, new org.netbeans.lib.awtextra.AbsoluteConstraints(1150, 430, 107, -1));
-        REPROCESO.add(jdreproceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 60, 170, -1));
+
+        jdreproceso.setEnabled(false);
+        REPROCESO.add(jdreproceso, new org.netbeans.lib.awtextra.AbsoluteConstraints(1090, 100, 150, -1));
 
         txtarea_repro.setColumns(20);
         txtarea_repro.setRows(5);
@@ -958,9 +1044,9 @@ public class Movimientos extends javax.swing.JFrame {
         jLabel60.setText("ID :");
         REPROCESO.add(jLabel60, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 80, -1, -1));
 
-        jTabbedPane1.addTab("Reproceso", REPROCESO);
+        tabpanel.addTab("Reproceso", REPROCESO);
 
-        jPanel4.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 56, 1290, 520));
+        jPanel4.add(tabpanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 56, 1290, 520));
 
         jLabel13.setFont(new java.awt.Font("Arial", 0, 36)); // NOI18N
         jLabel13.setText("Movimientos");
@@ -980,6 +1066,30 @@ public class Movimientos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    public void permisos()
+    {
+        switch(this.mp.user.getPerfil())
+        {
+            //ALMACEN    
+            case 3:
+                this.tabpanel.setEnabledAt(0, true);
+                this.tabpanel.setEnabledAt(1, true);
+                this.tabpanel.setEnabledAt(2, false);
+                this.tabpanel.setEnabledAt(3, false);
+                this.tabpanel.setEnabledAt(4, false);
+                break;
+            //PRODUCC    
+            case 4:
+                this.tabpanel.setEnabledAt(0, false);
+                this.tabpanel.setEnabledAt(1, false);
+                this.tabpanel.setEnabledAt(2, true);
+                this.tabpanel.setEnabledAt(3, true);
+                this.tabpanel.setEnabledAt(4, true);
+                this.tabpanel.setSelectedIndex(2);
+                break;
+        }
+    }
     
     //cambiar formato de fecha
     public String fechadividir(JTextField  jt, int i ){
@@ -1009,7 +1119,12 @@ public class Movimientos extends javax.swing.JFrame {
         }
         return fi;
     }
-
+    
+    //METODO PARA QUITAR COLOR ROJO 
+    public void regresar_color(JTextField jx)
+    {
+        jx.setBackground(Color.WHITE);
+    }
     
     public void combo() throws SQLException
     {
@@ -1349,7 +1464,7 @@ public class Movimientos extends javax.swing.JFrame {
     
     //</editor-fold>
        
-    //<editor-fold defaultstate="collapsed" desc="ODP">
+    //<editor-fold defaultstate="collapsed" desc="ODProduccion">
     public void colocarcliente(Clientes cl)
     {
         
@@ -1371,9 +1486,7 @@ public class Movimientos extends javax.swing.JFrame {
         maxid=Integer.parseInt(this.dbc.seleccionarid(query)+1);
         
         this.txtidopc.setText(maxid + "");
-        
         this.btnAgregarproOPC.setEnabled(true);
-        this.btnquitarproOPC.setEnabled(true);
         
     }
     
@@ -1718,7 +1831,7 @@ public class Movimientos extends javax.swing.JFrame {
                                     viewer.setVisible(true); //Inicializamos la vista del Reporte
 
                                 } catch (Exception ex) {
-                                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                                    JOptionPane.showMessageDialog(null, "No se encontro el archivo del reporte", "Error", JOptionPane.ERROR_MESSAGE);
                                 }
                             }
                             
@@ -1739,7 +1852,7 @@ public class Movimientos extends javax.swing.JFrame {
             }
             else
             {
-                JOptionPane.showMessageDialog(null, "Error en la fecha");
+                JOptionPane.showMessageDialog(null, "No hay ningun producto en la tabla");
             }
             
         }
@@ -1759,10 +1872,11 @@ public class Movimientos extends javax.swing.JFrame {
     private void btnquitarproOPCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitarproOPCActionPerformed
         try
         {
-            if (this.tabla_OPC.getRowCount() >0 ) {
-                this.tabla_OPC.removeRow(this.columnaopp);
+            this.tabla_OPC.removeRow(this.columnaopp);
+            if (this.tabla_OPC.getRowCount()==0) {
+                this.btnquitarproOPC.setEnabled(false);
+                this.btnaceptarOPC.setEnabled(false);
             }
-
         }
         catch(Exception ex)
         {
@@ -1810,6 +1924,22 @@ public class Movimientos extends javax.swing.JFrame {
     
     //<editor-fold defaultstate="collapsed" desc="OCompra">
 
+    private void txtlotecompraKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtlotecompraKeyReleased
+        this.regresar_color(txtlotecompra);
+    }//GEN-LAST:event_txtlotecompraKeyReleased
+
+    private void txtfactnoCOMKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtfactnoCOMKeyReleased
+        this.regresar_color(txtfactnoCOM);
+    }//GEN-LAST:event_txtfactnoCOMKeyReleased
+
+    private void txtcantidadcompraCOMKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcantidadcompraCOMKeyReleased
+        this.regresar_color(txtcantidadcompraCOM);
+    }//GEN-LAST:event_txtcantidadcompraCOMKeyReleased
+
+    private void txtcapacidadcompraCOMKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcapacidadcompraCOMKeyReleased
+        this.regresar_color(txtcapacidadcompraCOM);
+    }//GEN-LAST:event_txtcapacidadcompraCOMKeyReleased
+    
     private void btncancelarCOMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelarCOMActionPerformed
         try {
             OrdenPedido_Provedores_DB opp = new OrdenPedido_Provedores_DB(this.con);
@@ -1860,14 +1990,20 @@ public class Movimientos extends javax.swing.JFrame {
     
     private boolean valida_formato_compra()
     {
+        String error="";
         boolean valida=true;
         if (!this.txtcantidadcompraCOM.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
             valida = false;
             this.txtcantidadcompraCOM.setBackground(Color.decode("#FFCCCC"));
+            error+="Cantidad : 3.65 ó 57";
         }
         if (!this.txtcapacidadcompraCOM.getText().matches("^([0-9]+)(\\.[0-9]+)?$")) {
             valida = false;
             this.txtcapacidadcompraCOM.setBackground(Color.decode("#FFCCCC"));
+            error+="Capacidad : 3.65 ó 57";
+        }
+        if (!valida) {
+            JOptionPane.showMessageDialog(null, "Formato Incorrecto:\n"+error);
         }
         return valida;
     }
@@ -1907,7 +2043,6 @@ public class Movimientos extends javax.swing.JFrame {
             this.jdfecha_entradacompra.setDateFormatString("dd/MM/yyyy");
             this.jdfecha_entradacompra.setDate(date);
 
-            this.txtfechapedidocompra.setEnabled(true);
             this.jdfecha_entradacompra.setEnabled(true);
 
             this.txtlotecompra.setEnabled(true);
@@ -1918,9 +2053,19 @@ public class Movimientos extends javax.swing.JFrame {
             this.txtcapacidadcompraCOM.setEnabled(true);
             
             this.jdfecha_caducidadcompra.setEnabled(true);
-
+            this.jdfecha_caducidadcompra.setDateFormatString("dd/MM/yyyy");
+            this.jdfecha_caducidadcompra.setDate(date);
+            
             this.btnAgregarproCOM.setEnabled(true);
-
+            this.btnquitarproCOM.setEnabled(false);
+            this.btnaceptarCOM.setEnabled(false);
+            
+            this.txtlotecompra.setText("");
+            this.txtfactnoCOM.setText("");
+            this.txtcantidadcompraCOM.setText("");
+            this.txtcapacidadcompraCOM.setText("");
+            
+            this.tabla_Compra2.setRowCount(0);
         }
         catch(SQLException ex)
         {
@@ -1951,7 +2096,7 @@ public class Movimientos extends javax.swing.JFrame {
                 }
             }
 
-            if (escero && this.txtfechapedidocompra.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$")) {
+            if (escero) {
                 String  query ="Insert into inventario(idproducto,fechaentrada,cantidadactual,lote,idopp,facturano,cantidad,costo,fechacaducidad,idmoneda) values (?,?,?,?,?,?,?,?,?,?)";
                 for (int i = 0; i < this.tabla_Compra2.getRowCount(); i++) {
                     PreparedStatement ps= this.dbc.getCnx().prepareStatement(query);
@@ -2020,7 +2165,7 @@ public class Movimientos extends javax.swing.JFrame {
             }
             else
             {
-                JOptionPane.showMessageDialog(null, "Falta producto por agregar o error en la fecha");
+                JOptionPane.showMessageDialog(null, "Falta producto por agregar, revise la tabla de la derecha");
             }
 
         }
@@ -2053,6 +2198,10 @@ public class Movimientos extends javax.swing.JFrame {
             }
 
             this.tabla_Compra2.removeRow(fila);
+            if (this.tabla_Compra2.getRowCount()==0) {
+                this.btnquitarproCOM.setEnabled(false);
+                this.btnaceptarCOM.setEnabled(false);
+            }
         }
 
     }//GEN-LAST:event_btnquitarproCOMActionPerformed
@@ -2099,14 +2248,10 @@ public class Movimientos extends javax.swing.JFrame {
                 this.btnaceptarCOM.setEnabled(true);
                 this.btnquitarproCOM.setEnabled(true);
             }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "Formato Incorrecto");
-            }
         }
         else
         {
-            JOptionPane.showMessageDialog(null, "Algun campo esta vacio");
+            JOptionPane.showMessageDialog(null, "Campos vacios");
         }
 
     }//GEN-LAST:event_btnAgregarproCOMActionPerformed
@@ -2134,7 +2279,11 @@ public class Movimientos extends javax.swing.JFrame {
             this.txtidOPP.setText(maxid + "");
 
             this.btnAgregarproOPP.setEnabled(true);
-            this.btnquitarproOPP.setEnabled(true);
+            this.cbcondicion_pagoOPP.setEnabled(true);
+            
+            if (this.tabla_OPP.getRowCount()==0) {
+                this.btnquitarproOPP.setEnabled(false);
+            }
         }
         catch(SQLException ex)
         {
@@ -2192,11 +2341,10 @@ public class Movimientos extends javax.swing.JFrame {
     
     private void btnaceptaroppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaceptaroppActionPerformed
         try{
-            
-            if (this.tbproductosopp.getRowCount() > 0) {
+            String respuesta = JOptionPane.showInputDialog(this, "Observaciones");
+            if (this.tbproductosopp.getRowCount() > 0 && respuesta != null) {
                 OrdenPedido_Provedores_DB db = new OrdenPedido_Provedores_DB(this.con);
                 OrdenPedido_Provedores opp = new OrdenPedido_Provedores();
-                String respuesta = JOptionPane.showInputDialog(this, "Observaciones");
                 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                 
                 double subtotal=0;
@@ -2261,44 +2409,44 @@ public class Movimientos extends javax.swing.JFrame {
                    JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
                    viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
                    viewer.setVisible(true); //Inicializamos la vista del Reporte
+                   
+                    if (JOptionPane.showConfirmDialog(null, "¿Enviar correo?", "Correo", JOptionPane.YES_NO_OPTION)==0) {
+                        Properties props = new Properties();
+                        props.setProperty("mail.smtp.host", "smtp.gmail.com");
+                        props.setProperty("mail.smtp.starttls.enable", "true");
+                        props.setProperty("mail.smtp.port","587");
+                        props.setProperty("mail.smtp.user", "bevisagaleria@gmail.com");
+                        props.setProperty("mail.smtp.auth", "true");
+                        Session session = Session.getDefaultInstance(props);
 
-                } catch (Exception ex) {
-                   Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                        BodyPart texto = new MimeBodyPart();
+                        texto.setText("Mando orden de compra,favor de confirmar fecha indicada de entrega ");
+                        BodyPart adjunto = new MimeBodyPart();
+                        adjunto.setDataHandler(new DataHandler(new FileDataSource(s+"\\ODC\\ODC-"+id+".pdf")));
+                        adjunto.setFileName("ODC.pdf");
+
+                        MimeMultipart multiParte = new MimeMultipart();
+                        multiParte.addBodyPart(texto);
+                        multiParte.addBodyPart(adjunto);
+
+
+                        MimeMessage message = new MimeMessage(session);
+
+                        message.setFrom(new InternetAddress("bevisagaleria@gmail.com"));
+                        message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.correo));
+
+                        message.setSubject("Orden de Compra");
+                        message.setContent(multiParte);
+                        //t.connect("bevisagaleria@gmail.com","bevisairlandesa");
+                        Transport t = session.getTransport("smtp");
+                        t.connect("bevisagaleria@gmail.com","bevisairlandesa");
+                        t.sendMessage(message,message.getAllRecipients());
+                        t.close();
+                    }
+                }   
+                catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error cargando el reporte");
                 }
-                if (JOptionPane.showConfirmDialog(null, "¿Enviar correo?", "Correo", JOptionPane.YES_NO_OPTION)==0) {
-                    Properties props = new Properties();
-                    props.setProperty("mail.smtp.host", "smtp.gmail.com");
-                    props.setProperty("mail.smtp.starttls.enable", "true");
-                    props.setProperty("mail.smtp.port","587");
-                    props.setProperty("mail.smtp.user", "bevisagaleria@gmail.com");
-                    props.setProperty("mail.smtp.auth", "true");
-                    Session session = Session.getDefaultInstance(props);
-
-                    BodyPart texto = new MimeBodyPart();
-                    texto.setText("Mando orden de compra,favor de confirmar fecha indicada de entrega ");
-                    BodyPart adjunto = new MimeBodyPart();
-                    adjunto.setDataHandler(new DataHandler(new FileDataSource(s+"\\ODC\\ODC-"+id+".pdf")));
-                    adjunto.setFileName("ODC.pdf");
-
-                    MimeMultipart multiParte = new MimeMultipart();
-                    multiParte.addBodyPart(texto);
-                    multiParte.addBodyPart(adjunto);
-
-                    
-                    MimeMessage message = new MimeMessage(session);
-
-                    message.setFrom(new InternetAddress("bevisagaleria@gmail.com"));
-                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(this.correo));
-
-                    message.setSubject("Orden de Compra");
-                    message.setContent(multiParte);
-                    //t.connect("bevisagaleria@gmail.com","bevisairlandesa");
-                    Transport t = session.getTransport("smtp");
-                    t.connect("bevisagaleria@gmail.com","bevisairlandesa");
-                    t.sendMessage(message,message.getAllRecipients());
-                    t.close();
-                }
-                
                 this.tabla_OPP.setRowCount(0);
                 this.btnAgregarproOPP.setEnabled(false);
                 this.btnquitarproOPP.setEnabled(false);
@@ -2311,10 +2459,6 @@ public class Movimientos extends javax.swing.JFrame {
                 this.preciosopp.clear();
                 this.combo();
 
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(null, "Error en la fecha");
             }
         }
         catch(SQLException ex)
@@ -2334,12 +2478,11 @@ public class Movimientos extends javax.swing.JFrame {
     private void btnquitarproOPPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnquitarproOPPActionPerformed
         try
         {
+            
             int col=this.tbproductosopp.getSelectedRow();
-            if (this.tbproductosopp.getRowCount() != 0) {
-                this.tabla_OPP.removeRow(col);
-            }
-            else
-            {
+            this.tabla_OPP.removeRow(col);
+            
+            if (this.tbproductosopp.getRowCount() == 0) {
                 this.btnaceptaropp.setEnabled(false);
                 this.btnquitarproOPP.setEnabled(false);
             }
@@ -2376,11 +2519,18 @@ public class Movimientos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnElegir_proveedorOPPActionPerformed
 
-   
+     private void tbproductosoppMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbproductosoppMouseClicked
+        if (this.tabla_OPP.getRowCount()!=0) {
+            this.btnquitarproOPP.setEnabled(true);
+        }
+    }//GEN-LAST:event_tbproductosoppMouseClicked
 
-    //</editor-fold>    
+    //</editor-fold>         
+
+    //<editor-fold defaultstate="collapsed" desc="REPRO">
     
-    public void colocar_producto_repro(Producto pro)
+     
+     public void colocar_producto_repro(Producto pro)
     {
         Object[] obj = new Object[5];
         obj[0]=pro.getId();
@@ -2390,8 +2540,10 @@ public class Movimientos extends javax.swing.JFrame {
         obj[4]=pro.getStockmin();
         
         this.tabla_repro.addRow(obj);
+        
+        this.btnquitar_repro.setEnabled(true);
+        this.btnaceptar_repro.setEnabled(true);
     }
-    
 
      private void btnbuscar_reproActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbuscar_reproActionPerformed
          if (this.txtidodp_repro.getText().matches("^[0-9]+$")) {
@@ -2404,14 +2556,13 @@ public class Movimientos extends javax.swing.JFrame {
                     this.txtcantidad_repro.setText(dato_odp[2]);
                     this.txtidpro_repro.setText(dato_odp[3]);
                             
-                    this.btnagregar_repro.setEnabled(true);
-                    this.btnquitar_repro.setEnabled(true);
-                    this.btnaceptar_repro.setEnabled(true);
+                    this.btnagregar_repro.setEnabled(true); 
                     this.txtarea_repro.setEnabled(true);
                     
                     Date date = new Date();
                     this.jdreproceso.setDateFormatString("dd/MM/yyyy");
                     this.jdreproceso.setDate(date);
+                    this.jdreproceso.setEnabled(true);
                     
                 }
                 else
@@ -2461,6 +2612,10 @@ public class Movimientos extends javax.swing.JFrame {
         try
         {
             this.tabla_repro.removeRow(this.tb_repro.getSelectedRow());
+            if (tabla_repro.getRowCount()==0) {
+                this.btnquitar_repro.setEnabled(false);
+                this.btnaceptar_repro.setEnabled(false);
+            }
         }
         catch(Exception ex)
         {
@@ -2562,6 +2717,12 @@ public class Movimientos extends javax.swing.JFrame {
 
         
     }//GEN-LAST:event_btnaceptar_reproActionPerformed
+
+    //</editor-fold>
+    
+   
+   
+    
     
     /**
      * @param args the command line arguments
@@ -2627,6 +2788,9 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cboppCOM;
     private javax.swing.JComboBox<String> cbproductosCOM;
     private com.toedter.calendar.JDateChooser jDfechaopc;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -2667,6 +2831,7 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel58;
     private javax.swing.JLabel jLabel59;
     private javax.swing.JLabel jLabel60;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
@@ -2678,13 +2843,13 @@ public class Movimientos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private com.toedter.calendar.JDateChooser jdfechaLIB;
     private com.toedter.calendar.JDateChooser jdfecha_caducidadcompra;
     private com.toedter.calendar.JDateChooser jdfecha_entradacompra;
     private com.toedter.calendar.JDateChooser jdfechaopp;
     private com.toedter.calendar.JDateChooser jdreproceso;
+    private javax.swing.JTabbedPane tabpanel;
     private javax.swing.JTable tb_repro;
     private javax.swing.JTable tbliberacionsensoriales;
     private javax.swing.JTable tblieracionfisicoquimicas;

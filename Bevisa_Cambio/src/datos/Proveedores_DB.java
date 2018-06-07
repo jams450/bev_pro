@@ -24,6 +24,8 @@ public class Proveedores_DB {
     
     private final String PAGO = "select * from modo_pago";
     
+    private final String SELECT_NOMBRE="select * from proveedores where nombre=? ";
+    
     public Proveedores_DB(Connection userConn) {  //constructor
         this.userConn = userConn;
     }
@@ -162,5 +164,29 @@ public class Proveedores_DB {
             }
         }
         return rows;
+    }
+    
+    public boolean existe_proveedor(String clave)throws SQLException 
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean existe=true;
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(this.SELECT_NOMBRE);
+            stmt.setString(1, clave);
+            rs = stmt.executeQuery();
+            if (rs.first()) {
+                existe=false;
+            }
+            return existe;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
     }
 }

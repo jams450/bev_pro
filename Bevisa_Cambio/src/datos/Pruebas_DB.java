@@ -26,6 +26,8 @@ public class Pruebas_DB {
     
     private final String CATEGORIA="select * from categoria_prueba";
     
+    private final String SELECT_DETERMINACION="select * from pruebas where determinacion = ? ";
+    
     public List<Prueba> select_pr(int id) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -135,6 +137,29 @@ public class Pruebas_DB {
         return rows;
     }
     
+    public boolean existe_prueba(String clave)throws SQLException 
+    {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        boolean existe=true;
+        try {
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(this.SELECT_DETERMINACION);
+            stmt.setString(1, clave);
+            rs = stmt.executeQuery();
+            if (rs.first()) {
+                existe=false;
+            }
+            return existe;
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            if (this.userConn == null) {
+                Conexion.close(conn);
+            }
+        }
+    }
     
     }
     

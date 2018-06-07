@@ -194,39 +194,32 @@ public class Productos_DB {
     
     public int insert_mp(Producto pro,int medida,int cate, int moneda) throws SQLException 
     {
-        if (this.existe_producto(pro.getClave())) {
-            Connection conn = null;
-            PreparedStatement stmt = null;		
-            int rows = 0; 
-            try {
+        Connection conn = null;
+        PreparedStatement stmt = null;		
+        int rows = 0; 
+        try {
 
-                conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
-                stmt = conn.prepareStatement(this.INSERT_MP);
-                int index = 1;//contador de columnas
+            conn = (this.userConn != null) ? this.userConn : Conexion.getConnection();
+            stmt = conn.prepareStatement(this.INSERT_MP);
+            int index = 1;//contador de columnas
 
-                stmt.setString(index++, pro.getClave());
-                stmt.setString(index++, pro.getNombre());
-                stmt.setInt(index++, cate);
-                stmt.setInt(index++, medida);
-                stmt.setDouble(index++, pro.getStockmin());
-                stmt.setDouble(index++, pro.getPventa());
-                stmt.setInt(index++, pro.getIva());
-                stmt.setInt(index++, moneda);
-                rows = stmt.executeUpdate();
-            } finally {
-                Conexion.close(stmt);
-                //Unicamente cerramos la conexión si fue creada en este metodo
-                if (this.userConn == null) {
-                    Conexion.close(conn);
-                }
+            stmt.setString(index++, pro.getClave());
+            stmt.setString(index++, pro.getNombre());
+            stmt.setInt(index++, cate);
+            stmt.setInt(index++, medida);
+            stmt.setDouble(index++, pro.getStockmin());
+            stmt.setDouble(index++, pro.getPventa());
+            stmt.setInt(index++, pro.getIva());
+            stmt.setInt(index++, moneda);
+            rows = stmt.executeUpdate();
+        } finally {
+            Conexion.close(stmt);
+            //Unicamente cerramos la conexión si fue creada en este metodo
+            if (this.userConn == null) {
+                Conexion.close(conn);
             }
-            return rows;
         }
-        else
-        {
-            JOptionPane.showMessageDialog(null, "Ya existe la materia prima");
-        }
-        return 0;
+        return rows;
     }
     
     public int update_mp(Producto pro,int medida,int cate,int moneda) throws SQLException 

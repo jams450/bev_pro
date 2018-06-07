@@ -6,6 +6,7 @@ import datos.Login_DB;
 import java.awt.Color;
 import negocio.Usuario;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
@@ -40,6 +41,14 @@ public class Login extends javax.swing.JFrame {
         
     }
 
+    @Override
+    public Image getIconImage() {
+       Image retValue = Toolkit.getDefaultToolkit().
+             getImage(ClassLoader.getSystemResource("img/icono.png"));
+
+
+       return retValue;
+    }
     
     public void camcolor(JButton jp)
     {
@@ -72,7 +81,8 @@ public class Login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
         setBackground(new java.awt.Color(255, 255, 255));
-        setIconImages(null);
+        setIconImage(getIconImage());
+        setIconImages(getIconImages());
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(162, 127, 51));

@@ -9,6 +9,7 @@ import datos.Ventas_DB;
 import java.awt.Color;
 import java.awt.Dimension;
 import static java.awt.Frame.NORMAL;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -51,6 +52,15 @@ public class Elegir_ProductoVentas extends javax.swing.JFrame {
         this.vpro=p;
         
        
+    }
+    
+    @Override
+    public Image getIconImage() {
+       Image retValue = Toolkit.getDefaultToolkit().
+             getImage(ClassLoader.getSystemResource("img/icono.png"));
+
+
+       return retValue;
     }
     
      public void creaciontabla() throws SQLException
@@ -105,6 +115,8 @@ public class Elegir_ProductoVentas extends javax.swing.JFrame {
         txtcomision = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconImage(getIconImage());
+        setIconImages(getIconImages());
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -148,9 +160,9 @@ public class Elegir_ProductoVentas extends javax.swing.JFrame {
             }
         });
         tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tbdatos.setColumnSelectionAllowed(true);
         tbdatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tbdatos.setGridColor(new java.awt.Color(204, 204, 204));
+        tbdatos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbdatos.setShowHorizontalLines(false);
         tbdatos.setShowVerticalLines(false);
         tbdatos.getTableHeader().setReorderingAllowed(false);
@@ -274,46 +286,84 @@ public class Elegir_ProductoVentas extends javax.swing.JFrame {
         tr.setRowFilter(RowFilter.regexFilter(this.txtbuscar.getText().toUpperCase(),2));
     }//GEN-LAST:event_txtbuscarKeyReleased
 
+    public boolean validad_vacio()
+    {
+        boolean pasa=true;
+        
+        if (this.txtdescuento.getText().isEmpty()) {
+            this.txtdescuento.setText("0");
+        }
+            
+        if (this.txtcantidad.getText().isEmpty()) {
+            pasa=false;
+            this.txtcantidad.setBackground(Color.decode("#FFCCCC"));
+        }
+
+        if (this.txtcomision.getText().isEmpty()) {
+            pasa=false;
+            this.txtcomision.setBackground(Color.decode("#FFCCCC"));
+        }
+        
+        return pasa;
+           
+    }
+
+    public boolean validad_formato()
+    {
+        boolean pasa=true;
+        String error="";
+        
+        if (!this.txtdescuento.getText().matches("^[0-9]*(.[0-9]+)?$")) {
+            pasa=false;
+            this.txtdescuento.setBackground(Color.decode("#FFCCCC"));
+            error+="Descuento: 10.5 ó 50\n";
+        }
+            
+        if (!this.txtcantidad.getText().matches("^[0-9]*(.[0-9]+)?$")) {
+            pasa=false;
+            this.txtcantidad.setBackground(Color.decode("#FFCCCC"));
+            error+="Cantidad: 10.5 ó 50\n";
+        }
+
+        if (!this.txtcomision.getText().matches("^[0-9]*(.[0-9]+)?$")) {
+            pasa=false;
+            this.txtcomision.setBackground(Color.decode("#FFCCCC"));
+            error+="Comision: 10.5 ó 50\n";
+        }
+        if (pasa) {
+            JOptionPane.showMessageDialog(null, "Formato invalida:\n"+error);
+        }
+        return pasa;
+           
+    }
+    
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         try{
           
             boolean valida=true;
-            
-            if (this.txtdescuento.getText().isEmpty()) {
-                this.txtdescuento.setText("0");
-            }
-            
-            if (!this.txtcantidad.getText().matches("^[0-9]+$")) {
-                valida=false;
-                this.txtcantidad.setBackground(Color.decode("#FFCCCC"));
-            }
-            
-            if (!this.txtcomision.getText().matches("^[0-9]*(.[0-9]+)?$")) {
-                valida=false;
-                this.txtcomision.setBackground(Color.decode("#FFCCCC"));
-            }
-           
-            
-            if (valida) {
-
-                String[] c = new String[8];
+   
+            if (validad_vacio()) {
+                if (validad_formato()) {
+                    String[] c = new String[8];
                 
-                c[0]=this.txtid.getText();
-                c[1]=this.txtclave.getText();
-                c[2]=this.txtnombre.getText();
-                c[3]=this.txtdescuento.getText();
-                c[4]=this.txtcantidad.getText();
-                c[5]=this.txtcomision.getText();
-                c[6]=this.tbdatos.getValueAt(this.columna, 3).toString();
-                c[7]=this.tbdatos.getValueAt(this.columna, 4).toString();
-                this.vpro.colocarproducto(c);
-                this.vpro.setEnabled(true);
-                this.vpro.setState(NORMAL);
-                this.dispose();
+                    c[0]=this.txtid.getText();
+                    c[1]=this.txtclave.getText();
+                    c[2]=this.txtnombre.getText();
+                    c[3]=this.txtdescuento.getText();
+                    c[4]=this.txtcantidad.getText();
+                    c[5]=this.txtcomision.getText();
+                    c[6]=this.tbdatos.getValueAt(this.columna, 3).toString();
+                    c[7]=this.tbdatos.getValueAt(this.columna, 4).toString();
+                    this.vpro.colocarproducto(c);
+                    this.vpro.setEnabled(true);
+                    this.vpro.setState(NORMAL);
+                    this.dispose();
+                }
+                
             }
             else
             {
-               JOptionPane.showMessageDialog(null, "Algun campo esta mal");
+               JOptionPane.showMessageDialog(null, "Campos vacios");
             }
             
         

@@ -1,17 +1,21 @@
 
 package sistema;
 
+import com.toedter.calendar.JTextFieldDateEditor;
 import datos.Clientes_DB;
 import datos.Conexion;
 import datos.DBcontrolador;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +83,18 @@ public class reportes extends javax.swing.JFrame {
             //final
             s+="\\Reportes\\";
             
+            Date date= new Date();
+            this.jdate_ventas_sem1.setDateFormatString("dd/MM/yyyy");
+            this.jdate_ventas_sem2.setDateFormatString("dd/MM/yyyy");
+            this.jdate_ventas_sem1.setDate(date);
+            this.jdate_ventas_sem2.setDate(date);
             
+            JTextFieldDateEditor fecha = (JTextFieldDateEditor) this.jdate_ventas_sem1.getDateEditor();
+            fecha.setEditable(false);
+            JTextFieldDateEditor fecha1 = (JTextFieldDateEditor) this.jdate_ventas_sem2.getDateEditor();
+            fecha1.setEditable(false);
+            
+            permisos();
         } 
         
         catch (Exception ex) {
@@ -88,6 +103,51 @@ public class reportes extends javax.swing.JFrame {
             this.con=Conexion.getConnection();
         }
         
+    }
+    
+    public void permisos()
+    {
+        switch(this.mp.user.getPerfil())
+        {
+            //ALMACEN    
+            case 2:
+                this.tabpanel.setEnabledAt(0, false);
+                this.tabpanel.setEnabledAt(1, false);
+                this.tabpanel.setEnabledAt(2, false);
+                this.tabpanel.setEnabledAt(3, true);
+                this.tabpanel.setEnabledAt(4, true);
+                this.tabpanel.setEnabledAt(5, true);
+                break;
+            //ALMACEN    
+            case 3:
+                this.tabpanel.setEnabledAt(0, false);
+                this.tabpanel.setEnabledAt(1, true);
+                this.tabpanel.setEnabledAt(2, false);
+                this.tabpanel.setEnabledAt(3, false);
+                this.tabpanel.setEnabledAt(4, false);
+                this.tabpanel.setEnabledAt(5, false);
+                this.tabpanel.setSelectedIndex(1);
+                break;
+            //PRODUCC    
+            case 4:
+                this.tabpanel.setEnabledAt(0, false);
+                this.tabpanel.setEnabledAt(1, false);
+                this.tabpanel.setEnabledAt(2, true);
+                this.tabpanel.setEnabledAt(3, false);
+                this.tabpanel.setEnabledAt(4, false);
+                this.tabpanel.setEnabledAt(5, false);
+                this.tabpanel.setSelectedIndex(2);
+                break;
+        }
+    }
+    
+    @Override
+    public Image getIconImage() {
+       Image retValue = Toolkit.getDefaultToolkit().
+             getImage(ClassLoader.getSystemResource("img/icono.png"));
+
+
+       return retValue;
     }
     
     public void camcolor(JPanel jp)
@@ -108,7 +168,7 @@ public class reportes extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
+        tabpanel = new javax.swing.JTabbedPane();
         Productos = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         productostodos = new javax.swing.JPanel();
@@ -185,8 +245,6 @@ public class reportes extends javax.swing.JFrame {
         jLabel43 = new javax.swing.JLabel();
         jLabel44 = new javax.swing.JLabel();
         jLabel45 = new javax.swing.JLabel();
-        txtanovg = new javax.swing.JTextField();
-        txtmesvg = new javax.swing.JTextField();
         jLabel46 = new javax.swing.JLabel();
         jLabel47 = new javax.swing.JLabel();
         vgvmes = new javax.swing.JPanel();
@@ -202,17 +260,13 @@ public class reportes extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
         jLabel52 = new javax.swing.JLabel();
         jLabel57 = new javax.swing.JLabel();
-        txtinivs = new javax.swing.JTextField();
-        txtfivs = new javax.swing.JTextField();
         vs = new javax.swing.JPanel();
         jLabel62 = new javax.swing.JLabel();
         jLabel63 = new javax.swing.JLabel();
         jLabel64 = new javax.swing.JLabel();
         jLabel65 = new javax.swing.JLabel();
         jLabel66 = new javax.swing.JLabel();
-        txtanodv = new javax.swing.JTextField();
         jLabel67 = new javax.swing.JLabel();
-        txtmesdv = new javax.swing.JTextField();
         dventa = new javax.swing.JPanel();
         jLabel68 = new javax.swing.JLabel();
         jLabel69 = new javax.swing.JLabel();
@@ -239,6 +293,8 @@ public class reportes extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Reportes");
+        setIconImage(getIconImage());
+        setIconImages(getIconImages());
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -253,10 +309,10 @@ public class reportes extends javax.swing.JFrame {
         jLabel1.setText("Reportes");
         jPanel7.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, -1, 39));
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bevisalogo.png"))); // NOI18N
-        jPanel7.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, 180, 80));
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/bevisalogo_p.png"))); // NOI18N
+        jPanel7.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, 110, 80));
 
-        jTabbedPane2.setBackground(new java.awt.Color(255, 255, 255));
+        tabpanel.setBackground(new java.awt.Color(255, 255, 255));
 
         Productos.setBackground(new java.awt.Color(255, 255, 255));
         Productos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -488,7 +544,7 @@ public class reportes extends javax.swing.JFrame {
 
         Productos.add(ingredientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 100, -1, -1));
 
-        jTabbedPane2.addTab("Productos ", Productos);
+        tabpanel.addTab("Productos ", Productos);
 
         Inventario.setBackground(new java.awt.Color(255, 255, 255));
         Inventario.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -786,7 +842,7 @@ public class reportes extends javax.swing.JFrame {
         Inventario.add(jano_inventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 170, 120, -1));
         Inventario.add(jmes_inventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, 100, 30));
 
-        jTabbedPane2.addTab("Inventario", Inventario);
+        tabpanel.addTab("Inventario", Inventario);
 
         Produccion.setBackground(new java.awt.Color(255, 255, 255));
         Produccion.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -992,7 +1048,7 @@ public class reportes extends javax.swing.JFrame {
         jLabel80.setText("ODP");
         Produccion.add(jLabel80, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 20, 60, 39));
 
-        jTabbedPane2.addTab("Produccion", Produccion);
+        tabpanel.addTab("Produccion", Produccion);
 
         jPanel8.setBackground(new java.awt.Color(255, 255, 255));
         jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1094,8 +1150,6 @@ public class reportes extends javax.swing.JFrame {
         jLabel45.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel45.setText("No. Mes");
         jPanel8.add(jLabel45, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 260, -1, -1));
-        jPanel8.add(txtanovg, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, 120, -1));
-        jPanel8.add(txtmesvg, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 300, 120, -1));
 
         jLabel46.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         jLabel46.setText("Vendedor");
@@ -1199,10 +1253,10 @@ public class reportes extends javax.swing.JFrame {
         jLabel55.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel55.setText("Tipo");
         jPanel8.add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, -1, -1));
-        jPanel8.add(jano_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 230, 120, -1));
-        jPanel8.add(jmes_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 330, -1, -1));
+        jPanel8.add(jano_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, 120, -1));
+        jPanel8.add(jmes_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 290, -1, -1));
 
-        jTabbedPane2.addTab("Ventas ", jPanel8);
+        tabpanel.addTab("Ventas ", jPanel8);
 
         jPanel9.setBackground(new java.awt.Color(255, 255, 255));
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1213,9 +1267,7 @@ public class reportes extends javax.swing.JFrame {
 
         jLabel57.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel57.setText("Fin");
-        jPanel9.add(jLabel57, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 160, -1, -1));
-        jPanel9.add(txtinivs, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 110, 120, -1));
-        jPanel9.add(txtfivs, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 200, 120, -1));
+        jPanel9.add(jLabel57, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 150, -1, -1));
 
         vs.setBackground(new java.awt.Color(240, 200, 115));
         vs.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1260,7 +1312,7 @@ public class reportes extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel9.add(vs, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, -1, 90));
+        jPanel9.add(vs, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, -1, 90));
 
         jLabel64.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         jLabel64.setText("Detalle de las Ventas");
@@ -1273,12 +1325,10 @@ public class reportes extends javax.swing.JFrame {
         jLabel66.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel66.setText("Año");
         jPanel9.add(jLabel66, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 140, -1, -1));
-        jPanel9.add(txtanodv, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 160, 120, -1));
 
         jLabel67.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel67.setText("No. Mes");
         jPanel9.add(jLabel67, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 190, -1, -1));
-        jPanel9.add(txtmesdv, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 210, 120, -1));
 
         dventa.setBackground(new java.awt.Color(240, 200, 115));
         dventa.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1327,12 +1377,12 @@ public class reportes extends javax.swing.JFrame {
         jLabel71.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel71.setText("Tipo");
         jPanel9.add(jLabel71, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 70, -1, -1));
-        jPanel9.add(jdate_ventas_sem2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, 120, -1));
-        jPanel9.add(jdate_ventas_sem1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 140, 120, -1));
-        jPanel9.add(jano_detventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 160, 120, -1));
-        jPanel9.add(jmes_detventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 210, -1, -1));
+        jPanel9.add(jdate_ventas_sem2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 120, -1));
+        jPanel9.add(jdate_ventas_sem1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 110, 120, -1));
+        jPanel9.add(jano_detventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 160, 120, -1));
+        jPanel9.add(jmes_detventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 220, -1, -1));
 
-        jTabbedPane2.addTab("Ventas Semanales", jPanel9);
+        tabpanel.addTab("Ventas Semanales", jPanel9);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1517,9 +1567,9 @@ public class reportes extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane2.addTab("Vendedores/ Clientes", jPanel2);
+        tabpanel.addTab("Vendedores/ Clientes", jPanel2);
 
-        jPanel7.add(jTabbedPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 690, 470));
+        jPanel7.add(tabpanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 690, 470));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1937,11 +1987,11 @@ public class reportes extends javax.swing.JFrame {
         // Ubicacion del Reporte
         String path = s+"Ventas_Semanal.jasper";
         try {
-
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("ini", fechadividir(this.txtinivs.getText(),2) );
-            c.put("fin", fechadividir(this.txtfivs.getText(),2));
+            c.put("ini", this.fechadividir(formatter.format(this.jdate_ventas_sem1.getDate()), 2) );
+            c.put("fin", this.fechadividir(formatter.format(this.jdate_ventas_sem2.getDate()), 2));
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
             JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
             viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
@@ -1961,6 +2011,7 @@ public class reportes extends javax.swing.JFrame {
        
     }//GEN-LAST:event_vsMouseClicked
 
+    
     private void vgvanoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_vgvanoMouseExited
         this.resetcolor(this.vgvano);
     }//GEN-LAST:event_vgvanoMouseExited
@@ -1976,7 +2027,7 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("ano", this.txtanovg.getText());
+            c.put("ano", this.jano_ventas.getYear());
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
             JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
             viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
@@ -2008,8 +2059,8 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("mes", this.txtmesvg.getText());
-            c.put("ano", this.txtanovg.getText());
+            c.put("mes", this.jmes_ventas.getMonth());
+            c.put("ano", this.jano_ventas.getYear());
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
             JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
             viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
@@ -2040,8 +2091,8 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("mes", this.txtmesvg.getText());
-            c.put("ano", this.txtanovg.getText());
+            c.put("mes", this.jmes_ventas.getMonth());
+            c.put("ano", this.jano_ventas.getYear());
             switch(this.cbtipoventa.getSelectedIndex())
             {
                 case 0:
@@ -2084,7 +2135,7 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("ano", this.txtanovg.getText());
+            c.put("ano", this.jano_ventas.getYear());
             switch(this.cbtipoventa.getSelectedIndex())
             {
                 case 0:
@@ -2366,8 +2417,8 @@ public class reportes extends javax.swing.JFrame {
         String path = s+"Ventas_Salida.jasper";
         try {
             Map c = new HashMap();
-            c.put("mes", this.txtmesdv.getText());
-            c.put("ano", this.txtanodv.getText());
+            c.put("mes", this.jmes_detventa.getMonth());
+            c.put("ano", this.jano_detventa.getYear());
              switch(this.cbtipoventa1.getSelectedIndex())
             {
                 case 0:
@@ -2542,7 +2593,6 @@ public class reportes extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
-    private javax.swing.JTabbedPane jTabbedPane2;
     private com.toedter.calendar.JYearChooser jano_detventa;
     private com.toedter.calendar.JYearChooser jano_inventario;
     private com.toedter.calendar.JYearChooser jano_prodruccion;
@@ -2563,12 +2613,7 @@ public class reportes extends javax.swing.JFrame {
     private javax.swing.JPanel pruebas;
     private javax.swing.JRadioButton rbAceptados;
     private javax.swing.JRadioButton rbProspectos;
-    private javax.swing.JTextField txtanodv;
-    private javax.swing.JTextField txtanovg;
-    private javax.swing.JTextField txtfivs;
-    private javax.swing.JTextField txtinivs;
-    private javax.swing.JTextField txtmesdv;
-    private javax.swing.JTextField txtmesvg;
+    private javax.swing.JTabbedPane tabpanel;
     private javax.swing.JTextField txtodp;
     private javax.swing.JPanel vendedoresdele;
     private javax.swing.JPanel vendedorestodos;

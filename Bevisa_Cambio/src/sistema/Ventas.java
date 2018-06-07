@@ -1,19 +1,24 @@
 
 package sistema;
 
+import com.toedter.calendar.JTextFieldDateEditor;
 import datos.Conexion;
 import negocio.*;
 import datos.DBcontrolador;
 import datos.Ventas_DB;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,11 +101,23 @@ public class Ventas extends javax.swing.JFrame {
         s = c.toAbsolutePath().toString();
         this.importe=0;
         this.iva=0;
-        LocalDate dt = LocalDate.now();
-        this.txtfecha.setText(dt.getDayOfMonth()+"/"+dt.getMonthValue()+"/"+dt.getYear());
         this.ventas = (DefaultTableModel) this.tbventas.getModel();
+        
+        JTextFieldDateEditor fecha6 = (JTextFieldDateEditor) this.jdate_venta.getDateEditor();
+        fecha6.setEditable(false);
+        Date date = new Date();
+        this.jdate_venta.setDateFormatString("dd/MM/yyyy");
+        this.jdate_venta.setDate(date);
     }
 
+    @Override
+    public Image getIconImage() {
+       Image retValue = Toolkit.getDefaultToolkit().
+             getImage(ClassLoader.getSystemResource("img/icono.png"));
+
+
+       return retValue;
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -119,7 +136,6 @@ public class Ventas extends javax.swing.JFrame {
         txtidcliente = new javax.swing.JTextField();
         txtnombrecliente = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        txtfecha = new javax.swing.JTextField();
         btnvendedor = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         tbventas = new javax.swing.JTable();
@@ -135,8 +151,12 @@ public class Ventas extends javax.swing.JFrame {
         txtidvendedor = new javax.swing.JTextField();
         btnelegircliente = new javax.swing.JButton();
         btncancelacion = new javax.swing.JButton();
+        jdate_venta = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Ventas");
+        setIconImage(getIconImage());
+        setIconImages(getIconImages());
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -205,11 +225,6 @@ public class Ventas extends javax.swing.JFrame {
         jLabel7.setText("Fecha :");
         jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 20, -1, -1));
 
-        txtfecha.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        txtfecha.setDisabledTextColor(new java.awt.Color(0, 0, 0));
-        txtfecha.setEnabled(false);
-        jPanel2.add(txtfecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 20, 155, -1));
-
         btnvendedor.setText("Elegir [F8]");
         btnvendedor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -247,8 +262,8 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         tbventas.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        tbventas.setCellSelectionEnabled(true);
         tbventas.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tbventas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbventas.getTableHeader().setReorderingAllowed(false);
         tbventas.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -319,7 +334,7 @@ public class Ventas extends javax.swing.JFrame {
         txtimporta.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtimporta.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtimporta.setEnabled(false);
-        jPanel2.add(txtimporta, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 60, 155, -1));
+        jPanel2.add(txtimporta, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 60, 150, -1));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel10.setText("IVA :");
@@ -328,12 +343,12 @@ public class Ventas extends javax.swing.JFrame {
         txtiva.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtiva.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtiva.setEnabled(false);
-        jPanel2.add(txtiva, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 90, 155, -1));
+        jPanel2.add(txtiva, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 90, 150, -1));
 
         txttotal.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txttotal.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txttotal.setEnabled(false);
-        jPanel2.add(txttotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 120, 155, -1));
+        jPanel2.add(txttotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 120, 150, -1));
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel11.setText("Total :");
@@ -363,12 +378,10 @@ public class Ventas extends javax.swing.JFrame {
                 btncancelacionActionPerformed(evt);
             }
         });
-        btncancelacion.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                btncancelacionbtnelegirclienteKeyPressed(evt);
-            }
-        });
         jPanel2.add(btncancelacion, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 450, 190, -1));
+
+        jdate_venta.setEnabled(false);
+        jPanel2.add(jdate_venta, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 20, 150, -1));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 1210, 500));
 
@@ -394,24 +407,22 @@ public class Ventas extends javax.swing.JFrame {
         this.txtidvendedor.setText(vende.getId()+"");
         this.txtnombrevendedor.setText(vende.getNombre()+"");
         this.venta.setIdvendedor(vende.getId()+"");
-        
+        this.txtidvendedor.setBackground(Color.WHITE);
+        this.txtnombrevendedor.setBackground(Color.WHITE);
         this.btnagregar.setEnabled(true);
-        this.btnquitar.setEnabled(true);
-        
-        this.txtfecha.setEnabled(true);
+        this.jdate_venta.setEnabled(true);
     }
     
     public void colocarcliente(Clientes clie)
     {
         this.txtidcliente.setText(clie.getId()+"");
         this.txtnombrecliente.setText(clie.getNombre()+"");
+        this.txtidcliente.setBackground(Color.WHITE);
+        this.txtnombrecliente.setBackground(Color.WHITE);
         this.venta.setIdcliente(clie.getId()+"");
-        this.txtfecha.setEnabled(true);
         this.btnagregar.setEnabled(true);
-        this.btnquitar.setEnabled(true);
-        this.txtfecha.setEnabled(true);
+        this.jdate_venta.setEnabled(true);
     }
-    
     
     public void colocarproducto(String[] c)
     {
@@ -462,6 +473,7 @@ public class Ventas extends javax.swing.JFrame {
         this.txttotal.setText(total+"");
         
         this.btnaceptar.setEnabled(true);
+        this.btnquitar.setEnabled(true);
         
     }
     
@@ -542,154 +554,170 @@ public class Ventas extends javax.swing.JFrame {
         try{
             Ventas_DB db= new Ventas_DB(this.con);
 
-            if (this.txtfecha.getText().matches("^[0-9]{1,2}\\/[0-9]{1,2}\\/[0-9]{4}$") && this.tbventas.getRowCount() > 0) {
-                
-                boolean hay = true;
-                String falta="";
-                for (int i = 0; i < this.tbventas.getRowCount(); i++) {
-                     double cantidad=db.validacion_prodvtas(this.tbventas.getValueAt(i, 0).toString());
-                     if (cantidad==0) {
-                        falta+="Falta "+this.tbventas.getValueAt(i, 4).toString()+" del prodcuto "+ this.tbventas.getValueAt(i, 2).toString() +"\n";
-                        hay = false;
+            if (this.tbventas.getRowCount() > 0) {
+                if (!this.txtidcliente.getText().isEmpty()) {
+                    if (!this.txtidvendedor.getText().isEmpty()) {
+                        boolean hay = true;
+                        String falta="";
+                        for (int i = 0; i < this.tbventas.getRowCount(); i++) {
+                             double cantidad=db.validacion_prodvtas(this.tbventas.getValueAt(i, 0).toString());
+                             if (cantidad==0) {
+                                falta+="Falta "+this.tbventas.getValueAt(i, 4).toString()+" del prodcuto "+ this.tbventas.getValueAt(i, 2).toString() +"\n";
+                                hay = false;
+                            }
+                            else
+                            {
+                                if (cantidad < Double.parseDouble(this.tbventas.getValueAt(i, 4).toString() )) {
+                                   hay = false;
+                                   double aux=Double.parseDouble(this.tbventas.getValueAt(i, 4).toString())-cantidad;
+                                   falta+="Falta "+aux+" del prodcuto "+ this.tbventas.getValueAt(i, 2).toString() +"\n";
+                               }
+                            }
+
+                        }
+                        if (hay) {
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                            String respuesta = JOptionPane.showInputDialog(this, "Observaciones");
+                            this.venta.setFecha(this.fechadividir(formatter.format(this.jdate_venta.getDate()), 2));
+                            this.venta.setImporte(importe);
+                            this.venta.setIva(iva);
+                            this.venta.setTotal(importe);
+                            this.venta.setTipo(this.cbconcepto.getSelectedIndex()+1+"");
+                            this.venta.setOp(respuesta);
+                            int id_venta=db.insert(venta);      
+                            List <String[]> lotes = new ArrayList<>();
+                            for (int i = 0; i < this.ventas.getRowCount(); i++) {
+                                lotes=db.validacion_lotes(this.tbventas.getValueAt(i, 0).toString());
+                                double cantidad = Double.parseDouble(this.ventas.getValueAt(i, 4).toString());
+                                for (int j = 0; j < lotes.size(); j++) {
+
+                                    double cantidad_inventario = Double.parseDouble(lotes.get(j)[1]);
+
+                                    double aux = cantidad_inventario-cantidad;
+                                    if (cantidad != 0) {
+
+                                        if (aux >= 0) {
+                                            this.venta.getDetalle().get(i).setIdventa(id_venta);
+                                            this.venta.getDetalle().get(i).setIdinven(Integer.parseInt(lotes.get(j)[0]));
+                                            db.insert_dv(this.venta.getDetalle().get(i));
+
+                                            Inventario inven = new Inventario();
+                                            inven.setId(Integer.parseInt(lotes.get(j)[0]));
+                                            inven.setCantidad_actual(aux);
+                                            db.update_inv(inven);
+                                            cantidad=0;
+                                        }
+                                        else
+                                        {
+                                            this.venta.getDetalle().get(i).setIdventa(id_venta);
+                                            this.venta.getDetalle().get(i).setIdventa(Integer.parseInt(lotes.get(j)[0]));
+                                            db.insert_dv(this.venta.getDetalle().get(i));
+
+                                            Inventario inven = new Inventario();
+                                            inven.setId(Integer.parseInt(lotes.get(j)[0]));
+                                            inven.setCantidad_actual(0);
+                                            db.update_inv(inven);
+                                            cantidad-=cantidad_inventario;
+                                        }
+                                    }
+                                }
+                            }
+
+                            this.venta.getDetalle().clear();
+
+                            //limpiar
+                            this.ventas.setRowCount(0);
+
+                            this.txtidcliente.setText("");
+                            this.txtnombrecliente.setText("");
+                            this.txtidvendedor.setText("");
+                            this.txtnombrevendedor.setText("");
+                            this.total=0;
+                            this.importe=0;
+                            this.iva=0;
+                            this.txtimporta.setText("");
+                            this.txtiva.setText("");
+                            this.txttotal.setText("");
+
+                            //deshabilitar
+                            this.btnaceptar.setEnabled(false);
+                            this.btnagregar.setEnabled(false);
+                            this.btnquitar.setEnabled(false);
+
+
+                            JasperReport reporte; //Creo el objeto reporte
+                            // Ubicacion del Reporte
+                           String path = s+"\\Reportes\\Ventas_Ticket.jasper";
+                           try {
+
+                               Map categoria = new HashMap();
+                               categoria.put("ID_Venta", id_venta);
+                               categoria.put("op",respuesta);
+                               reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
+                               JasperPrint jprint = JasperFillManager.fillReport(path, categoria,this.con); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+                               JasperExportManager.exportReportToPdfFile(jprint, s+"\\Tickets\\Venta-"+id_venta+".pdf");
+
+
+                               if (this.cbconcepto.getSelectedIndex()==1)
+                               {
+                                   for (int i = 0; i < 2; i++) {
+                                        PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
+
+                                        printRequestAttributeSet.add(new Copies(1));
+                                        PrinterName printerName = new PrinterName("EPSON TM-T88V Receipt", null); //gets printer 
+                                        PrintServiceAttributeSet printServiceAttributeSet = new HashPrintServiceAttributeSet();
+                                        printServiceAttributeSet.add(printerName);
+                                        JRPrintServiceExporter exporter = new JRPrintServiceExporter();
+                                        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jprint);
+                                        exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, printRequestAttributeSet);
+                                        exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, printServiceAttributeSet);
+                                        exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, Boolean.FALSE);
+                                        exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
+                                        exporter.exportReport();
+                                       }              
+                               }
+
+                               JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
+                               viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
+                               viewer.setVisible(true); //Inicializamos la vista del Reporte
+
+
+
+                           } 
+                           catch(Exception ex)
+                            {
+                                JOptionPane.showMessageDialog(null, "Error reporte "+ ex);
+                                 try {
+                                    this.con=Conexion.getConnection();
+                                } catch (SQLException ex1) {
+                                    Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(null, falta);
+                        }
                     }
                     else
                     {
-                        if (cantidad < Double.parseDouble(this.tbventas.getValueAt(i, 4).toString() )) {
-                           hay = false;
-                           double aux=Double.parseDouble(this.tbventas.getValueAt(i, 4).toString())-cantidad;
-                           falta+="Falta "+aux+" del prodcuto "+ this.tbventas.getValueAt(i, 2).toString() +"\n";
-                       }
+                        JOptionPane.showMessageDialog(null, "No hay un vendedor seleccionado");
+                        this.txtidvendedor.setBackground(Color.decode("#FFCCCC"));
+                        this.txtnombrevendedor.setBackground(Color.decode("#FFCCCC"));
                     }
-                    
-                }
-                if (hay) {
-                    String respuesta = JOptionPane.showInputDialog(this, "Observaciones");
-                    this.venta.setFecha(this.fechadividir(this.txtfecha.getText(), 1));
-                    this.venta.setImporte(importe);
-                    this.venta.setIva(iva);
-                    this.venta.setTotal(importe);
-                    this.venta.setTipo(this.cbconcepto.getSelectedIndex()+1+"");
-                    this.venta.setOp(respuesta);
-                    int id_venta=db.insert(venta);      
-                    List <String[]> lotes = new ArrayList<>();
-                    for (int i = 0; i < this.ventas.getRowCount(); i++) {
-                        lotes=db.validacion_lotes(this.tbventas.getValueAt(i, 0).toString());
-                        double cantidad = Double.parseDouble(this.ventas.getValueAt(i, 4).toString());
-                        for (int j = 0; j < lotes.size(); j++) {
-
-                            double cantidad_inventario = Double.parseDouble(lotes.get(j)[1]);
-
-                            double aux = cantidad_inventario-cantidad;
-                            if (cantidad != 0) {
-                                
-                                if (aux >= 0) {
-                                    this.venta.getDetalle().get(i).setIdventa(id_venta);
-                                    this.venta.getDetalle().get(i).setIdinven(Integer.parseInt(lotes.get(j)[0]));
-                                    db.insert_dv(this.venta.getDetalle().get(i));
-                                    
-                                    Inventario inven = new Inventario();
-                                    inven.setId(Integer.parseInt(lotes.get(j)[0]));
-                                    inven.setCantidad_actual(aux);
-                                    db.update_inv(inven);
-                                    cantidad=0;
-                                }
-                                else
-                                {
-                                    this.venta.getDetalle().get(i).setIdventa(id_venta);
-                                    this.venta.getDetalle().get(i).setIdventa(Integer.parseInt(lotes.get(j)[0]));
-                                    db.insert_dv(this.venta.getDetalle().get(i));
-                                    
-                                    Inventario inven = new Inventario();
-                                    inven.setId(Integer.parseInt(lotes.get(j)[0]));
-                                    inven.setCantidad_actual(0);
-                                    db.update_inv(inven);
-                                    cantidad-=cantidad_inventario;
-                                }
-                            }
-                        }
-                    }
-                  
-                    this.venta.getDetalle().clear();
-                    
-                    //limpiar
-                    this.ventas.setRowCount(0);
-                    
-                    this.txtidcliente.setText("");
-                    this.txtnombrecliente.setText("");
-                    this.txtidvendedor.setText("");
-                    this.txtnombrevendedor.setText("");
-                    this.total=0;
-                    this.importe=0;
-                    this.iva=0;
-                    this.txtimporta.setText("");
-                    this.txtiva.setText("");
-                    this.txttotal.setText("");
-                    
-                    //deshabilitar
-                    this.btnaceptar.setEnabled(false);
-                    this.btnagregar.setEnabled(false);
-                    this.btnquitar.setEnabled(false);
-                    
-                    
-                    JasperReport reporte; //Creo el objeto reporte
-                    // Ubicacion del Reporte
-                   String path = s+"\\Reportes\\Ventas_Ticket.jasper";
-                   try {
-                       
-                       Map categoria = new HashMap();
-                       categoria.put("ID_Venta", id_venta);
-                       categoria.put("op",respuesta);
-                       reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
-                       JasperPrint jprint = JasperFillManager.fillReport(path, categoria,this.con); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
-                       JasperExportManager.exportReportToPdfFile(jprint, s+"\\Tickets\\Venta-"+id_venta+".pdf");
-
-                       
-                       if (this.cbconcepto.getSelectedIndex()==1)
-                       {
-                           for (int i = 0; i < 2; i++) {
-                                PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
-
-                                printRequestAttributeSet.add(new Copies(1));
-                                PrinterName printerName = new PrinterName("EPSON TM-T88V Receipt", null); //gets printer 
-                                PrintServiceAttributeSet printServiceAttributeSet = new HashPrintServiceAttributeSet();
-                                printServiceAttributeSet.add(printerName);
-                                JRPrintServiceExporter exporter = new JRPrintServiceExporter();
-                                exporter.setParameter(JRExporterParameter.JASPER_PRINT, jprint);
-                                exporter.setParameter(JRPrintServiceExporterParameter.PRINT_REQUEST_ATTRIBUTE_SET, printRequestAttributeSet);
-                                exporter.setParameter(JRPrintServiceExporterParameter.PRINT_SERVICE_ATTRIBUTE_SET, printServiceAttributeSet);
-                                exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PAGE_DIALOG, Boolean.FALSE);
-                                exporter.setParameter(JRPrintServiceExporterParameter.DISPLAY_PRINT_DIALOG, Boolean.FALSE);
-                                exporter.exportReport();
-                               }              
-                       }
-
-                       JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
-                       viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
-                       viewer.setVisible(true); //Inicializamos la vista del Reporte
-                        
-                        
-                       
-                   } 
-                   catch(Exception ex)
-                    {
-                        JOptionPane.showMessageDialog(null, "Error reporte "+ ex);
-                         try {
-                            this.con=Conexion.getConnection();
-                        } catch (SQLException ex1) {
-                            Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex1);
-                        }
-                    }
-                    
                 }
                 else
                 {
-                    JOptionPane.showMessageDialog(null, falta);
+                    JOptionPane.showMessageDialog(null, "No hay un cliente seleccionado");
+                    this.txtidcliente.setBackground(Color.decode("#FFCCCC"));
+                    this.txtnombrecliente.setBackground(Color.decode("#FFCCCC"));
                 }
-
+                
             }
             else
             {
-                JOptionPane.showMessageDialog(null, "Error en los datos");
+                JOptionPane.showMessageDialog(null, "No hay ningun producto en la venta");
             }
 
         }
@@ -748,10 +776,6 @@ public class Ventas extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnelegirclienteKeyPressed
 
-    private void btncancelacionbtnelegirclienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btncancelacionbtnelegirclienteKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btncancelacionbtnelegirclienteKeyPressed
-
     private void btncancelacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelacionActionPerformed
         try{
             Ventas_DB db = new Ventas_DB(this.con);
@@ -778,6 +802,7 @@ public class Ventas extends javax.swing.JFrame {
         }     
     }//GEN-LAST:event_btncancelacionActionPerformed
 
+    
     /**
      * @param args the command line arguments
      */
@@ -835,8 +860,8 @@ public class Ventas extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane4;
+    private com.toedter.calendar.JDateChooser jdate_venta;
     private javax.swing.JTable tbventas;
-    private javax.swing.JTextField txtfecha;
     private javax.swing.JTextField txtidcliente;
     private javax.swing.JTextField txtidvendedor;
     private javax.swing.JTextField txtimporta;
