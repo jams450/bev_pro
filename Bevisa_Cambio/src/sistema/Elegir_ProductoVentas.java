@@ -148,7 +148,7 @@ public class Elegir_ProductoVentas extends javax.swing.JFrame {
                 java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, true
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -160,6 +160,7 @@ public class Elegir_ProductoVentas extends javax.swing.JFrame {
             }
         });
         tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tbdatos.setColumnSelectionAllowed(true);
         tbdatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tbdatos.setGridColor(new java.awt.Color(204, 204, 204));
         tbdatos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -330,8 +331,8 @@ public class Elegir_ProductoVentas extends javax.swing.JFrame {
             this.txtcomision.setBackground(Color.decode("#FFCCCC"));
             error+="Comision: 10.5 ó 50\n";
         }
-        if (pasa) {
-            JOptionPane.showMessageDialog(null, "Formato invalida:\n"+error);
+        if (!pasa) {
+            JOptionPane.showMessageDialog(null, "Formato invalido:\n"+error);
         }
         return pasa;
            

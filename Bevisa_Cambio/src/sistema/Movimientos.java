@@ -355,7 +355,7 @@ public class Movimientos extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, true, true
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -714,7 +714,7 @@ public class Movimientos extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true
+                false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -735,7 +735,6 @@ public class Movimientos extends javax.swing.JFrame {
             tbopc.getColumnModel().getColumn(3).setPreferredWidth(50);
             tbopc.getColumnModel().getColumn(4).setPreferredWidth(100);
             tbopc.getColumnModel().getColumn(5).setPreferredWidth(150);
-            tbopc.getColumnModel().getColumn(5).setHeaderValue("No. Orden Cliente");
         }
 
         OPC.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 1230, 250));
@@ -1413,9 +1412,7 @@ public class Movimientos extends javax.swing.JFrame {
                            Map id = new HashMap();
                            id.put("ID_Inven", this.dbc.seleccionarid("select max(id) from inventario"));
                            JasperPrint jprint = JasperFillManager.fillReport(path, id, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
-                           File d = new File(s+"\\Liberacion");
-                           File pdf = File.createTempFile("Liberacion-"+this.cbodpLIB.getSelectedItem().toString()+"--", ".pdf",d);
-                           JasperExportManager.exportReportToPdfStream(jprint, new FileOutputStream(pdf));
+                           JasperExportManager.exportReportToPdfFile(jprint, s+"\\Liberacion\\Liberacion-"+this.cbodpLIB.getSelectedItem().toString()+".pdf");
                            JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
                            viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
                            viewer.setVisible(true); //Inicializamos la vista del Reporte
@@ -2719,11 +2716,7 @@ public class Movimientos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnaceptar_reproActionPerformed
 
     //</editor-fold>
-    
-   
-   
-    
-    
+
     /**
      * @param args the command line arguments
      */

@@ -232,9 +232,6 @@ public class reportes extends javax.swing.JFrame {
         jLabel61 = new javax.swing.JLabel();
         jmes_prodruccion = new com.toedter.calendar.JMonthChooser();
         jano_prodruccion = new com.toedter.calendar.JYearChooser();
-        produccion_odp_sinnombre = new javax.swing.JPanel();
-        jLabel78 = new javax.swing.JLabel();
-        jLabel79 = new javax.swing.JLabel();
         jLabel80 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jLabel40 = new javax.swing.JLabel();
@@ -840,7 +837,7 @@ public class reportes extends javax.swing.JFrame {
 
         Inventario.add(inventario_dinero_mes, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 320, 130, 110));
         Inventario.add(jano_inventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 170, 120, -1));
-        Inventario.add(jmes_inventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 270, 100, 30));
+        Inventario.add(jmes_inventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 270, 120, 20));
 
         tabpanel.addTab("Inventario", Inventario);
 
@@ -997,52 +994,8 @@ public class reportes extends javax.swing.JFrame {
         jLabel61.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel61.setText("Lote");
         Produccion.add(jLabel61, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 70, -1, -1));
-        Produccion.add(jmes_prodruccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 150, 100, -1));
+        Produccion.add(jmes_prodruccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 150, 130, -1));
         Produccion.add(jano_prodruccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 120, -1));
-
-        produccion_odp_sinnombre.setBackground(new java.awt.Color(240, 200, 115));
-        produccion_odp_sinnombre.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                produccion_odp_sinnombreMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                produccion_odp_sinnombreMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                produccion_odp_sinnombreMouseExited(evt);
-            }
-        });
-
-        jLabel78.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/trabajador.png"))); // NOI18N
-
-        jLabel79.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jLabel79.setForeground(new java.awt.Color(162, 127, 51));
-        jLabel79.setText("Con Nombre");
-
-        javax.swing.GroupLayout produccion_odp_sinnombreLayout = new javax.swing.GroupLayout(produccion_odp_sinnombre);
-        produccion_odp_sinnombre.setLayout(produccion_odp_sinnombreLayout);
-        produccion_odp_sinnombreLayout.setHorizontalGroup(
-            produccion_odp_sinnombreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(produccion_odp_sinnombreLayout.createSequentialGroup()
-                .addGroup(produccion_odp_sinnombreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(produccion_odp_sinnombreLayout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jLabel78))
-                    .addGroup(produccion_odp_sinnombreLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel79)))
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
-        produccion_odp_sinnombreLayout.setVerticalGroup(
-            produccion_odp_sinnombreLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(produccion_odp_sinnombreLayout.createSequentialGroup()
-                .addComponent(jLabel78)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel79)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        Produccion.add(produccion_odp_sinnombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 240, 130, 90));
 
         jLabel80.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         jLabel80.setText("ODP");
@@ -1254,7 +1207,7 @@ public class reportes extends javax.swing.JFrame {
         jLabel55.setText("Tipo");
         jPanel8.add(jLabel55, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, -1, -1));
         jPanel8.add(jano_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, 120, -1));
-        jPanel8.add(jmes_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 290, -1, -1));
+        jPanel8.add(jmes_ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(69, 290, 120, -1));
 
         tabpanel.addTab("Ventas ", jPanel8);
 
@@ -1312,7 +1265,7 @@ public class reportes extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel9.add(vs, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 240, -1, 90));
+        jPanel9.add(vs, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 250, -1, 90));
 
         jLabel64.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         jLabel64.setText("Detalle de las Ventas");
@@ -1380,7 +1333,7 @@ public class reportes extends javax.swing.JFrame {
         jPanel9.add(jdate_ventas_sem2, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 120, -1));
         jPanel9.add(jdate_ventas_sem1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 110, 120, -1));
         jPanel9.add(jano_detventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 160, 120, -1));
-        jPanel9.add(jmes_detventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 220, -1, -1));
+        jPanel9.add(jmes_detventa, new org.netbeans.lib.awtextra.AbsoluteConstraints(459, 220, 120, -1));
 
         tabpanel.addTab("Ventas Semanales", jPanel9);
 
@@ -1609,7 +1562,7 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("mes", this.jmes_inventario.getMonth()+"");
+            c.put("mes", this.jmes_inventario.getMonth()+1+"");
             c.put("ano", this.jano_inventario.getYear()+"");
              switch(this.cbtipoinventario.getSelectedIndex())
             {
@@ -1742,7 +1695,7 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("mes", this.jmes_inventario.getMonth()+"");
+            c.put("mes", this.jmes_inventario.getMonth()+1+"");
             c.put("ano", this.jano_inventario.getYear()+"");
              switch(this.cbtipoinventario.getSelectedIndex())
             {
@@ -1821,7 +1774,7 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("mes", this.jmes_inventario.getMonth()+"");
+            c.put("mes", this.jmes_inventario.getMonth()+1+"");
             c.put("ano", this.jano_inventario.getYear()+"");
              switch(this.cbtipoinventario.getSelectedIndex())
             {
@@ -1877,7 +1830,7 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("mes", this.jmes_prodruccion.getMonth()+"");
+            c.put("mes", this.jmes_prodruccion.getMonth()+1+"");
             c.put("ano", this.jano_prodruccion.getYear()+"");
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
             JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
@@ -1955,19 +1908,7 @@ public class reportes extends javax.swing.JFrame {
     private void produccion_odp_nombreMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_produccion_odp_nombreMouseExited
         resetcolor(this.produccion_odp_nombre);
     }//GEN-LAST:event_produccion_odp_nombreMouseExited
-    
-     private void produccion_odp_sinnombreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_produccion_odp_sinnombreMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_produccion_odp_sinnombreMouseClicked
-
-    private void produccion_odp_sinnombreMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_produccion_odp_sinnombreMouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_produccion_odp_sinnombreMouseEntered
-
-    private void produccion_odp_sinnombreMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_produccion_odp_sinnombreMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_produccion_odp_sinnombreMouseExited
-    
+        
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="VENTAS">
@@ -2027,7 +1968,7 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("ano", this.jano_ventas.getYear());
+            c.put("ano", this.jano_ventas.getYear()+"");
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
             JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
             viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
@@ -2059,8 +2000,8 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("mes", this.jmes_ventas.getMonth());
-            c.put("ano", this.jano_ventas.getYear());
+            c.put("mes", this.jmes_ventas.getMonth()+1+"");
+            c.put("ano", this.jano_ventas.getYear()+"");
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
             JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
             viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
@@ -2091,8 +2032,8 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("mes", this.jmes_ventas.getMonth());
-            c.put("ano", this.jano_ventas.getYear());
+            c.put("mes", this.jmes_ventas.getMonth()+1+"");
+            c.put("ano", this.jano_ventas.getYear()+"");
             switch(this.cbtipoventa.getSelectedIndex())
             {
                 case 0:
@@ -2135,7 +2076,7 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
-            c.put("ano", this.jano_ventas.getYear());
+            c.put("ano", this.jano_ventas.getYear()+"");
             switch(this.cbtipoventa.getSelectedIndex())
             {
                 case 0:
@@ -2417,8 +2358,8 @@ public class reportes extends javax.swing.JFrame {
         String path = s+"Ventas_Salida.jasper";
         try {
             Map c = new HashMap();
-            c.put("mes", this.jmes_detventa.getMonth());
-            c.put("ano", this.jano_detventa.getYear());
+            c.put("mes", this.jmes_detventa.getMonth()+1+"");
+            c.put("ano", this.jano_detventa.getYear()+"");
              switch(this.cbtipoventa1.getSelectedIndex())
             {
                 case 0:
@@ -2584,8 +2525,6 @@ public class reportes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel73;
     private javax.swing.JLabel jLabel74;
     private javax.swing.JLabel jLabel75;
-    private javax.swing.JLabel jLabel78;
-    private javax.swing.JLabel jLabel79;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel80;
     private javax.swing.JLabel jLabel9;
@@ -2606,7 +2545,6 @@ public class reportes extends javax.swing.JFrame {
     private javax.swing.JPanel produccion_ano;
     private javax.swing.JPanel produccion_mes;
     private javax.swing.JPanel produccion_odp_nombre;
-    private javax.swing.JPanel produccion_odp_sinnombre;
     private javax.swing.JPanel productosmp;
     private javax.swing.JPanel productosterminados;
     private javax.swing.JPanel productostodos;

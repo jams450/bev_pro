@@ -209,7 +209,7 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
                 java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, false, true
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -221,6 +221,7 @@ public class Elegir_ProductoOPP extends javax.swing.JFrame {
             }
         });
         tbdatos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tbdatos.setColumnSelectionAllowed(true);
         tbdatos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tbdatos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbdatos.setShowHorizontalLines(false);

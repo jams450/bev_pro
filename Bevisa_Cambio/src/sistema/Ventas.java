@@ -262,6 +262,7 @@ public class Ventas extends javax.swing.JFrame {
             }
         });
         tbventas.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tbventas.setColumnSelectionAllowed(true);
         tbventas.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tbventas.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tbventas.getTableHeader().setReorderingAllowed(false);
@@ -658,7 +659,7 @@ public class Ventas extends javax.swing.JFrame {
                                JasperExportManager.exportReportToPdfFile(jprint, s+"\\Tickets\\Venta-"+id_venta+".pdf");
 
 
-                               if (this.cbconcepto.getSelectedIndex()==1)
+                               if (JOptionPane.showConfirmDialog(null, "¿Desea Imprimir el ticket?\n(Por regla, el ticket se imprime dos veces))", "Imprimir", JOptionPane.YES_NO_OPTION)==0)
                                {
                                    for (int i = 0; i < 2; i++) {
                                         PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();

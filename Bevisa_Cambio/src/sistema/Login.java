@@ -251,7 +251,7 @@ public class Login extends javax.swing.JFrame {
                 }
 
                 if (correcto) {
-                    JOptionPane.showMessageDialog(null, "Bienvendo");
+                    JOptionPane.showMessageDialog(null, "Bienvenido");
                     Menu_Principal mp = new Menu_Principal(user,this.con);
                     mp.setVisible(true);
                     this.dispose();
