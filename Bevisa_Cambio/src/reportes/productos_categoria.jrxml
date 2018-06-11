@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="productos" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="825e37e0-f222-4030-afb2-dbf81fd27e68">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Trabajo"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#A1A1A1">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="90174fd0-d8c8-4a36-8347-08810ea839eb">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Trabajo"/>
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<parameter name="c1" class="java.lang.String"/>
+		<parameter name="c2" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select productos.id as ID , productos.Clave, productos.Nombre, categoria.Nombre as Categoria, 
+umedida.Nombre as UMedida
+from productos 
+join categoria on productos.idcategoria = categoria.id 
+join umedida on productos.idmedida= umedida.id 
+where idcategoria =  $P{c1}  or idcategoria =  $P{c2} 
+order by productos.id]]>
+		</queryString>
+		<field name="ID" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="ID"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="productos"/>
+		</field>
+		<field name="Clave" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="Clave"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="productos"/>
+		</field>
+		<field name="Nombre" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="Nombre"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="productos"/>
+		</field>
+		<field name="Categoria" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="Categoria"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="categoria"/>
+		</field>
+		<field name="UMedida" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="UMedida"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="umedida"/>
+		</field>
+	</subDataset>
+	<parameter name="categoria" class="java.lang.Integer"/>
+	<parameter name="categoria2" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 1]]>
+	</queryString>
+	<field name="1" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="1"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="92" splitType="Stretch">
+			<image>
+				<reportElement x="60" y="20" width="50" height="37" uuid="1d8f006e-4b58-4bc2-952f-3dd07273e6f1"/>
+				<imageExpression><![CDATA["bevisalogo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="320" y="20" width="151" height="44" uuid="787a8244-90ec-48c0-9774-2b13903fd60d"/>
+				<textElement textAlignment="Center">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Productos]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="640" y="40" width="100" height="30" uuid="7f9ff2a2-165c-407a-a909-ad486a0c40b1"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="640" y="10" width="100" height="30" uuid="c1de19df-ff4a-4b1d-ac5b-3e7fa5edfc5a"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="14" y="80" width="728" height="1" uuid="9fbab3af-112e-4373-9f11-48425a82045a"/>
+			</rectangle>
+		</band>
+	</title>
+	<detail>
+		<band height="105" splitType="Stretch">
+			<componentElement>
+				<reportElement x="-1" y="10" width="742" height="80" uuid="a2e5ca67-40a1-49f4-893e-98f5db678e56">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset1" uuid="48390ca3-c13b-4737-9859-017d23331fdb">
+						<datasetParameter name="c1">
+							<datasetParameterExpression><![CDATA[$P{categoria}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="c2">
+							<datasetParameterExpression><![CDATA[$P{categoria2}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="70" uuid="87e4417e-63db-4764-8ee8-5f77f6c692a8">
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement x="0" y="0" width="70" height="20" uuid="52cebcca-47f7-4b2a-9fbe-6a276660dee5"/>
+								<text><![CDATA[ID]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="70" height="20" uuid="8a5dbb18-a0e8-4063-a270-dcc174375c8b"/>
+								<textFieldExpression><![CDATA[$F{ID}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="6eb203bb-21d9-49a1-a9ec-7168e4fc6ac1">
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="20" uuid="eeca2d0c-127e-4435-b73e-b55177b1dac4"/>
+								<text><![CDATA[Clave]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="100" height="20" uuid="4b33a00c-d089-4f83-bd80-ff9f22c733ed"/>
+								<textFieldExpression><![CDATA[$F{Clave}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="310" uuid="27406c8c-7647-4248-ad11-78ec9c6c74e1">
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement x="0" y="0" width="310" height="20" uuid="b9e41b35-851a-4372-acdb-f57b404d47b7"/>
+								<text><![CDATA[Nombre]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="310" height="20" uuid="37f2cfd6-1001-4c03-b0aa-45fbfbe6ba3e"/>
+								<textFieldExpression><![CDATA[$F{Nombre}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="130" uuid="1a5ec6f2-15ba-45b1-8d24-23b18f0eb30e">
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement x="0" y="0" width="130" height="20" uuid="5388acc0-72ef-429b-8b2e-64d545ad624a"/>
+								<text><![CDATA[Categoria]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="130" height="20" uuid="9d2f4fa1-3df8-4873-a696-a1390a149ebb"/>
+								<textFieldExpression><![CDATA[$F{Categoria}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="132" uuid="48682256-8ea9-497c-96c1-2f03a164ead4">
+						<jr:columnHeader style="Table_CH" height="20">
+							<staticText>
+								<reportElement x="0" y="0" width="132" height="20" uuid="71426a02-1a1b-4458-891c-ca584bfbd9c6"/>
+								<text><![CDATA[UMedida]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="132" height="20" uuid="38569047-ea38-4eee-96d3-7d4185427436"/>
+								<textFieldExpression><![CDATA[$F{UMedida}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

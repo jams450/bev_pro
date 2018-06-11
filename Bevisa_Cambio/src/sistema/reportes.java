@@ -1732,7 +1732,9 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
+            String respuesta = JOptionPane.showInputDialog(this, "Factor (Conversion de dolar)");
             c.put("ano", this.jano_inventario.getYear()+"");
+            c.put("factor", Double.parseDouble(respuesta));
              switch(this.cbtipoinventario.getSelectedIndex())
             {
                 case 0:
@@ -1774,6 +1776,8 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
+            String respuesta = JOptionPane.showInputDialog(this, "Factor (Conversion de dolar)");
+            c.put("factor", Double.parseDouble(respuesta) );
             c.put("mes", this.jmes_inventario.getMonth()+1+"");
             c.put("ano", this.jano_inventario.getYear()+"");
              switch(this.cbtipoinventario.getSelectedIndex())
@@ -1830,8 +1834,10 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
+            String respuesta = JOptionPane.showInputDialog(this, "Factor (Conversion de dolar)");
             c.put("mes", this.jmes_prodruccion.getMonth()+1+"");
             c.put("ano", this.jano_prodruccion.getYear()+"");
+            c.put("factor", Double.parseDouble(respuesta));
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
             JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
             viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
@@ -1862,7 +1868,9 @@ public class reportes extends javax.swing.JFrame {
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
             Map c = new HashMap();
+            String respuesta = JOptionPane.showInputDialog(this, "Factor (Conversion de dolar)");
             c.put("ano",this.jano_prodruccion.getYear()+"");
+            c.put("factor",Double.parseDouble(respuesta));
             JasperPrint jprint = JasperFillManager.fillReport(path, c, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
             JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
             viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Clientes_todos" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="49a5ca6b-0e12-4e6b-bac5-48d706030566">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Trabajo"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString>
+		<![CDATA[select vendedores.id,  vendedores.nombre,  vendedores.telefono,
+  vendedores.correo,  delegacion.nombre,  vendedores.colonia,
+ vendedores.calle,  vendedores.noint,  vendedores.noext 
+ from vendedores join delegacion
+  on  vendedores.iddelegacion = delegacion.id]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vendedores"/>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vendedores"/>
+	</field>
+	<field name="telefono" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="telefono"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vendedores"/>
+	</field>
+	<field name="correo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="correo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vendedores"/>
+	</field>
+	<field name="COLUMN_5" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="delegacion"/>
+	</field>
+	<field name="colonia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="colonia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vendedores"/>
+	</field>
+	<field name="calle" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="calle"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vendedores"/>
+	</field>
+	<field name="noint" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="noint"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vendedores"/>
+	</field>
+	<field name="noext" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="noext"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vendedores"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="96" splitType="Stretch">
+			<image>
+				<reportElement x="10" y="13" width="50" height="37" uuid="909daad5-76cb-49b7-96b4-031436dcacea"/>
+				<imageExpression><![CDATA["bevisalogo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="127" y="10" width="293" height="44" uuid="29c1fa18-3310-4a61-b71f-9b26ac258e3e"/>
+				<textElement textAlignment="Center">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Vendedores]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="450" y="40" width="100" height="30" uuid="48ed710b-dda0-49db-91f6-9fc282447c38"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="450" y="10" width="100" height="30" uuid="45467d86-bb3b-483f-9279-04f1d0126bf0"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement x="1" y="80" width="570" height="1" uuid="f097ecbb-e0bb-483e-9561-7383a54f072a"/>
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="137" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="30" width="70" height="20" uuid="44b70165-3adf-463f-ad50-664141c1017a"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Telefono :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="60" height="20" uuid="f855c9c0-7896-4ad3-bff0-0884586c1d2c"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Correo :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="80" height="20" uuid="5e958afc-1bb5-4284-8179-12339dcaf29e"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Delegacion :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="30" width="80" height="20" uuid="bfdbd270-d1ee-4ea6-9a2a-00722715b964"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Colonia :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="245" y="50" width="65" height="20" uuid="a4ce6300-5338-46e8-acf7-ffc504714b22"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Calle :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="70" width="60" height="20" uuid="0dba4580-6edc-4e72-8947-1b4842ff0149"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[No. Int :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="255" y="90" width="55" height="20" uuid="63d3019c-d16a-4328-abe1-c22067a506c6"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[No. Ext :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="30" width="80" height="20" uuid="1ad5e6b6-169e-4264-b54e-e3d92a3d89ce"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="50" width="150" height="20" uuid="e3c8f920-3f39-4a95-8142-195e2aebd0e5"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{correo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="70" width="110" height="20" uuid="23c559ce-bd70-4df2-9b9c-bbf6b6c2ab02"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COLUMN_5}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="30" width="150" height="20" uuid="02dbe728-d8a2-44d3-a309-c1772391f3a6"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{colonia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="50" width="150" height="20" uuid="324d414f-b837-434b-8641-e6f4b2381036"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{calle}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="70" width="80" height="20" uuid="31bd7e7a-9f8d-4649-8a1b-df33afd6fe8d"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{noint}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="90" width="80" height="20" uuid="32e5b6af-778f-41b9-a094-3747b3ca3427"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{noext}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="10" width="250" height="20" uuid="940bc932-1cb2-43b3-b301-3ce5a32ab737"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="230" y="10" width="80" height="20" uuid="1d53ee12-8b38-4dcd-919c-2293e987f5f8"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Nombre :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="10" width="50" height="20" uuid="11376065-ec19-4029-8383-a3673abd6b25"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[ID :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="50" y="10" width="50" height="20" uuid="f3dca454-e14f-43a5-8005-7b4bb5918647"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement x="1" y="120" width="570" height="1" uuid="981045ef-ef12-4492-952f-530155323f4c"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

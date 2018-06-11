@@ -659,7 +659,7 @@ public class Ventas extends javax.swing.JFrame {
                                JasperExportManager.exportReportToPdfFile(jprint, s+"\\Tickets\\Venta-"+id_venta+".pdf");
 
 
-                               if (JOptionPane.showConfirmDialog(null, "¿Desea Imprimir el ticket?\n(Por regla, el ticket se imprime dos veces))", "Imprimir", JOptionPane.YES_NO_OPTION)==0)
+                               if (this.cbconcepto.getSelectedIndex()==1)
                                {
                                    for (int i = 0; i < 2; i++) {
                                         PrintRequestAttributeSet printRequestAttributeSet = new HashPrintRequestAttributeSet();
