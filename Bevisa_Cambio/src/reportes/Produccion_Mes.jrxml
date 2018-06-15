@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Produccion_Mes" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6c50824a-b7d9-4caa-80a6-8bfc29052c0e">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Trabajo"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -47,7 +47,7 @@
 		<parameter name="unidades" class="java.lang.Double"/>
 		<queryString>
 			<![CDATA[Select inventario.id, productos.nombre as Nombre, inventario.lote as Lote, mp_odp.cantidad as Cantidad, umedida.nombre as UMedida, 
-productos.clave  as Clave , mp_odp.costo  as Costo, monedas.nombre as mo
+productos.clave  as Clave , productos.pventa  as Costo, monedas.nombre as mo
 from mp_odp 
 join inventario on inventario.id = mp_odp.idinven 
 join productos on inventario.idproducto = productos.id
@@ -80,17 +80,17 @@ join umedida on umedida.id = productos.idmedida where mp_odp.idodp =  $P{ID_ODP}
 		</field>
 		<field name="Costo" class="java.lang.Double">
 			<property name="com.jaspersoft.studio.field.label" value="Costo"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="mp_odp"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="productos"/>
 		</field>
 		<field name="mo" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="mo"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="monedas"/>
 		</field>
 		<variable name="SUMA_TOTAL" class="java.lang.Double" calculation="Sum">
-			<variableExpression><![CDATA[$P{unidades}*$V{factor}]]></variableExpression>
+			<variableExpression><![CDATA[$F{Cantidad}*$V{factor}]]></variableExpression>
 		</variable>
 		<variable name="factor" class="java.lang.Double">
-			<variableExpression><![CDATA[$F{mo}.equals( "USD" )==true?$P{factor}*($F{Costo}/$P{unidades}):$F{Costo}/$P{unidades}]]></variableExpression>
+			<variableExpression><![CDATA[$F{mo}.equals( "USD" )==true?$P{factor}*$F{Costo}:$F{Costo}*1]]></variableExpression>
 		</variable>
 		<variable name="SUMA_Unitaria" class="java.lang.Double" calculation="Sum">
 			<variableExpression><![CDATA[$V{factor}]]></variableExpression>
@@ -138,7 +138,7 @@ where estatus =2 and month(fecha) = $P{mes}   and year(fecha) =  $P{ano}]]>
 				<imageExpression><![CDATA["bevisalogo.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="220" y="0" width="140" height="35" uuid="3b955dc0-b9dd-4c76-a6f7-cb835035ceb5"/>
+				<reportElement x="210" y="0" width="140" height="35" uuid="3b955dc0-b9dd-4c76-a6f7-cb835035ceb5"/>
 				<textElement textAlignment="Center">
 					<font size="24"/>
 				</textElement>
@@ -393,7 +393,7 @@ where estatus =2 and month(fecha) = $P{mes}   and year(fecha) =  $P{ano}]]>
 								<textElement textAlignment="Center">
 									<font size="9"/>
 								</textElement>
-								<text><![CDATA[Costo U
+								<text><![CDATA[Costo U.
 ]]></text>
 							</staticText>
 						</jr:columnHeader>
@@ -403,7 +403,7 @@ where estatus =2 and month(fecha) = $P{mes}   and year(fecha) =  $P{ano}]]>
 								<textElement>
 									<font size="9"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($F{Costo}/$P{unidades})]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($F{Costo})]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -435,7 +435,7 @@ where estatus =2 and month(fecha) = $P{mes}   and year(fecha) =  $P{ano}]]>
 							<textField>
 								<reportElement x="0" y="0" width="60" height="20" uuid="a166443e-fdfd-4485-b4ab-edc281c337e9"/>
 								<textElement textAlignment="Right"/>
-								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($V{SUMA_Unitaria})]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($V{SUMA_TOTAL}/$P{unidades})]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
@@ -483,7 +483,7 @@ where estatus =2 and month(fecha) = $P{mes}   and year(fecha) =  $P{ano}]]>
 								<textElement textAlignment="Right">
 									<font size="9"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($P{unidades}*$V{factor})]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($F{Cantidad}*$V{factor})]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
