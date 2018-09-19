@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Clientes_C" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="802b6e74-bedc-4d16-acb1-f5e1a7a9f4f5">
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Clientes_C" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="802b6e74-bedc-4d16-acb1-f5e1a7a9f4f5">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Trabajo"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -33,12 +42,19 @@
 	<subDataset name="Dataset1" uuid="23caf934-67b4-4fc9-a130-9695c7bfb662">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Trabajo"/>
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<parameter name="ID_C" class="java.lang.Integer"/>
+		<parameter name="vende" class="java.lang.String"/>
+		<parameter name="query" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{vende}.equals("*")  
+? " select clientes.id as ID, clientes.nombre as Nombre, clientes.telefono as Telefono, clientes.correo as Correo, clientes.rfc as RFC,clientes.contacto as Contacto from clientes "
+: " select clientes.id as ID, clientes.nombre as Nombre, clientes.telefono as Telefono, clientes.correo as Correo, clientes.rfc as RFC,clientes.contacto as Contacto from clientes where clientes.idvendedor=   " +$P{vende}]]></defaultValueExpression>
+		</parameter>
 		<queryString>
-			<![CDATA[select clientes.nombre as Nombre, clientes.telefono as Telefono, clientes.celular as Celular, clientes.correo as Correo,
-delegacion.nombre as 'Dele/Muni', clientes.colonia as Colonia, clientes.calle as Calle, clientes.noint as Noint, clientes.noext as Noext,clientes.contacto as Contacto from clientes
-join delegacion on delegacion.id = clientes.iddelegacion where estatus = $P{ID_C}]]>
+			<![CDATA[$P!{query}]]>
 		</queryString>
+		<field name="ID" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="ID"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
+		</field>
 		<field name="Nombre" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="Nombre"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
@@ -47,32 +63,12 @@ join delegacion on delegacion.id = clientes.iddelegacion where estatus = $P{ID_C
 			<property name="com.jaspersoft.studio.field.label" value="Telefono"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
 		</field>
-		<field name="Celular" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.label" value="Celular"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
-		</field>
 		<field name="Correo" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="Correo"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
 		</field>
-		<field name="Dele/Muni" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.label" value="Dele/Muni"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="delegacion"/>
-		</field>
-		<field name="Colonia" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.label" value="Colonia"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
-		</field>
-		<field name="Calle" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.label" value="Calle"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
-		</field>
-		<field name="Noint" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.label" value="Noint"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
-		</field>
-		<field name="Noext" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.label" value="Noext"/>
+		<field name="RFC" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="RFC"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
 		</field>
 		<field name="Contacto" class="java.lang.String">
@@ -80,7 +76,8 @@ join delegacion on delegacion.id = clientes.iddelegacion where estatus = $P{ID_C
 			<property name="com.jaspersoft.studio.field.tree.path" value="clientes"/>
 		</field>
 	</subDataset>
-	<parameter name="ID_C" class="java.lang.Integer"/>
+	<parameter name="id_vendedor" class="java.lang.String"/>
+	<parameter name="path" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select  1]]>
 	</queryString>
@@ -93,62 +90,88 @@ join delegacion on delegacion.id = clientes.iddelegacion where estatus = $P{ID_C
 	<title>
 		<band height="79" splitType="Stretch">
 			<image>
-				<reportElement x="40" y="4" width="139" height="63" uuid="fe86a101-bc41-4a35-a32c-5e59e040ec12"/>
-				<imageExpression><![CDATA["bevisalogo.png"]]></imageExpression>
+				<reportElement x="0" y="7" width="100" height="63" uuid="fe86a101-bc41-4a35-a32c-5e59e040ec12"/>
+				<imageExpression><![CDATA[$P{path}+"/bevisalogo.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="340" y="10" width="103" height="35" uuid="74b0b93d-e976-44c3-bf93-0a5cb8a151ae"/>
+				<reportElement x="212" y="9" width="133" height="46" uuid="74b0b93d-e976-44c3-bf93-0a5cb8a151ae"/>
 				<textElement textAlignment="Center">
 					<font size="24"/>
 				</textElement>
 				<text><![CDATA[Clientes]]></text>
 			</staticText>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="650" y="10" width="100" height="30" uuid="36459725-19b0-4847-80f6-ca52ca72fd2a"/>
+				<reportElement x="470" y="0" width="100" height="30" uuid="36459725-19b0-4847-80f6-ca52ca72fd2a"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="650" y="40" width="100" height="30" uuid="329de61b-d32e-4a9b-9e3e-bb32c92c1768"/>
+				<reportElement x="470" y="30" width="100" height="30" uuid="329de61b-d32e-4a9b-9e3e-bb32c92c1768"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<detail>
-		<band height="56" splitType="Stretch">
+		<band height="63" splitType="Stretch">
 			<componentElement>
-				<reportElement x="0" y="0" width="750" height="40" uuid="02877a10-c743-46ae-acc0-33921651d7f4">
+				<reportElement x="10" y="0" width="560" height="40" uuid="02877a10-c743-46ae-acc0-33921651d7f4">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="Dataset1" uuid="ce7e4c1d-c2d2-421f-b702-512da045cb72">
-						<datasetParameter name="ID_C">
-							<datasetParameterExpression><![CDATA[$P{ID_C}]]></datasetParameterExpression>
+					<datasetRun subDataset="Dataset1" uuid="2d0c1913-e3e2-4c99-a05a-4fae6a70dd7b">
+						<datasetParameter name="vende">
+							<datasetParameterExpression><![CDATA[$P{id_vendedor}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
-					<jr:column width="100" uuid="40430c7a-0828-47de-91fc-f454885b25c9">
-						<jr:columnHeader style="Table_CH" height="20">
+					<jr:column width="40" uuid="1a761b4a-4dc3-4b79-889b-5028dac8f5fb">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="100" height="20" uuid="52dc349f-8676-4974-8a99-8ad881eccbc3"/>
+								<reportElement x="0" y="0" width="40" height="20" uuid="fabdeb08-826c-44f7-875d-608b5f19c0e7"/>
+								<textElement textAlignment="Center">
+									<font size="12"/>
+								</textElement>
+								<text><![CDATA[ID]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isStretchWithOverflow="true">
+								<reportElement x="0" y="0" width="40" height="20" uuid="9d5f6882-fe7d-4921-a6f2-5c402dffeae0"/>
+								<textFieldExpression><![CDATA[$F{ID}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="40430c7a-0828-47de-91fc-f454885b25c9">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="20" uuid="52dc349f-8676-4974-8a99-8ad881eccbc3"/>
+								<textElement textAlignment="Center">
+									<font size="12"/>
+								</textElement>
 								<text><![CDATA[Nombre]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="20">
 							<textField isStretchWithOverflow="true">
-								<reportElement x="0" y="0" width="100" height="20" uuid="1e78ab1d-d33b-4b49-b57f-e64f716d5225"/>
+								<reportElement x="0" y="0" width="140" height="20" uuid="1e78ab1d-d33b-4b49-b57f-e64f716d5225"/>
 								<textFieldExpression><![CDATA[$F{Nombre}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="90" uuid="9282bffd-7c3a-4b95-9a40-f71892949f4a">
-						<jr:columnHeader style="Table_CH" height="20">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="90" height="20" uuid="9db82fa0-444e-4a77-bcd3-77df2477b01a"/>
+								<textElement textAlignment="Center">
+									<font size="12"/>
+								</textElement>
 								<text><![CDATA[Telefono]]></text>
 							</staticText>
 						</jr:columnHeader>
@@ -159,24 +182,14 @@ join delegacion on delegacion.id = clientes.iddelegacion where estatus = $P{ID_C
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="80" uuid="003af538-cc2a-41d8-9808-25ae370aa821">
-						<jr:columnHeader style="Table_CH" height="20">
-							<staticText>
-								<reportElement x="0" y="0" width="80" height="20" uuid="43261e26-2459-4e41-b4e8-758414df487c"/>
-								<text><![CDATA[Celular]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:detailCell style="Table_TD" height="20">
-							<textField isStretchWithOverflow="true">
-								<reportElement x="0" y="0" width="80" height="20" uuid="580c7a27-3f52-4b86-86ca-a0b607ae2159"/>
-								<textFieldExpression><![CDATA[$F{Celular}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
 					<jr:column width="100" uuid="0660be4d-98a3-4f1f-b154-292b57653079">
-						<jr:columnHeader style="Table_CH" height="20">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="100" height="20" uuid="5701ecb4-2dc2-405d-9f05-762963c1b4ce"/>
+								<textElement textAlignment="Center">
+									<font size="12"/>
+								</textElement>
 								<text><![CDATA[Correo]]></text>
 							</staticText>
 						</jr:columnHeader>
@@ -187,86 +200,38 @@ join delegacion on delegacion.id = clientes.iddelegacion where estatus = $P{ID_C
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="80" uuid="13f6aa7d-2c8c-4613-a1b2-7dd3eb728a56">
-						<jr:columnHeader style="Table_CH" height="20">
+					<jr:column width="100" uuid="f53a3551-d1c4-4f66-84ac-571c3c26084d">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="80" height="20" uuid="6a8ecd07-7c83-452d-94e6-eeb5c0e6ef21"/>
-								<text><![CDATA[Dele/Muni]]></text>
+								<reportElement x="0" y="0" width="100" height="20" uuid="e7d2c25a-7fd9-4e8e-ba14-c98605282c66"/>
+								<textElement textAlignment="Center">
+									<font size="12"/>
+								</textElement>
+								<text><![CDATA[RFC]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="20">
 							<textField isStretchWithOverflow="true">
-								<reportElement x="0" y="0" width="80" height="20" uuid="b19ffbd1-69aa-4eb2-8978-6aaef4d6269e"/>
-								<textFieldExpression><![CDATA[$F{Dele/Muni}]]></textFieldExpression>
+								<reportElement x="0" y="0" width="100" height="20" uuid="e89b54a4-3d89-4c04-ad50-30ad815acfd4"/>
+								<textFieldExpression><![CDATA[$F{RFC}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="80" uuid="3d245637-6ba1-4a10-84c9-29755493a91c">
-						<jr:columnHeader style="Table_CH" height="20">
+					<jr:column width="90" uuid="3a08a9d1-13df-49a2-be11-192326c3b1e3">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="80" height="20" uuid="40dbf07c-3254-41c3-b11e-4305ff71bb19"/>
-								<text><![CDATA[Colonia]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:detailCell style="Table_TD" height="20">
-							<textField isStretchWithOverflow="true">
-								<reportElement x="0" y="0" width="80" height="20" uuid="85d8da8e-80f7-4974-888e-74dc7b3d40e9"/>
-								<textFieldExpression><![CDATA[$F{Colonia}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="70" uuid="4aab3131-8a72-4143-b657-a31c70363960">
-						<jr:columnHeader style="Table_CH" height="20">
-							<staticText>
-								<reportElement x="0" y="0" width="70" height="20" uuid="8635865f-8809-420b-aef5-24546622e69a"/>
-								<text><![CDATA[Calle]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:detailCell style="Table_TD" height="20">
-							<textField isStretchWithOverflow="true">
-								<reportElement x="0" y="0" width="70" height="20" uuid="49dc1a84-a802-41a2-af9d-01438f2a929d"/>
-								<textFieldExpression><![CDATA[$F{Calle}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="40" uuid="d0cb37df-f694-4482-aa1f-c8f8691bdea6">
-						<jr:columnHeader style="Table_CH" height="20">
-							<staticText>
-								<reportElement x="0" y="0" width="40" height="20" uuid="ab305075-b65c-45ec-9dc7-102caa49efeb"/>
-								<text><![CDATA[Noint]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:detailCell style="Table_TD" height="20">
-							<textField isStretchWithOverflow="true">
-								<reportElement x="0" y="0" width="40" height="20" uuid="e4053ed3-c1f3-4765-ba0f-f9f3f975d790"/>
-								<textFieldExpression><![CDATA[$F{Noint}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="30" uuid="6dc316fe-0268-4417-83e2-4966be6a4ee4">
-						<jr:columnHeader style="Table_CH" height="20">
-							<staticText>
-								<reportElement x="0" y="0" width="30" height="20" uuid="5977969e-6c35-405d-aaa4-4c20ff4e6d50"/>
-								<text><![CDATA[Noext]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:detailCell style="Table_TD" height="20">
-							<textField isStretchWithOverflow="true">
-								<reportElement x="0" y="0" width="30" height="20" uuid="8fbd5ca3-f7dd-4ae4-9856-d71f9126eabd"/>
-								<textFieldExpression><![CDATA[$F{Noext}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="80" uuid="3a08a9d1-13df-49a2-be11-192326c3b1e3">
-						<jr:columnHeader style="Table_CH" height="20">
-							<staticText>
-								<reportElement x="0" y="0" width="80" height="20" uuid="b0ab3109-86d3-4df3-9109-a0e6b51513eb"/>
+								<reportElement x="0" y="0" width="90" height="20" uuid="b0ab3109-86d3-4df3-9109-a0e6b51513eb"/>
+								<textElement textAlignment="Center">
+									<font size="12"/>
+								</textElement>
 								<text><![CDATA[Contacto]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="20">
 							<textField isStretchWithOverflow="true">
-								<reportElement x="0" y="0" width="80" height="20" uuid="2524f2cb-3b8b-47d1-a458-c75a079e7356"/>
+								<reportElement x="0" y="0" width="90" height="20" uuid="2524f2cb-3b8b-47d1-a458-c75a079e7356"/>
 								<textFieldExpression><![CDATA[$F{Contacto}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>

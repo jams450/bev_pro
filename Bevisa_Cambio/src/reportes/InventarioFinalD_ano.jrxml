@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Inventario_Meses" pageWidth="612" pageHeight="792" whenNoDataType="NoPages" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="81224b0c-1913-4b08-892e-be99464a5a6a">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Trabajo"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -53,7 +53,7 @@ join productos on productos.id = inventario.idproducto
 join umedida on umedida.id = productos.idmedida 
 join monedas on monedas.id=productos.idmoneda
 where (productos.idcategoria = $P{c1}   or productos.idcategoria =  $P{c2})  and  year(fechaentrada) <= $P{a} and inventario.cantidadactual > 0
-group by productos.nombre
+group by productos.clave
 order by productos.nombre asc]]>
 		</queryString>
 		<field name="nombre" class="java.lang.String">
@@ -80,10 +80,13 @@ order by productos.nombre asc]]>
 			<property name="com.jaspersoft.studio.field.tree.path" value="monedas"/>
 		</field>
 		<variable name="suma" class="java.lang.Double" calculation="Sum">
-			<variableExpression><![CDATA[$F{sum(inventario.cantidadactual)}*$P{factor}]]></variableExpression>
+			<variableExpression><![CDATA[$V{unitario}]]></variableExpression>
 		</variable>
 		<variable name="conversion" class="java.lang.Double">
 			<variableExpression><![CDATA[$F{COLUMN_6}.equals( "USD" )==true?$F{pventa}*$P{factor}:1*$F{pventa}]]></variableExpression>
+		</variable>
+		<variable name="unitario" class="java.lang.Double">
+			<variableExpression><![CDATA[$F{sum(inventario.cantidadactual)}*$V{conversion}]]></variableExpression>
 		</variable>
 	</subDataset>
 	<parameter name="ano" class="java.lang.String"/>
@@ -340,7 +343,7 @@ order by productos.nombre asc]]>
 								<textElement textAlignment="Right">
 									<font fontName="Arial" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($V{suma})]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($V{suma}.doubleValue())]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
@@ -358,7 +361,7 @@ order by productos.nombre asc]]>
 								<textElement textAlignment="Right">
 									<font fontName="Arial" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($F{sum(inventario.cantidadactual)}*$V{conversion})]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($V{unitario}.doubleValue())]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

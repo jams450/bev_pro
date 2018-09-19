@@ -39,7 +39,8 @@
 		<queryString>
 			<![CDATA[select productos.nombre as Producto, sum(ventas_productos.cantidad) as Cantidad , sum(ventas_productos.total) as Precio from ventas_productos 
 join productos on productos.id = ventas_productos.idproducto join ventas on ventas.id = ventas_productos.idventa
-where ventas.tipo= $P{tipo}  and month(ventas.fecha) =  $P{mes}  and year(ventas.fecha) = $P{a } group by ventas_productos.idproducto order by sum(ventas_productos.cantidad) desc]]>
+where ventas.tipo= $P{tipo}  and month(ventas.fecha) =  $P{mes}  and year(ventas.fecha) = $P{a }
+ and ventas.idestatus=1 group by ventas_productos.idproducto order by sum(ventas_productos.cantidad) desc]]>
 		</queryString>
 		<field name="Producto" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="Producto"/>

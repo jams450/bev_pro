@@ -4716,11 +4716,11 @@ public class Datos extends javax.swing.JFrame {
     public boolean validar_formato_prueba()
     {
         boolean valida=true;
-        if (!(this.txtparametro.getText().matches("^[A-Za-z\\s]+$") || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$") || this.txtparametro.getText().matches("^>=[0-9]+(.[0-9]+)?|<=[0-9]+(.[0-9]+)?$") 
-             || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?$")) ) {
+        /*if (!(this.txtparametro.getText().matches("^[A-Za-zñÑáéíóúÁÍÚÉÓ\\s]+$") || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$") || this.txtparametro.getText().matches("^>[0-9]+(.[0-9]+)?|<[0-9]+(.[0-9]+)?$") 
+             || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?$") || this.txtparametro.getText().matches("^[0-9]+(.[0-9]+)?\\sMAX$") )) {
             valida = false;
             this.txtparametro.setBackground(Color.decode("#FFCCCC"));
-        }
+        }*/
         return valida;
     }
     
@@ -4809,7 +4809,7 @@ public class Datos extends javax.swing.JFrame {
                     prueba.setDeterminacion(this.txtdeterminacion.getText().toUpperCase() );
                     prueba.setParametro(this.txtparametro.getText().toUpperCase());
                     prueba.setMetodo(this.txtmetodo.getText().toUpperCase() );
-                    if (pr.existe_prueba(this.txtdeterminacion.getText().toUpperCase())) {
+                    if (pr.existe_prueba(this.txtdeterminacion.getText().toUpperCase(),this.txtidprueba.getText())) {
                         pr.insert(prueba, cate);
                         actualizarprueba();
                         this.txtdeterminacion.setText("");

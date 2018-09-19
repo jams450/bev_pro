@@ -598,9 +598,21 @@ public class Ventas extends javax.swing.JFrame {
                                     if (cantidad != 0) {
 
                                         if (aux >= 0) {
-                                            this.venta.getDetalle().get(i).setIdventa(id_venta);
-                                            this.venta.getDetalle().get(i).setIdinven(Integer.parseInt(lotes.get(j)[0]));
-                                            db.insert_dv(this.venta.getDetalle().get(i));
+                                            DetalleVenta aux_dt=this.venta.getDetalle().get(i);
+                                            DetalleVenta dt=new DetalleVenta();
+                                            dt.setIdventa(id_venta);
+                                            dt.setIdinven(Integer.parseInt(lotes.get(j)[0]));
+                                            dt.setIdproducto(aux_dt.getIdproducto());
+                                            dt.setPventa(aux_dt.getPventa());
+                                            dt.setCantidad(cantidad);
+                                            dt.setImporte(aux_dt.getPventa()*cantidad);
+                                            dt.setDescuento(aux_dt.getDescuento());
+                                            dt.setIdescuento(dt.getImporte()*(dt.getDescuento()/100));
+                                            dt.setIva(aux_dt.getIva()/cantidad);
+                                            dt.setTotal(dt.getImporte()-dt.getIdescuento()+dt.getIva());
+                                            dt.setComision(aux_dt.getComision()/cantidad);
+                                            
+                                            db.insert_dv(dt);
 
                                             Inventario inven = new Inventario();
                                             inven.setId(Integer.parseInt(lotes.get(j)[0]));
@@ -610,9 +622,20 @@ public class Ventas extends javax.swing.JFrame {
                                         }
                                         else
                                         {
-                                            this.venta.getDetalle().get(i).setIdventa(id_venta);
-                                            this.venta.getDetalle().get(i).setIdventa(Integer.parseInt(lotes.get(j)[0]));
-                                            db.insert_dv(this.venta.getDetalle().get(i));
+                                            DetalleVenta aux_dt=this.venta.getDetalle().get(i);
+                                            DetalleVenta dt=new DetalleVenta();
+                                            dt.setIdventa(id_venta);
+                                            dt.setIdinven(Integer.parseInt(lotes.get(j)[0]));
+                                            dt.setIdproducto(aux_dt.getIdproducto());
+                                            dt.setPventa(aux_dt.getPventa());
+                                            dt.setCantidad(cantidad_inventario);
+                                            dt.setImporte(aux_dt.getPventa()*cantidad_inventario);
+                                            dt.setDescuento(aux_dt.getDescuento());
+                                            dt.setIdescuento(dt.getImporte()*(dt.getDescuento()/100));
+                                            dt.setIva(aux_dt.getIva()/cantidad_inventario);
+                                            dt.setTotal(dt.getImporte()-dt.getIdescuento()+dt.getIva());
+                                            dt.setComision(aux_dt.getComision()/cantidad_inventario);
+                                            db.insert_dv(dt);
 
                                             Inventario inven = new Inventario();
                                             inven.setId(Integer.parseInt(lotes.get(j)[0]));

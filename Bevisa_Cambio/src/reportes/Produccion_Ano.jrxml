@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Produccion_Mes" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6c50824a-b7d9-4caa-80a6-8bfc29052c0e">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Trabajo"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -87,13 +87,13 @@ join umedida on umedida.id = productos.idmedida where mp_odp.idodp =  $P{ID_ODP}
 			<property name="com.jaspersoft.studio.field.tree.path" value="monedas"/>
 		</field>
 		<variable name="SUMA_TOTAL" class="java.lang.Double" calculation="Sum">
-			<variableExpression><![CDATA[$F{Cantidad}*$V{factor}]]></variableExpression>
+			<variableExpression><![CDATA[$V{SUMA_Unitaria}]]></variableExpression>
 		</variable>
 		<variable name="factor" class="java.lang.Double">
 			<variableExpression><![CDATA[$F{mo}.equals( "USD" )==true?$P{factor}*$F{Costo}:$F{Costo}*1]]></variableExpression>
 		</variable>
 		<variable name="SUMA_Unitaria" class="java.lang.Double">
-			<variableExpression><![CDATA[$F{Cantidad}*$V{factor}/$P{unidades}]]></variableExpression>
+			<variableExpression><![CDATA[$F{Cantidad}*$V{factor}]]></variableExpression>
 		</variable>
 	</subDataset>
 	<parameter name="ano" class="java.lang.String"/>
@@ -450,7 +450,7 @@ where estatus =2 and year(fecha) =  $P{ano}]]>
 								<textElement textAlignment="Right">
 									<font size="9"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($V{SUMA_TOTAL}*1)]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($V{SUMA_TOTAL}.doubleValue())]]></textFieldExpression>
 							</textField>
 						</jr:tableFooter>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
@@ -468,7 +468,7 @@ where estatus =2 and year(fecha) =  $P{ano}]]>
 								<textElement textAlignment="Right">
 									<font size="9"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($F{Cantidad}*$V{factor})]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new java.text.DecimalFormat("$ #,##0.00").format($V{SUMA_Unitaria}.doubleValue())]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

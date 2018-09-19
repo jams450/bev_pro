@@ -53,7 +53,10 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.view.JasperViewer;
 
 
@@ -827,7 +830,7 @@ public class Movimientos extends javax.swing.JFrame {
 
         jLabel20.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel20.setText("Sensoriales");
-        LOP.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 100, -1, -1));
+        LOP.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 100, -1, -1));
 
         tblieracionmicrobiologicas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1248,13 +1251,18 @@ public class Movimientos extends javax.swing.JFrame {
             boolean mi=true;
 
             for (int i = 0; i < this.tbliberacionsensoriales.getRowCount(); i++) {
-                 String res=this.tbliberacionsensoriales.getValueAt(i, 1).toString().toUpperCase();
-                        if (res.isEmpty()) {
-                            se=false;
-                        }
+                String res=this.tbliberacionsensoriales.getValueAt(i, 1).toString().toUpperCase();
+                if (res.isEmpty()) {
+                    se=false;
+                }
             }
 
             for (int i = 0; i < this.tblieracionmicrobiologicas.getRowCount(); i++) {
+                String res=this.tblieracionmicrobiologicas.getValueAt(i, 1).toString().toUpperCase();
+                if (res.isEmpty()) {
+                    mi=false;
+                }
+                /*
                 if (this.mi.get(i)[4].matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$")) {
                     String[] c = this.mi.get(i)[4].split("-");
                     double n1=Double.parseDouble(c[0]);
@@ -1290,10 +1298,15 @@ public class Movimientos extends javax.swing.JFrame {
                             mi=false;
                         }
                     }
-                }
+                }*/
             }
 
             for (int i = 0; i < this.tblieracionfisicoquimicas.getRowCount(); i++) {
+                String res=this.tblieracionfisicoquimicas.getValueAt(i, 1).toString().toUpperCase();
+                if (res.isEmpty()) {
+                    mi=false;
+                }
+                /*
                 if (this.fi.get(i)[4].matches("^[0-9]+(.[0-9]+)?-[0-9]+(.[0-9]+)?$")) {
                     String[] c = this.fi.get(i)[4].split("-");
                     double n1=Double.parseDouble(c[0]);
@@ -1329,100 +1342,110 @@ public class Movimientos extends javax.swing.JFrame {
                             fi=false;
                         }
                     }
-                }
+                }*/
             }
 
             if (se) {
                 if (mi) {
                     if (fi) {
-                        String query="update ordenes_prod set estatus = 2, observaciones = '"+this.txtcomentariosLIB.getText()+"' where id = "+ this.cbodpLIB.getSelectedItem().toString();
-                        this.dbc.operacion(query);
-                        
-                        query="insert into resultadosp_odp (idodp, idprueba, resultado) values (?,?,?)";
-                        for (int i = 0; i < this.se.size(); i++) {
+                        int n = JOptionPane.showConfirmDialog(null,"¿Seguro que dar de alta los resultados?","Datos Correctos",JOptionPane.YES_NO_OPTION);
+                        if (n== JOptionPane.YES_OPTION) {
+                            String query="update ordenes_prod set estatus = 2, observaciones = '"+this.txtcomentariosLIB.getText()+"' where id = "+ this.cbodpLIB.getSelectedItem().toString();
+                            this.dbc.operacion(query);
+
+                            query="insert into resultadosp_odp (idodp, idprueba, resultado) values (?,?,?)";
+                            for (int i = 0; i < this.se.size(); i++) {
+                                PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
+
+                                ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
+                                ps.setString(2, this.se.get(i)[0]);
+                                ps.setString(3, this.sensoriales.getValueAt(i, 1).toString());
+
+                                ps.executeUpdate();
+                                ps.close();
+                            }
+
+                            for (int i = 0; i < this.mi.size(); i++) {
+                                PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
+
+                                ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
+                                ps.setString(2, this.mi.get(i)[0]);
+                                ps.setString(3, this.micro.getValueAt(i, 1).toString());
+
+                                ps.executeUpdate();
+                                ps.close();
+                            }
+
+                            for (int i = 0; i < this.fi.size(); i++) {
+                                PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
+
+                                ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
+                                ps.setString(2, this.fi.get(i)[0]);
+                                ps.setString(3, this.fisico.getValueAt(i, 1).toString());
+
+                                ps.executeUpdate();
+                                ps.close();
+                            }
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                            //insertar pt en inventario
+                            query="insert into inventario(idproducto, fechaentrada, cantidadactual,lote, idopp,facturano, cantidad,costo,fechacaducidad) values (?,?,?,?,?,?,?,?,?)";
                             PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
-
-                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
-                            ps.setString(2, this.se.get(i)[0]);
-                            ps.setString(3, this.sensoriales.getValueAt(i, 1).toString());
-
+                            ps.setString(1, this.txtproductoidliberacion.getText());
+                            ps.setString(2, this.fechadividir(formatter.format(this.jdfechaLIB.getDate()), 1) );
+                            String q2 =this.dbc.seleccionarid("select cantidad from ordenes_prod where id = "+this.cbodpLIB.getSelectedItem().toString());
+                            ps.setString(3, q2);
+                            ps.setString(4, this.cbodpLIB.getSelectedItem().toString());
+                            ps.setString(5, this.cbodpLIB.getSelectedItem().toString());
+                            ps.setString(6, this.cbodpLIB.getSelectedItem().toString());
+                            ps.setString(7, q2);
+                            String q3 =this.dbc.seleccionarid("select sum(costo) from mp_odp where idodp = "+this.cbodpLIB.getSelectedItem().toString());
+                            ps.setString(8, q3);
+                            String q4 =this.dbc.seleccionarid("select mesescaducidad from productos where id = "+this.txtproductoidliberacion.getText());
+                            LocalDate dt =  LocalDate.parse(this.fechadividir(formatter.format(this.jdfechaLIB.getDate()), 1)).plusMonths(Integer.parseInt(q4));
+                            ps.setString(9, dt.getYear()+"-"+dt.getMonthValue()+"-"+dt.getDayOfMonth());
                             ps.executeUpdate();
                             ps.close();
+
+                            this.sensoriales.setRowCount(0);
+                            this.micro.setRowCount(0);
+                            this.fisico.setRowCount(0);
+
+                            this.txtcomentariosLIB.setText("");
+                            this.txtproductoidliberacion.setText("");
+                            this.txtproductoliberacion.setText("");
+
+                            this.btnaceptarLIB.setEnabled(false);
+
+                            JasperReport reporte; //Creo el objeto reporte
+                            // Ubicacion del Reporte
+                            String path = s+"\\Reportes\\Liberacion_ODP.jasper";
+                            try {
+                                reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
+                                Map id = new HashMap();
+                                id.put("ID_Inven", this.dbc.seleccionarid("select max(id) from inventario"));
+                                JasperPrint jprint = JasperFillManager.fillReport(path, id, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
+                                JasperExportManager.exportReportToPdfFile(jprint, s+"\\Liberacion\\Liberacion-"+this.cbodpLIB.getSelectedItem().toString()+".pdf");
+                                
+                                JRDocxExporter exporter = new JRDocxExporter();
+                                exporter.setExporterInput(new SimpleExporterInput(jprint));      
+                                File exportReportFile = new File(s+"\\Liberacion\\Liberacion-"+this.cbodpLIB.getSelectedItem().toString() + ".docx");
+                                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(exportReportFile));
+                                exporter.exportReport();
+                                
+                                
+                                
+                                JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
+                                viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
+                                viewer.setVisible(true); //Inicializamos la vista del Reporte
+
+                            } catch (Exception ex) {
+                                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                            combo();
+                            comboliberacion();
                         }
                         
-                        for (int i = 0; i < this.mi.size(); i++) {
-                            PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
-
-                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
-                            ps.setString(2, this.mi.get(i)[0]);
-                            ps.setString(3, this.micro.getValueAt(i, 1).toString());
-
-                            ps.executeUpdate();
-                            ps.close();
-                        }
-                         
-                        for (int i = 0; i < this.fi.size(); i++) {
-                            PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
-
-                            ps.setString(1, this.cbodpLIB.getSelectedItem().toString());
-                            ps.setString(2, this.fi.get(i)[0]);
-                            ps.setString(3, this.fisico.getValueAt(i, 1).toString());
-
-                            ps.executeUpdate();
-                            ps.close();
-                        }
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                        //insertar pt en inventario
-                        query="insert into inventario(idproducto, fechaentrada, cantidadactual,lote, idopp,facturano, cantidad,costo,fechacaducidad) values (?,?,?,?,?,?,?,?,?)";
-                        PreparedStatement ps= this.dbc.getCnx().prepareStatement(query); 
-                        ps.setString(1, this.txtproductoidliberacion.getText());
-                        ps.setString(2, this.fechadividir(formatter.format(this.jdfechaLIB.getDate()), 1) );
-                        String q2 =this.dbc.seleccionarid("select cantidad from ordenes_prod where id = "+this.cbodpLIB.getSelectedItem().toString());
-                        ps.setString(3, q2);
-                        ps.setString(4, this.cbodpLIB.getSelectedItem().toString());
-                        ps.setString(5, this.cbodpLIB.getSelectedItem().toString());
-                        ps.setString(6, this.cbodpLIB.getSelectedItem().toString());
-                        ps.setString(7, q2);
-                        String q3 =this.dbc.seleccionarid("select sum(costo) from mp_odp where idodp = "+this.cbodpLIB.getSelectedItem().toString());
-                        ps.setString(8, q3);
-                        String q4 =this.dbc.seleccionarid("select mesescaducidad from productos where id = "+this.txtproductoidliberacion.getText());
-                        LocalDate dt =  LocalDate.parse(this.fechadividir(formatter.format(this.jdfechaLIB.getDate()), 1)).plusMonths(Integer.parseInt(q4));
-                        ps.setString(9, dt.getYear()+"-"+dt.getMonthValue()+"-"+dt.getDayOfMonth());
-                        ps.executeUpdate();
-                        ps.close();
-                        
-                        this.sensoriales.setRowCount(0);
-                        this.micro.setRowCount(0);
-                        this.fisico.setRowCount(0);
-        
-                        this.txtcomentariosLIB.setText("");
-                        this.txtproductoidliberacion.setText("");
-                        this.txtproductoliberacion.setText("");
-                        
-                        this.btnaceptarLIB.setEnabled(false);
-                         
-                        
-                        
-                        
-                        JasperReport reporte; //Creo el objeto reporte
-                        // Ubicacion del Reporte
-                       String path = s+"\\Reportes\\Liberacion_ODP.jasper";
-                       try {
-                           reporte = (JasperReport) JRLoader.loadObjectFromFile(path); //Cargo el reporte al objeto
-                           Map id = new HashMap();
-                           id.put("ID_Inven", this.dbc.seleccionarid("select max(id) from inventario"));
-                           JasperPrint jprint = JasperFillManager.fillReport(path, id, this.dbc.getCnx()); //Llenado del Reporte con Tres parametros ubicacion,parametros,conexion a la base de datos
-                           JasperExportManager.exportReportToPdfFile(jprint, s+"\\Liberacion\\Liberacion-"+this.cbodpLIB.getSelectedItem().toString()+".pdf");
-                           JasperViewer viewer = new JasperViewer(jprint,false); //Creamos la vista del Reporte
-                           viewer.setDefaultCloseOperation(DISPOSE_ON_CLOSE); // Le agregamos que se cierre solo el reporte cuando lo cierre el usuario
-                           viewer.setVisible(true); //Inicializamos la vista del Reporte
-                           
-                       } catch (Exception ex) {
-                           Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-                       }
-                        
-                        combo();
-                        comboliberacion();
              
                         
                         
@@ -2263,6 +2286,7 @@ public class Movimientos extends javax.swing.JFrame {
         try{
             this.txtidproveedorOPP.setText(pr.getId() + "");
             this.txtnombreproveedorOPP.setText(pr.getNombre());
+            this.correo=pr.getCorreo();
             this.jdfechaopp.setDateFormatString("dd/MM/yyyy");
             Date date =new Date();
             this.jdfechaopp.setDate(date);
@@ -2415,17 +2439,17 @@ public class Movimientos extends javax.swing.JFrame {
                         props.setProperty("mail.smtp.user", "bevisagaleria@gmail.com");
                         props.setProperty("mail.smtp.auth", "true");
                         Session session = Session.getDefaultInstance(props);
-
+                        
                         BodyPart texto = new MimeBodyPart();
                         texto.setText("Mando orden de compra,favor de confirmar fecha indicada de entrega ");
                         BodyPart adjunto = new MimeBodyPart();
                         adjunto.setDataHandler(new DataHandler(new FileDataSource(s+"\\ODC\\ODC-"+id+".pdf")));
                         adjunto.setFileName("ODC.pdf");
 
+                        
                         MimeMultipart multiParte = new MimeMultipart();
                         multiParte.addBodyPart(texto);
                         multiParte.addBodyPart(adjunto);
-
 
                         MimeMessage message = new MimeMessage(session);
 
@@ -2442,7 +2466,8 @@ public class Movimientos extends javax.swing.JFrame {
                     }
                 }   
                 catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Error cargando el reporte");
+                    JOptionPane.showMessageDialog(null, "Error cargando el reporte "+ex);
+                    
                 }
                 this.tabla_OPP.setRowCount(0);
                 this.btnAgregarproOPP.setEnabled(false);

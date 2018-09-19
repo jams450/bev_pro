@@ -59,7 +59,7 @@ where ventas_productos.idventa = $P{ID_Venta}]]>
 		</field>
 	</subDataset>
 	<parameter name="ID_Venta" class="java.lang.String"/>
-	<parameter name="op" class="java.lang.String"/>
+	<parameter name="path" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select ventas.id, vendedores.nombre, clientes.nombre, ventas.total, sum(ventas_productos.cantidad),ventas.op from ventas
 join vendedores on vendedores.id = ventas.idvendedor 
@@ -96,8 +96,8 @@ join ventas_productos on ventas_productos.idventa = ventas.id where ventas.id= $
 		<band height="120" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<image>
-				<reportElement x="5" y="12" width="176" height="97" uuid="9efd115c-e3e9-4c7e-828c-f9c862112875"/>
-				<imageExpression><![CDATA["galeria.png"]]></imageExpression>
+				<reportElement x="5" y="11" width="176" height="97" uuid="9efd115c-e3e9-4c7e-828c-f9c862112875"/>
+				<imageExpression><![CDATA[$P{path}+"/galeria.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>
@@ -110,10 +110,11 @@ join ventas_productos on ventas_productos.idventa = ventas.id where ventas.id= $
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[BEVISA
-SANTA CRUZ S/N LT. C24
-CP:56600
+PRIVADA DE LAS AMÉRICAS
+MZ 6  LOTE 27 COL. TEPALCATES
+CP:09210
 TEL: 59-75-61-48
-VENTAS.JGALERIA@BEVISAGALERIA.COM]]></text>
+BEVISAGALERIA@GMAIL.COM]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -124,7 +125,7 @@ VENTAS.JGALERIA@BEVISAGALERIA.COM]]></text>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[NOTAS DE VENTA]]></text>
+				<text><![CDATA[NOTA DE VENTA]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1" y="63" width="50" height="20" uuid="7b49d0e3-6c05-48c9-b2e1-de9bb01891a7"/>
@@ -316,8 +317,8 @@ VENTAS.JGALERIA@BEVISAGALERIA.COM]]></text>
 	<columnFooter>
 		<band height="203">
 			<image>
-				<reportElement positionType="Float" x="10" y="80" width="148" height="90" uuid="b71b7472-7057-447a-a420-ca58386e8f4d"/>
-				<imageExpression><![CDATA["bevisalogo.png"]]></imageExpression>
+				<reportElement positionType="Float" x="14" y="78" width="148" height="90" uuid="b71b7472-7057-447a-a420-ca58386e8f4d"/>
+				<imageExpression><![CDATA[$P{path}+"/bevisalogo.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement positionType="Float" x="2" y="10" width="173" height="60" uuid="e7f16296-4c45-489b-bc02-c032e85a9928"/>
